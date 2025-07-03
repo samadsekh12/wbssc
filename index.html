@@ -87,7 +87,7 @@
     // --- Configuration ---
     const SHARED_USER = 'user';
     const SHARED_PASS = 'user123';
-    const ALL_USERS   = ['Alice','Bob','Charlie','Dave'];
+    const ALL_USERS   = ['Alice','Bob','Charlie','Dave','Samad','Ishtayak'];
 
     // --- UI References ---
     const loginPage   = document.getElementById('loginPage');
@@ -118,10 +118,7 @@
     loginForm.addEventListener('submit', e => {
       e.preventDefault();
       if (usernameEl.value === SHARED_USER && passwordEl.value === SHARED_PASS) {
-        const name = prompt(
-          'Enter your display name:',
-          ALL_USERS[0]
-        );
+        const name = prompt('Enter your display name:', ALL_USERS[0]);
         if (!ALL_USERS.includes(name)) {
           alert('Name must be one of: ' + ALL_USERS.join(', '));
           return;
@@ -164,7 +161,7 @@
         messages.push({
           from: currentUser,
           to: recipientEl.value,
-          text: '', 
+          text: '',
           loc: {lat: latitude, lon: longitude}
         });
         renderMessages(currentUser, recipientEl.value);
@@ -192,7 +189,6 @@
           const d = document.createElement('div');
           d.className = 'bubble';
           if (m.loc) {
-            // show clickable map link
             d.innerHTML = `
               <strong>${m.from}</strong> → <strong>${m.to}</strong><br>
               <a href="https://www.google.com/maps?q=${m.loc.lat},${m.loc.lon}"
