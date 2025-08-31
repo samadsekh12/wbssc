@@ -1,4 +1,4 @@
-// Simple Idle Timer
+// Idle timer
 let seconds = 0;
 const idleEl = document.getElementById('idleTimer');
 
