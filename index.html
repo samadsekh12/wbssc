@@ -9,8 +9,8 @@
 <body>
   <main class="app">
     <section class="player" id="playerContainer">
-      <video id="video" preload="metadata" playsinline>
-        <!-- Source and track are injected by script.js -->
+      <!-- Main player (no native controls; custom controls below) -->
+      <video id="video" preload="metadata" playsinline poster="media/nature.jpg">
         Your browser does not support HTML5 video.
       </video>
 
@@ -64,7 +64,58 @@
 
     <aside class="playlist">
       <h2>Playlist</h2>
-      <ul id="playlist" role="listbox" aria-label="Video playlist"></ul>
+
+      <!-- Add videos here using <video> tags as clickable previews -->
+      <ul id="playlist" role="listbox" aria-label="Video playlist">
+        <li class="item" role="option" tabindex="0" aria-selected="false"
+            data-title="Nature"
+            data-src-mp4="media/nature.mp4"
+            data-src-webm=""
+            data-poster="media/nature.jpg"
+            data-track="media/nature.vtt"
+            data-lang="en">
+          <video class="thumb" preload="metadata" muted playsinline poster="media/nature.jpg">
+            <source src="media/nature.mp4#t=0.1" type="video/mp4">
+          </video>
+          <div class="meta">
+            <span class="title">Nature</span>
+            <span class="sub">Captions available</span>
+          </div>
+        </li>
+
+        <li class="item" role="option" tabindex="0" aria-selected="false"
+            data-title="City"
+            data-src-mp4="media/city.mp4"
+            data-src-webm=""
+            data-poster="media/city.jpg"
+            data-track=""
+            data-lang="en">
+          <video class="thumb" preload="metadata" muted playsinline poster="media/city.jpg">
+            <source src="media/city.mp4#t=0.1" type="video/mp4">
+          </video>
+          <div class="meta">
+            <span class="title">City</span>
+            <span class="sub">No captions</span>
+          </div>
+        </li>
+
+        <li class="item" role="option" tabindex="0" aria-selected="false"
+            data-title="Ocean"
+            data-src-mp4="media/ocean.mp4"
+            data-src-webm=""
+            data-poster="media/ocean.jpg"
+            data-track="media/ocean.vtt"
+            data-lang="en">
+          <video class="thumb" preload="metadata" muted playsinline poster="media/ocean.jpg">
+            <source src="media/ocean.mp4#t=0.1" type="video/mp4">
+          </video>
+          <div class="meta">
+            <span class="title">Ocean</span>
+            <span class="sub">Captions available</span>
+          </div>
+        </li>
+      </ul>
+
       <p class="hint">
         Tip: Space = Play/Pause, F = Fullscreen, M = Mute, C = Captions, 0–9 = Seek %
       </p>
