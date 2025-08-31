@@ -1,65 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>YouTube‑Style Playlist</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <!-- Main Player -->
-    <div class="main-player">
-      <video id="mainVideo" controls preload="metadata" poster="media/nature.jpg">
-        <source src="media/nature.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-      </video>
-      <h2 id="videoTitle">Nature</h2>
+<ul id="playlist" role="listbox" aria-label="Video playlist">
+  <li role="option" tabindex="0" aria-selected="false"
+      data-title="Nature"
+      data-src-mp4="media/nature.mp4"
+      data-poster="media/nature.jpg"
+      data-track="media/nature.vtt"
+      data-lang="en">
+    <video class="thumb" muted preload="metadata" poster="media/nature.jpg">
+      <source src="media/nature.mp4#t=0.1" type="video/mp4">
+    </video>
+    <div class="meta">
+      <span class="title">Nature</span>
+      <span class="sub">Captions available</span>
     </div>
+  </li>
 
-    <!-- Playlist -->
-    <div class="playlist">
-      <div class="playlist-item" 
-           data-src="media/nature.mp4" 
-           data-title="Nature" 
-           data-poster="media/nature.jpg">
-        <video class="thumb" muted preload="metadata" poster="media/nature.jpg">
-          <source src="media/nature.mp4#t=0.1" type="video/mp4">
-        </video>
-        <div class="meta">
-          <h4>Nature</h4>
-          <p>Captions available</p>
-        </div>
-      </div>
-
-      <div class="playlist-item" 
-           data-src="media/city.mp4" 
-           data-title="City" 
-           data-poster="media/city.jpg">
-        <video class="thumb" muted preload="metadata" poster="media/city.jpg">
-          <source src="media/city.mp4#t=0.1" type="video/mp4">
-        </video>
-        <div class="meta">
-          <h4>City</h4>
-          <p>No captions</p>
-        </div>
-      </div>
-
-      <div class="playlist-item" 
-           data-src="media/ocean.mp4" 
-           data-title="Ocean" 
-           data-poster="media/ocean.jpg">
-        <video class="thumb" muted preload="metadata" poster="media/ocean.jpg">
-          <source src="media/ocean.mp4#t=0.1" type="video/mp4">
-        </video>
-        <div class="meta">
-          <h4>Ocean</h4>
-          <p>Captions available</p>
-        </div>
-      </div>
+  <li role="option" tabindex="0" aria-selected="false"
+      data-title="City"
+      data-src-mp4="media/city.mp4"
+      data-poster="media/city.jpg"
+      data-track=""
+      data-lang="en">
+    <video class="thumb" muted preload="metadata" poster="media/city.jpg">
+      <source src="media/city.mp4#t=0.1" type="video/mp4">
+    </video>
+    <div class="meta">
+      <span class="title">City</span>
+      <span class="sub">No captions</span>
     </div>
-  </div>
+  </li>
 
-  <script src="script.js"></script>
-</body>
-</html>
+  <li role="option" tabindex="0" aria-selected="false"
+      data-title="Ocean"
+      data-src-mp4="media/ocean.mp4"
+      data-poster="media/ocean.jpg"
+      data-track="media/ocean.vtt"
+      data-lang="en">
+    <video class="thumb" muted preload="metadata" poster="media/ocean.jpg">
+      <source src="media/ocean.mp4#t=0.1" type="video/mp4">
+    </video>
+    <div class="meta">
+      <span class="title">Ocean</span>
+      <span class="sub">Captions available</span>
+    </div>
+  </li>
+</ul>
