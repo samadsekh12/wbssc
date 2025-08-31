@@ -65,23 +65,10 @@
     <aside class="playlist">
       <h2>Playlist</h2>
 
-      <!-- Add videos here using <video> tags as clickable previews -->
-      <ul id="playlist" role="listbox" aria-label="Video playlist">
-        <li class="item" role="option" tabindex="0" aria-selected="false"
-            data-title="Nature"
-            data-src-mp4="media/nature.mp4"
-            data-src-webm=""
-            data-poster="media/nature.jpg"
-            data-track="media/nature.vtt"
-            data-lang="en">
-          <video class="thumb" preload="metadata" muted playsinline poster="media/nature.jpg">
-            <source src="media/nature.mp4#t=0.1" type="video/mp4">
-          </video>
-          <div class="meta">
-            <span class="title">Nature</span>
-            <span class="sub">Captions available</span>
-          </div>
-        </li>
+      <video id="myVideo" width="150" height="75" controls>
+    <source src="Video/মানুষ চিনতে শিখুন.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
         <li class="item" role="option" tabindex="0" aria-selected="false"
             data-title="City"
