@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f6f8;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #003366;
+  color: white;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.topbar .controls button {
+  background: #0055aa;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.topbar .controls button:hover {
+  background: #0077dd;
+}
+
+.topbar .status {
+  margin: 5px;
+}
+
+.topbar .codes label {
+  margin: 0 5px;
+  font-size: 0.9em;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+}
+
+.card h2 {
+  margin-top: 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+
+.field {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.field:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: bold;
+  color: #333;
+}
+
+.value {
+  color: #555;
+}
