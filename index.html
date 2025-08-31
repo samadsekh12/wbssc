@@ -1,218 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Private Messenger with Location</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
-      margin: 0;
-    }
-    .page {
-      background: #fff;
-      padding: 20px;
-      border: 1px solid #ddd;
-      width: 360px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .hidden { display: none; }
-    label, select, input, textarea, button {
-      width: 100%;
-      margin-top: 8px;
-      box-sizing: border-box;
-    }
-    #chatWindow {
-      border: 1px solid #ccc;
-      height: 240px;
-      overflow-y: auto;
-      padding: 8px;
-      background: #fafafa;
-      margin-top: 12px;
-    }
-    .bubble {
-      background: #e1ffc7;
-      margin-bottom: 8px;
-      padding: 6px;
-      border-radius: 4px;
-    }
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .controls button, .controls textarea {
-      flex: 1;
-    }
-    .error { color: red; font-size: 0.9em; margin-top: 4px; }
-  </style>
+<meta charset="UTF-8">
+<title>TP Clients - SBI Life Mockup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- LOGIN PAGE -->
-  <div id="loginPage" class="page">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <label>Username:
-        <input id="username" required>
-      </label>
-      <label>Password:
-        <input id="password" type="password" required>
-      </label>
-      <button type="submit">Log In</button>
-      <p id="loginError" class="error"></p>
-    </form>
+
+<header class="topbar">
+  <div class="controls">
+    <button>Dial</button>
+    <button>Hangup</button>
+    <button>Hold</button>
+    <button>Mute</button>
+    <button>Break</button>
+    <button>Back</button>
+    <button>Setup</button>
+    <button>Logout</button>
   </div>
-
-  <!-- CHAT PAGE -->
-  <div id="chatPage" class="page hidden">
-    <h2>Welcome, <span id="currentUser"></span></h2>
-    <label>Send To:
-      <select id="recipient"></select>
-    </label>
-
-    <div class="controls">
-      <textarea id="messageInput" rows="2" placeholder="Type your message..."></textarea>
-      <button id="sendBtn">Send</button>
-    </div>
-    <button id="locBtn" style="margin-top:4px;">Send Location</button>
-
-    <div id="chatWindow"></div>
-    <button id="logoutBtn" style="margin-top:12px;">Logout</button>
+  <div class="status">
+    <span>Idle: <span id="idleTimer">00:00:00</span></span>
   </div>
+  <div class="codes">
+    <label>DispositionCode: <input type="text"></label>
+    <label>CRMCode: <input type="text"></label>
+  </div>
+</header>
 
-  <script>
-    // --- Configuration ---
-    const SHARED_USER = 'user';
-    const SHARED_PASS = 'user123';
-    const ALL_USERS   = ['Alice','Bob','Charlie','Dave','Samad','Ishtayak'];
+<main class="container">
+  <section class="card">
+    <h2>TP Clients</h2>
+    <div class="field"><span class="label">NAME</span><span class="value">John Doe</span></div>
+    <div class="field"><span class="label">CASE_ID</span><span class="value">123456</span></div>
+    <div class="field"><span class="label">POLICYNUMBER</span><span class="value">987654321</span></div>
+    <div class="field"><span class="label">INSTALLMENTPREMIUM</span><span class="value">₹ 5,000</span></div>
+    <div class="field"><span class="label">PRODUCTNAME</span><span class="value">Smart Platina Assure</span></div>
+    <div class="field"><span class="label">POLICYTERM</span><span class="value">10 Years</span></div>
+    <div class="field"><span class="label">HOLDERPREMIUM</span><span class="value">₹ 50,000</span></div>
+    <div class="field"><span class="label">HOLDERDOB</span><span class="value">01/01/1980</span></div>
+    <div class="field"><span class="label">HOLDERGENDER</span><span class="value">Male</span></div>
+    <div class="field"><span class="label">HOLDERPREMIUMDESIGNER</span><span class="value">Designer Name</span></div>
+  </section>
 
-    // --- UI References ---
-    const loginPage   = document.getElementById('loginPage');
-    const chatPage    = document.getElementById('chatPage');
-    const loginForm   = document.getElementById('loginForm');
-    const loginError  = document.getElementById('loginError');
-    const usernameEl  = document.getElementById('username');
-    const passwordEl  = document.getElementById('password');
-    const currentEl   = document.getElementById('currentUser');
-    const recipientEl = document.getElementById('recipient');
-    const messageIn   = document.getElementById('messageInput');
-    const sendBtn     = document.getElementById('sendBtn');
-    const locBtn      = document.getElementById('locBtn');
-    const chatWin     = document.getElementById('chatWindow');
-    const logoutBtn   = document.getElementById('logoutBtn');
+  <section class="card">
+    <h2>History</h2>
+    <div class="field"><span class="label">POLICYISSUEDATE</span><span class="value">01/01/2020</span></div>
+    <div class="field"><span class="label">POLICYMATURITYDATE</span><span class="value">01/01/2030</span></div>
+    <div class="field"><span class="label">PREMIUMAMOUNT</span><span class="value">₹ 5,000</span></div>
+    <div class="field"><span class="label">BANKNAME</span><span class="value">State Bank of India</span></div>
+    <div class="field"><span class="label">CHANNELNAME</span><span class="value">Direct</span></div>
+    <div class="field"><span class="label">POLICYPAIDSTATUS</span><span class="value">Paid</span></div>
+    <div class="field"><span class="label">CONTACTNO</span><span class="value">9876543210</span></div>
+    <div class="field"><span class="label">CONTACTADDRESS</span><span class="value">Kolkata, WB</span></div>
+    <div class="field"><span class="label">POLICYPAIDDATE</span><span class="value">01/01/2025</span></div>
+    <div class="field"><span class="label">CONTACTEMAIL</span><span class="value">john@example.com</span></div>
+  </section>
+</main>
 
-    let currentUser = null;
-    const messages = []; // {from,to,text,loc?:{lat,lon}}
-
-    // Populate recipient dropdown
-    ALL_USERS.forEach(u => {
-      const o = document.createElement('option');
-      o.value = u; o.textContent = u;
-      recipientEl.append(o);
-    });
-
-    // --- Login Logic ---
-    loginForm.addEventListener('submit', e => {
-      e.preventDefault();
-      if (usernameEl.value === SHARED_USER && passwordEl.value === SHARED_PASS) {
-        const name = prompt('Enter your display name:', ALL_USERS[0]);
-        if (!ALL_USERS.includes(name)) {
-          alert('Name must be one of: ' + ALL_USERS.join(', '));
-          return;
-        }
-        currentUser = name;
-        showChatUI();
-      } else {
-        loginError.textContent = 'Invalid credentials';
-      }
-    });
-
-    function showChatUI() {
-      loginPage.classList.add('hidden');
-      chatPage.classList.remove('hidden');
-      loginError.textContent = '';
-      usernameEl.value = passwordEl.value = '';
-      currentEl.textContent = currentUser;
-      renderMessages(currentUser, recipientEl.value);
-    }
-
-    // --- Send Text Message ---
-    sendBtn.addEventListener('click', () => {
-      const to = recipientEl.value;
-      const txt = messageIn.value.trim();
-      if (!txt) return;
-      messages.push({from: currentUser, to, text: txt});
-      messageIn.value = '';
-      renderMessages(currentUser, to);
-    });
-
-    // --- Send Location ---
-    locBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        alert('Geolocation not supported by your browser');
-        return;
-      }
-      locBtn.disabled = true;
-      navigator.geolocation.getCurrentPosition(pos => {
-        const {latitude, longitude} = pos.coords;
-        messages.push({
-          from: currentUser,
-          to: recipientEl.value,
-          text: '',
-          loc: {lat: latitude, lon: longitude}
-        });
-        renderMessages(currentUser, recipientEl.value);
-        locBtn.disabled = false;
-      }, err => {
-        alert('Unable to get location');
-        locBtn.disabled = false;
-      });
-    });
-
-    // --- Switching Recipient ---
-    recipientEl.addEventListener('change', () => {
-      renderMessages(currentUser, recipientEl.value);
-    });
-
-    // --- Render Only Private Chat ---
-    function renderMessages(me, other) {
-      chatWin.innerHTML = '';
-      messages
-        .filter(m =>
-          (m.from === me && m.to === other) ||
-          (m.from === other && m.to === me)
-        )
-        .forEach(m => {
-          const d = document.createElement('div');
-          d.className = 'bubble';
-          if (m.loc) {
-            d.innerHTML = `
-              <strong>${m.from}</strong> → <strong>${m.to}</strong><br>
-              <a href="https://www.google.com/maps?q=${m.loc.lat},${m.loc.lon}"
-                 target="_blank">
-                📍 Shared location
-              </a>
-            `;
-          } else {
-            d.innerHTML = `
-              <strong>${m.from}</strong> → <strong>${m.to}</strong><br>
-              ${m.text}
-            `;
-          }
-          chatWin.append(d);
-        });
-      chatWin.scrollTop = chatWin.scrollHeight;
-    }
-
-    // --- Logout ---
-    logoutBtn.addEventListener('click', () => {
-      currentUser = null;
-      chatPage.classList.add('hidden');
-      loginPage.classList.remove('hidden');
-    });
-  </script>
+<script src="script.js"></script>
 </body>
 </html>
