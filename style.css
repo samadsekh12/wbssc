@@ -83,9 +83,7 @@ input[type="range"]#volume {
   accent-color: var(--accent-2);
 }
 
-.speed-label select {
-  padding: 6px 8px;
-}
+.speed-label select { padding: 6px 8px; }
 
 .playlist {
   background: var(--surface);
@@ -105,41 +103,38 @@ input[type="range"]#volume {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 6px;
+  gap: 8px;
 }
 
-#playlist li {
-  display: flex;
+#playlist .item {
+  display: grid;
+  grid-template-columns: 160px 1fr;
   gap: 10px;
   align-items: center;
   background: #1a2030;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid transparent;
   border-radius: 8px;
   cursor: pointer;
 }
 
-#playlist li:hover {
-  border-color: var(--accent);
-}
-
-#playlist li.active {
+#playlist .item:hover { border-color: var(--accent); }
+#playlist .item.active {
   border-color: var(--accent-2);
   background: #1a2a22;
 }
 
-#playlist li .meta {
-  display: grid;
+#playlist .thumb {
+  width: 160px;
+  height: 90px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #000;
 }
 
-#playlist li .title {
-  font-weight: 600;
-}
-
-#playlist li .sub {
-  color: var(--muted);
-  font-size: 12px;
-}
+#playlist .meta { display: grid; gap: 2px; }
+#playlist .title { font-weight: 600; }
+#playlist .sub { color: var(--muted); font-size: 12px; }
 
 .hint {
   color: var(--muted);
