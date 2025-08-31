@@ -1,28 +1,3 @@
-// ----- Configuration: replace with your own files in ./media/ -----
-const PLAYLIST = [
-  {
-    title: "Sample: Nature",
-    src: "media/nature.mp4",
-    poster: "",
-    subtitles: "media/nature.vtt", // optional; set to "" if none
-    lang: "en",
-  },
-  {
-    title: "Sample: City",
-    src: "media/city.mp4",
-    poster: "",
-    subtitles: "",
-    lang: "en",
-  },
-  {
-    title: "Sample: Ocean",
-    src: "media/ocean.mp4",
-    poster: "",
-    subtitles: "media/ocean.vtt",
-    lang: "en",
-  },
-];
-
 // ----- Elements -----
 const container = document.getElementById("playerContainer");
 const video = document.getElementById("video");
@@ -43,6 +18,20 @@ const playlistEl = document.getElementById("playlist");
 let currentIndex = 0;
 let trackEl = null;
 
+// Build playlist from DOM <li> items that include <video> previews
+const PLAYLIST = [...playlistEl.querySelectorAll(".item")].map((li, i) => {
+  return {
+    index: i,
+    el: li,
+    title: li.dataset.title || `Item ${i + 1}`,
+    mp4: li.dataset.srcMp4 || "",
+    webm: li.dataset.srcWebm || "",
+    poster: li.dataset.poster || "",
+    track: li.dataset.track || "",
+    lang: li.dataset.lang || "en",
+  };
+});
+
 // ----- Helpers -----
 function fmt(t) {
   if (!Number.isFinite(t)) return "00:00";
@@ -53,15 +42,22 @@ function fmt(t) {
 }
 
 function setActive(idx) {
-  [...playlistEl.children].forEach((li, i) => {
-    li.classList.toggle("active", i === idx);
-    li.setAttribute("aria-selected", i === idx ? "true" : "false");
+  PLAYLIST.forEach((item, i) => {
+    item.el.classList.toggle("active", i === idx);
+    item.el.setAttribute("aria-selected", i === idx ? "true" : "false");
   });
 }
 
 function attachTrack(src, lang = "en") {
-  if (trackEl) trackEl.remove();
-  if (!src) return;
+  if (trackEl) {
+    try { trackEl.remove(); } catch {}
+    trackEl = null;
+  }
+  if (!src) {
+    ccBtn.disabled = true;
+    ccBtn.textContent = "CC";
+    return;
+  }
   trackEl = document.createElement("track");
   trackEl.kind = "subtitles";
   trackEl.label = "Subtitles";
@@ -69,6 +65,9 @@ function attachTrack(src, lang = "en") {
   trackEl.src = src;
   trackEl.default = false;
   video.appendChild(trackEl);
+  ccBtn.disabled = false;
+  // Ensure track object is ready
+  video.textTracks && [...video.textTracks].forEach(t => (t.mode = "disabled"));
 }
 
 function toggleCaptions() {
@@ -82,51 +81,64 @@ function toggleCaptions() {
 }
 
 function loadVideo(idx, autoplay = true) {
-  currentIndex = idx;
   const item = PLAYLIST[idx];
-  video.src = item.src;
-  if (item.poster) video.poster = item.poster;
-  attachTrack(item.subtitles, item.lang);
-  setActive(idx);
-  // Reset UI
+  if (!item) return;
+
+  currentIndex = idx;
+  // Set poster
+  video.poster = item.poster || "";
+
+  // Swap sources
+  video.pause();
+  video.removeAttribute("src");
+  // Remove existing <source> children
+  [...video.querySelectorAll("source")].forEach(s => s.remove());
+
+  if (item.mp4) {
+    const s = document.createElement("source");
+    s.src = item.mp4;
+    s.type = "video/mp4";
+    video.appendChild(s);
+  }
+  if (item.webm) {
+    const s = document.createElement("source");
+    s.src = item.webm;
+    s.type = "video/webm";
+    video.appendChild(s);
+  }
+
+  // Tracks
+  attachTrack(item.track, item.lang);
+
+  // Reset UI and load
   progress.value = 0;
   curTime.textContent = "00:00";
   durTime.textContent = "00:00";
   playPauseBtn.textContent = "▶️";
-  if (autoplay) video.play().catch(() => {}); // ignore autoplay policies
+
+  video.load();
+  setActive(idx);
+  if (autoplay) video.play().catch(() => {});
 }
 
-// ----- Init playlist -----
-function renderPlaylist() {
-  playlistEl.innerHTML = "";
-  PLAYLIST.forEach((item, idx) => {
-    const li = document.createElement("li");
-    li.role = "option";
-    li.tabIndex = 0;
-    li.innerHTML = `
-      <div class="meta">
-        <span class="title">${item.title}</span>
-        <span class="sub">${item.subtitles ? "Captions available" : "No captions"}</span>
-      </div>
-    `;
-    li.addEventListener("click", () => loadVideo(idx, true));
-    li.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        loadVideo(idx, true);
-      }
-    });
-    playlistEl.appendChild(li);
+// ----- Init playlist interactions -----
+PLAYLIST.forEach((item, idx) => {
+  const li = item.el;
+  // Click to play
+  li.addEventListener("click", () => loadVideo(idx, true));
+  // Keyboard activation
+  li.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      loadVideo(idx, true);
+    }
   });
-}
+});
 
-// ----- Events: controls -----
+// ----- Controls events -----
 playPauseBtn.addEventListener("click", () => {
-  if (video.paused) {
-    video.play();
-  } else {
-    video.pause();
-  }
+  if (video.paused) video.play();
+  else video.pause();
 });
 
 video.addEventListener("play", () => (playPauseBtn.textContent = "⏸️"));
@@ -137,7 +149,8 @@ backBtn.addEventListener("click", () => {
 });
 
 fwdBtn.addEventListener("click", () => {
-  video.currentTime = Math.min(video.duration || Infinity, video.currentTime + 10);
+  const d = isFinite(video.duration) ? video.duration : Infinity;
+  video.currentTime = Math.min(d, video.currentTime + 10);
 });
 
 muteBtn.addEventListener("click", () => {
@@ -167,15 +180,15 @@ fsBtn.addEventListener("click", async () => {
 
 ccBtn.addEventListener("click", toggleCaptions);
 
-// ----- Events: time & progress -----
+// ----- Time & progress -----
 video.addEventListener("loadedmetadata", () => {
   durTime.textContent = fmt(video.duration);
-  progress.max = video.duration || 0;
+  progress.max = isFinite(video.duration) ? video.duration : 0;
 });
 
 video.addEventListener("timeupdate", () => {
   curTime.textContent = fmt(video.currentTime);
-  if (!isNaN(video.duration)) {
+  if (isFinite(video.duration)) {
     progress.value = video.currentTime;
   }
 });
@@ -184,7 +197,7 @@ progress.addEventListener("input", () => {
   video.currentTime = Number(progress.value);
 });
 
-// Auto-advance
+// Auto-advance to next item
 video.addEventListener("ended", () => {
   const next = currentIndex + 1;
   if (next < PLAYLIST.length) {
@@ -195,7 +208,7 @@ video.addEventListener("ended", () => {
   }
 });
 
-// ----- Keyboard shortcuts -----
+// ----- Keyboard shortcuts (Space/K, arrows, F/M/C, 0–9) -----
 document.addEventListener("keydown", (e) => {
   const tag = document.activeElement?.tagName;
   const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
@@ -203,7 +216,7 @@ document.addEventListener("keydown", (e) => {
 
   switch (e.key.toLowerCase()) {
     case " ":
-    case "k": // YouTube-style
+    case "k":
       e.preventDefault();
       video.paused ? video.play() : video.pause();
       break;
@@ -213,7 +226,10 @@ document.addEventListener("keydown", (e) => {
       break;
     case "arrowright":
       e.preventDefault();
-      video.currentTime = Math.min(video.duration || Infinity, video.currentTime + 5);
+      video.currentTime = Math.min(
+        isFinite(video.duration) ? video.duration : Infinity,
+        video.currentTime + 5
+      );
       break;
     case "arrowup":
       e.preventDefault();
@@ -238,16 +254,7 @@ document.addEventListener("keydown", (e) => {
       e.preventDefault();
       toggleCaptions();
       break;
-    case "home":
-      e.preventDefault();
-      video.currentTime = 0;
-      break;
-    case "end":
-      e.preventDefault();
-      video.currentTime = Math.max(0, (video.duration || 0) - 1);
-      break;
     default:
-      // 0–9 jump to 0–90%
       if (e.key >= "0" && e.key <= "9" && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const pct = Number(e.key) / 10;
         if (isFinite(video.duration)) video.currentTime = video.duration * pct;
@@ -256,6 +263,8 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ----- Boot -----
-renderPlaylist();
-loadVideo(0, false);
-video.volume = 1;
+if (PLAYLIST.length > 0) {
+  // Load first item without autoplay
+  loadVideo(0, false);
+  video.volume = 1;
+}
