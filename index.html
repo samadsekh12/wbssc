@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Custom Video Player</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="player" id="playerContainer">
+      <video id="video" preload="metadata" playsinline>
+        <!-- Source and track are injected by script.js -->
+        Your browser does not support HTML5 video.
+      </video>
+
+      <div class="controls" role="group" aria-label="Video controls">
+        <button id="playPause" aria-label="Play">▶️</button>
+        <button id="back" aria-label="Rewind 10 seconds">⏪ 10s</button>
+        <button id="forward" aria-label="Forward 10 seconds">10s ⏩</button>
+
+        <div class="time">
+          <span id="currentTime">00:00</span> /
+          <span id="duration">00:00</span>
+        </div>
+
+        <input
+          id="progress"
+          type="range"
+          min="0"
+          max="100"
+          value="0"
+          step="0.1"
+          aria-label="Seek"
+        />
+
+        <button id="mute" aria-label="Mute">🔈</button>
+        <input
+          id="volume"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value="1"
+          aria-label="Volume"
+        />
+
+        <label class="speed-label">
+          <span class="visually-hidden">Playback speed</span>
+          <select id="speed" aria-label="Playback speed">
+            <option value="0.5">0.5×</option>
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+        </label>
+
+        <button id="cc" aria-label="Toggle captions">CC</button>
+        <button id="fullscreen" aria-label="Fullscreen">⛶</button>
+      </div>
+    </section>
+
+    <aside class="playlist">
+      <h2>Playlist</h2>
+      <ul id="playlist" role="listbox" aria-label="Video playlist"></ul>
+      <p class="hint">
+        Tip: Space = Play/Pause, F = Fullscreen, M = Mute, C = Captions, 0–9 = Seek %
+      </p>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
