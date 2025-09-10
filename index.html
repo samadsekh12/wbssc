@@ -1,58 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Music Player</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator Vault</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="top-bar">
-            <i class="material-icons">expand_more</i>
-            <span>Now Playing</span>
-            <i class="material-icons">more_horiz</i>
-        </div>
-        <div class="img-area">
-            <img src="" alt="">
-        </div>
-        <div class="song-details">
-            <p class="name"></p>
-            <p class="artist"></p>
-        </div>
-        <div class="progress-area">
-            <div class="progress-bar">
-                <audio id="main-audio" src=""></audio>
-            </div>
-            <div class="song-timer">
-                <span class="current-time">0:00</span>
-                <span class="max-duration">3:20</span>
-            </div>
-        </div>
-        <div class="controls">
-            <i id="repeat-plist" class="material-icons" title="Playlist Looped">repeat</i>
-            <i id="prev" class="material-icons">skip_previous</i>
-            <div class="play-pause">
-                <i class="material-icons play">play_arrow</i>
-            </div>
-            <i id="next" class="material-icons">skip_next</i>
-            <i id="more-music" class="material-icons">queue_music</i>
-        </div>
-        <div class="music-list">
-            <div class="header">
-                <div class="row">
-                    <i class="list material-icons">queue_music</i>
-                    <span>Music List</span>
-                </div>
-                <i id="close" class="material-icons">close</i>
-            </div>
-            <ul>
-                <!-- Use JavaScript to Display list of music here-->
-            </ul>
-        </div>
-    </div>
 
-    <script src="js/music-list.js"></script>
-    <script src="js/script.js"></script>
+<div id="calculator">
+  <input type="text" id="display" readonly>
+  <div class="buttons">
+    <button>7</button><button>8</button><button>9</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>1</button><button>2</button><button>3</button>
+    <button>0</button><button>C</button><button>OK</button>
+  </div>
+</div>
+
+<div id="vault" class="hidden">
+  <h2>🔒 Secret Vault</h2>
+  <p>Here you could show hidden images/videos.</p>
+  <div class="gallery">
+    <img src="https://via.placeholder.com/150" alt="Hidden 1">
+    <img src="https://via.placeholder.com/150" alt="Hidden 2">
+  </div>
+  <button id="logout">Lock Vault</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
