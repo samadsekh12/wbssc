@@ -1,64 +1,294 @@
 <!doctype html>
 <html lang="bn">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>লোকাল ডিলস ম্যাপ</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Queue Minder – Live Wait & Tokens</title>
 <style>
-  body{margin:0;font-family:sans-serif}
-  #map{height:90vh;width:100%}
-  .filter-bar{padding:8px;background:#f8fafc;border-bottom:1px solid #ddd;display:flex;gap:8px;flex-wrap:wrap}
-  select{padding:6px;border-radius:6px;border:1px solid #ccc}
+  body{margin:0;background:#f8fafc;color:#0f172a;font:14px/1.45 system-ui,Segoe UI,Roboto}
+  .wrap{max-width:1100px;margin:20px auto;padding:0 16px}
+  h1{font-size:20px;margin:0 0 12px}
+  .grid{display:grid;gap:12px}
+  .g-3{grid-template-columns:2fr 1fr}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  input,select,button{height:36px;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;background:#fff}
+  button{cursor:pointer}
+  .btn{background:#2563eb;color:#fff;border-color:#2563eb}
+  table{width:100%;border-collapse:separate;border-spacing:0}
+  th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left;background:#fff}
+  th{background:#f1f5f9;position:sticky;top:0}
+  .chip{padding:2px 8px;border-radius:999px;border:1px solid #e2e8f0;background:#f8fafc;font-size:12px}
+  .status{font-weight:600}
+  .status.wait{color:#92400e}.status.call{color:#1d4ed8}.status.serv{color:#166534}.status.done{color:#334155}
+  .screen{font-size:18px}
+  @media (max-width:980px){ .g-3{grid-template-columns:1fr} }
 </style>
-<body>
-<div class="filter-bar">
-  <label>ক্যাটাগরি:
-    <select id="categoryFilter">
-      <option value="all">সব</option>
-      <option value="restaurant">রেস্টুরেন্ট</option>
-      <option value="clothing">পোশাক</option>
-      <option value="electronics">ইলেকট্রনিক্স</option>
-    </select>
-  </label>
+<div class="wrap">
+  <h1>Queue Minder — Live Wait & Tokens</h1>
+
+  <div class="grid g-3">
+    <!-- Customer panel -->
+    <div class="card">
+      <h3 style="margin:0 0 8px">কাস্টমার ভিউ — কিউতে জয়েন</h3>
+      <div class="row">
+        <select id="serviceSelect"></select>
+        <input id="custName" placeholder="নাম (ঐচ্ছিক)">
+        <input id="custPhone" placeholder="মোবাইল (ঐচ্ছিক)">
+        <button class="btn" onclick="joinQueue()">Join Queue</button>
+        <span class="chip" id="etaChip">ETA: —</span>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <h4 style="margin:0 0 8px">লাইভ ওয়েট টাইম</h4>
+        <div id="liveWait"></div>
+      </div>
+    </div>
+
+    <!-- Config -->
+    <div class="card">
+      <h3 style="margin:0 0 8px">কনফিগ — সার্ভিস ও কাউন্টার</h3>
+      <div class="row">
+        <input id="svcName" placeholder="সার্ভিস (e.g., OPD, Haircut)" style="flex:1">
+        <input id="svcAvg" type="number" min="1" value="8" style="width:110px" placeholder="Avg min">
+        <button onclick="addService()">Add service</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <select id="counterSvc"></select>
+        <input id="counterId" placeholder="কাউন্টার আইডি (e.g., C1)" style="width:120px">
+        <button onclick="addCounter()">Add counter</button>
+      </div>
+      <div id="cfgList" style="margin-top:8px;font-size:13px"></div>
+    </div>
+  </div>
+
+  <!-- Staff panel -->
+  <div class="card" style="margin-top:12px">
+    <div class="row" style="justify-content:space-between">
+      <h3 style="margin:0">স্টাফ প্যানেল</h3>
+      <div class="row">
+        <select id="staffCounter"></select>
+        <button class="btn" onclick="callNext()">Call next</button>
+        <button onclick="markServing()">Mark serving</button>
+        <button onclick="markDone()">Done</button>
+        <button onclick="skipToken()">Skip</button>
+        <button onclick="recallToken()">Recall</button>
+      </div>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div class="card">
+        <h4 style="margin:0 0 6px">কিউ (Waiting)</h4>
+        <table><thead><tr><th>Token</th><th>Service</th><th>Name</th><th>ETA</th></tr></thead><tbody id="qWaiting"></tbody></table>
+      </div>
+      <div class="card">
+        <h4 style="margin:0 0 6px">লাইভ স্টেটাস</h4>
+        <table><thead><tr><th>Counter</th><th>Token</th><th>Status</th></tr></thead><tbody id="qNow"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Display screen -->
+  <div class="card screen" style="margin-top:12px">
+    <h3 style="margin:0 0 6px">ডিসপ্লে বোর্ড</h3>
+    <div id="displayBoard" class="row"></div>
+  </div>
 </div>
-<div id="map"></div>
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-// ম্যাপ সেটআপ (Pune কেন্দ্র করে)
-const map = L.map('map').setView([18.5204, 73.8567], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+/* ======= State (localStorage-backed) ======= */
+const SKEY='qm_state_v1';
+let state = JSON.parse(localStorage.getItem(SKEY) || 'null') || {
+  seq: 100, // token sequence
+  services: [ {id:'svc-1', name:'OPD', avgMin:8}, {id:'svc-2', name:'Haircut', avgMin:12} ],
+  counters: [ {id:'C1', serviceId:'svc-1', current:null, status:'IDLE'}, {id:'C2', serviceId:'svc-2', current:null, status:'IDLE'} ],
+  queue: [] // {token, serviceId, name, phone, createdAt, status: WAITING|CALLED|SERVING|DONE|SKIPPED, counterId?}
+};
+function save(){ localStorage.setItem(SKEY, JSON.stringify(state)); }
 
-// ডেমো মার্চেন্ট ডেটা
-const merchants = [
-  {name:"Spice Hub", category:"restaurant", offer:"20% ছাড় Lunch Combo", lat:18.5209, lng:73.8545},
-  {name:"Trendy Threads", category:"clothing", offer:"Buy 1 Get 1 Free", lat:18.5185, lng:73.8620},
-  {name:"Gadget World", category:"electronics", offer:"₹500 ছাড় ₹5000+ কেনাকাটায়", lat:18.5250, lng:73.8500},
-  {name:"Cafe Aroma", category:"restaurant", offer:"ফ্রি ডেজার্ট Dinner-এ", lat:18.5220, lng:73.8580}
-];
+/* ======= Helpers ======= */
+const byId = id => document.getElementById(id);
+const svcById = id => state.services.find(s=>s.id===id);
+function fmtETA(min){ return min<=0 ? 'Now' : `${min} min`; }
+function now(){ return Date.now(); }
 
-// মার্কার লেয়ার গ্রুপ
-let markersLayer = L.layerGroup().addTo(map);
+/* ======= Setup selects ======= */
+function renderConfig(){
+  // service select for customer + counter config
+  const svcSel = byId('serviceSelect'); svcSel.innerHTML='';
+  state.services.forEach(s=>{ const o=document.createElement('option'); o.value=s.id; o.textContent=`${s.name} (avg ${s.avgMin}m)`; svcSel.appendChild(o); });
 
-function renderMarkers(filterCat){
-  markersLayer.clearLayers();
-  merchants
-    .filter(m => filterCat==="all" || m.category===filterCat)
-    .forEach(m => {
-      const marker = L.marker([m.lat, m.lng]).addTo(markersLayer);
-      marker.bindPopup(`<b>${m.name}</b><br>${m.offer}<br><i>${m.category}</i>`);
-    });
+  const cSvc = byId('counterSvc'); cSvc.innerHTML='';
+  state.services.forEach(s=>{ const o=document.createElement('option'); o.value=s.id; o.textContent=s.name; cSvc.appendChild(o); });
+
+  const staffC = byId('staffCounter'); staffC.innerHTML='';
+  state.counters.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; const svc=svcById(c.serviceId); o.textContent=`${c.id} · ${svc?.name||'-'}`; staffC.appendChild(o); });
+
+  // config list
+  const cfg = byId('cfgList');
+  const svcList = state.services.map(s=>`• ${s.name} (avg ${s.avgMin}m)`).join('<br>');
+  const cList = state.counters.map(c=>`• ${c.id} → ${svcById(c.serviceId)?.name}`).join('<br>');
+  cfg.innerHTML = `<b>Services</b><br>${svcList || '—'}<br><b>Counters</b><br>${cList || '—'}`;
 }
 
-// ফিল্টার চেঞ্জ
-document.getElementById('categoryFilter').addEventListener('change', e=>{
-  renderMarkers(e.target.value);
-});
+/* ======= Live wait card ======= */
+function renderLiveWait(){
+  const box = byId('liveWait'); box.innerHTML='';
+  state.services.forEach(s=>{
+    const qLen = state.queue.filter(q=>q.serviceId===s.id && q.status==='WAITING').length;
+    const activeCounters = state.counters.filter(c=>c.serviceId===s.id && c.status!=='OFF').length || 1;
+    const eta = Math.ceil(qLen * s.avgMin / activeCounters);
+    const div=document.createElement('div');
+    div.className='row'; div.style.margin='4px 0';
+    div.innerHTML = `<span class="chip">${s.name}</span>
+                     <span class="chip">Waiting: ${qLen}</span>
+                     <span class="chip">ETA: ${fmtETA(eta)}</span>
+                     <span class="chip">Counters: ${activeCounters}</span>`;
+    box.appendChild(div);
+  });
+}
 
-// প্রথমবার সব দেখানো
-renderMarkers("all");
+/* ======= Join queue (customer) ======= */
+function joinQueue(){
+  const serviceId = byId('serviceSelect').value;
+  const name = byId('custName').value.trim();
+  const phone = byId('custPhone').value.trim();
+  const s = svcById(serviceId);
+  // Compute ETA at join time
+  const qLen = state.queue.filter(q=>q.serviceId===serviceId && q.status==='WAITING').length;
+  const activeCounters = state.counters.filter(c=>c.serviceId===serviceId && c.status!=='OFF').length || 1;
+  const etaMin = Math.ceil(qLen * s.avgMin / activeCounters);
+
+  const token = ++state.seq;
+  state.queue.push({ token, serviceId, name, phone, createdAt: now(), status:'WAITING' });
+  save();
+  byId('etaChip').textContent = `ETA: ${fmtETA(etaMin)}`;
+  alert(`টোকেন #${token} (${s.name}) নেয়া হলো। আনুমানিক অপেক্ষা: ${fmtETA(etaMin)}`);
+  renderAll();
+}
+
+/* ======= Staff actions ======= */
+function pickNext(serviceId){
+  return state.queue.find(q=>q.serviceId===serviceId && q.status==='WAITING');
+}
+function callNext(){
+  const counterId = byId('staffCounter').value;
+  const counter = state.counters.find(c=>c.id===counterId);
+  const next = pickNext(counter.serviceId);
+  if(!next) return alert('এই সার্ভিসে কোনো Waiting টোকেন নেই');
+  next.status='CALLED'; next.counterId = counter.id;
+  counter.current = next.token; counter.status='CALL';
+  save(); renderAll();
+}
+function markServing(){
+  const counterId = byId('staffCounter').value;
+  const counter = state.counters.find(c=>c.id===counterId);
+  if(!counter.current) return alert('কোনো টোকেন কল হয়নি');
+  const t = state.queue.find(q=>q.token===counter.current);
+  t.status='SERVING'; counter.status='SERV';
+  save(); renderAll();
+}
+function markDone(){
+  const counterId = byId('staffCounter').value;
+  const counter = state.counters.find(c=>c.id===counterId);
+  if(!counter.current) return alert('কোনো টোকেন চলমান নেই');
+  const t = state.queue.find(q=>q.token===counter.current);
+  t.status='DONE'; counter.current=null; counter.status='IDLE';
+  save(); renderAll();
+}
+function skipToken(){
+  const counterId = byId('staffCounter').value;
+  const counter = state.counters.find(c=>c.id===counterId);
+  const t = state.queue.find(q=>q.token===counter.current);
+  if(!t) return alert('স্কিপ করার মতো টোকেন নেই');
+  t.status='SKIPPED'; counter.current=null; counter.status='IDLE';
+  save(); renderAll();
+}
+function recallToken(){
+  // recall most recent skipped of this counter's service
+  const counterId = byId('staffCounter').value;
+  const counter = state.counters.find(c=>c.id===counterId);
+  const t = [...state.queue].reverse().find(q=>q.serviceId===counter.serviceId && q.status==='SKIPPED');
+  if(!t) return alert('রিকল করার মতো স্কিপড টোকেন নেই');
+  t.status='CALLED'; t.counterId = counter.id; counter.current=t.token; counter.status='CALL';
+  save(); renderAll();
+}
+
+/* ======= Rendering ======= */
+function renderQueues(){
+  // Waiting table
+  const w = byId('qWaiting'); w.innerHTML='';
+  state.queue.filter(q=>q.status==='WAITING').slice(0,50).forEach(q=>{
+    const svc = svcById(q.serviceId);
+    // rudimentary rolling ETA (approx)
+    const pos = state.queue.filter(x=>x.serviceId===q.serviceId && x.status==='WAITING').indexOf(q);
+    const counters = state.counters.filter(c=>c.serviceId===q.serviceId && c.status!=='OFF').length || 1;
+    const eta = Math.ceil(pos * svc.avgMin / counters);
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>#${q.token}</td><td>${svc.name}</td><td>${q.name||'-'}</td><td>${fmtETA(eta)}</td>`;
+    w.appendChild(tr);
+  });
+
+  // Now table (per counter)
+  const n = byId('qNow'); n.innerHTML='';
+  state.counters.forEach(c=>{
+    const t = c.current ? state.queue.find(q=>q.token===c.current) : null;
+    const s = t ? (t.status==='CALLED'?'call':t.status==='SERVING'?'serv':'wait') : 'done';
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${c.id} · ${svcById(c.serviceId)?.name||''}</td>
+                    <td>${t? '#'+t.token : '-'}</td>
+                    <td class="status ${s}">${t? t.status : 'IDLE'}</td>`;
+    n.appendChild(tr);
+  });
+}
+function renderDisplay(){
+  const box = byId('displayBoard'); box.innerHTML='';
+  state.counters.forEach(c=>{
+    const t = c.current ? state.queue.find(q=>q.token===c.current) : null;
+    const div=document.createElement('div'); div.className='chip';
+    div.style.fontSize='18px'; div.style.padding='8px 12px';
+    div.textContent = `${c.id}: ${t? '#'+t.token+' ('+(t.status)+')' : '—'}`;
+    box.appendChild(div);
+  });
+}
+
+/* ======= Add service/counter ======= */
+function addService(){
+  const name = byId('svcName').value.trim();
+  const avg = +byId('svcAvg').value || 8;
+  if(!name) return alert('সার্ভিসের নাম দিন');
+  const id = 'svc-'+Math.random().toString(36).slice(2,7);
+  state.services.push({id, name, avgMin:avg});
+  byId('svcName').value=''; save(); renderAll();
+}
+function addCounter(){
+  const serviceId = byId('counterSvc').value;
+  const id = byId('counterId').value.trim();
+  if(!id) return alert('কাউন্টার আইডি দিন');
+  state.counters.push({id, serviceId, current:null, status:'IDLE'});
+  byId('counterId').value=''; save(); renderAll();
+}
+
+/* ======= Main render ======= */
+function renderAll(){
+  renderConfig();
+  renderLiveWait();
+  renderQueues();
+  renderDisplay();
+}
+renderAll();
+
+/* ======= Auto progress demo (optional) ======= */
+setInterval(()=>{
+  // If a counter is IDLE, try to auto-call next (demo convenience)
+  state.counters.forEach(c=>{
+    if(!c.current){
+      const next = pickNext(c.serviceId);
+      if(next){ next.status='CALLED'; next.counterId=c.id; c.current=next.token; c.status='CALL'; }
+    } else {
+      // move CALLED → SERVING → DONE over time
+      const t = state.queue.find(q=>q.token===c.current);
+      if(t.status==='CALLED' && Math.random()<0.3){ t.status='SERVING'; c.status='SERV'; }
+      else if(t.status==='SERVING' && Math.random()<0.2){ t.status='DONE'; c.current=null; c.status='IDLE'; }
+    }
+  });
+  save(); renderAll();
+}, 4000);
 </script>
-</body>
 </html>
