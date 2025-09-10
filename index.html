@@ -1,33 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculator Vault</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GST Suite – Frontend Prototype</title>
+<style>
+  :root{
+    --primary:#2563eb; --success:#16a34a; --warn:#f59e0b; --error:#dc2626; --info:#0891b2;
+    --bg:#f8fafc; --surface:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font:14px/1.4 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--ink);background:var(--bg)}
+  .app{display:flex;height:100%}
+  /* Sidebar */
+  .side{width:260px;background:#0b1220;color:#cbd5e1;display:flex;flex-direction:column}
+  .brand{padding:14px 16px;font-weight:700;color:#e2e8f0;border-bottom:1px solid #111827}
+  .nav a{display:block;padding:10px 14px;color:#cbd5e1;text-decoration:none;border-radius:8px;margin:4px 8px}
+  .nav a:hover{background:#111827}
+  .nav a.active{background:#111827;color:#fff}
+  /* Main */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0}
+  .top{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;padding:0 12px}
+  .top .spacer{flex:1}
+  select,input[type="month"]{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 8px;background:#fff}
+  .btn{height:34px;padding:0 12px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer}
+  .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+  .btn.success{background:var(--success);border-color:var(--success);color:#fff}
+  .btn.warn{background:var(--warn);border-color:var(--warn);color:#fff}
+  .btn.ghost{background:transparent;border-color:transparent;color:var(--ink)}
+  .content{padding:16px;overflow:auto}
+  /* Cards and grids */
+  .grid{display:grid;gap:12px}
+  .kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .card h3{margin:0 0 6px 0;font-size:14px;color:var(--muted)}
+  .big{font-size:22px;font-weight:700}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .table{width:100%;border-collapse:separate;border-spacing:0}
+  .table th,.table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;background:#fff}
+  .table th{position:sticky;top:0;background:#f1f5f9;z-index:1}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid var(--line);gap:6px}
+  .chip{padding:3px 8px;border-radius:999px;font-size:12px;border:1px solid var(--line);background:#f8fafc}
+  .chip.success{background:#ecfdf5;border-color:#bbf7d0;color:#166534}
+  .chip.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+  .chip.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+  .chip.error{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+  /* Drawer */
+  .drawer{position:fixed;inset:0;display:none}
+  .drawer.open{display:block}
+  .overlay{position:absolute;inset:0;background:rgba(15,23,42,.45)}
+  .panel{position:absolute;right:0;top:0;bottom:0;width:420px;background:#fff;border-left:1px solid var(--line);padding:14px;overflow:auto}
+  .panel h2{margin:0 0 8px}
+  .field{display:flex;flex-direction:column;margin-bottom:10px}
+  .field label{font-size:12px;color:var(--muted);margin-bottom:4px}
+  .field input,.field select{height:34px;border:1px solid var(--line);border-radius:8px;padding:0 8px}
+  /* Stepper */
+  .stepper{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 12px}
+  .step{padding:6px 10px;border:1px solid var(--line);border-radius:999px}
+  .step.active{border-color:var(--primary);color:#1d4ed8;background:#eff6ff}
+  /* Toast */
+  .toast{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:1000}
+  .toast .t{background:#0b1220;color:#e2e8f0;padding:10px 12px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  /* Tabs */
+  .tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .tabs button{border:none;background:transparent;padding:10px 12px;cursor:pointer;border-bottom:2px solid transparent}
+  .tabs button.active{border-color:var(--primary);color:var(--primary);font-weight:600}
+  /* Responsive */
+  @media (max-width: 1024px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .side{width:64px} .nav a{padding:10px} .nav a span{display:none}}
+  @media (max-width: 640px){ .kpis{grid-template-columns:1fr} .top{flex-wrap:wrap;height:auto;padding:8px} .panel{width:100%} }
+</style>
 </head>
 <body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="side">
+    <div class="brand">GST Suite</div>
+    <nav class="nav">
+      <a href="#" class="active" data-route="dashboard">🏠 <span>Dashboard</span></a>
+      <a href="#" data-route="invoices">🧾 <span>Invoices</span></a>
+      <a href="#" data-route="purchases">🧾 <span>Purchases</span></a>
+      <a href="#" data-route="reco">🔄 <span>Reconciliation</span></a>
+      <a href="#" data-route="returns">📤 <span>Returns</span></a>
+      <a href="#" data-route="payments">💳 <span>Payments</span></a>
+      <a href="#" data-route="reports">📈 <span>Reports</span></a>
+      <a href="#" data-route="settings">⚙️ <span>Settings</span></a>
+    </nav>
+  </aside>
 
-<div id="calculator">
-  <input type="text" id="display" readonly>
-  <div class="buttons">
-    <button>7</button><button>8</button><button>9</button>
-    <button>4</button><button>5</button><button>6</button>
-    <button>1</button><button>2</button><button>3</button>
-    <button>0</button><button>C</button><button>OK</button>
+  <!-- Main -->
+  <div class="main">
+    <header class="top">
+      <select id="orgSel">
+        <option>Acme Pvt Ltd</option>
+        <option>Bluebird Foods</option>
+      </select>
+      <select id="gstinSel">
+        <option value="27ABCDE1234F1Z5">27ABCDE1234F1Z5 (MH)</option>
+        <option value="19ABCDE1234F1Z3">19ABCDE1234F1Z3 (WB)</option>
+      </select>
+      <input id="periodSel" type="month" value="2025-06" />
+      <div class="spacer"></div>
+      <button class="btn">🔔</button>
+      <button class="btn">👤</button>
+    </header>
+
+    <main class="content">
+      <!-- DASHBOARD -->
+      <section id="page-dashboard">
+        <div class="grid kpis">
+          <div class="card"><h3>Outward tax</h3><div class="big" id="kpi-out">₹ 8,40,000</div></div>
+          <div class="card"><h3>Available ITC</h3><div class="big" id="kpi-itc">₹ 6,10,000</div></div>
+          <div class="card"><h3>Net liability</h3><div class="big" id="kpi-net">₹ 2,30,000</div></div>
+          <div class="card"><h3>Unfiled returns</h3><div class="big" id="kpi-returns">2</div></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="row">
+            <strong>Due dates:</strong>
+            <span class="chip info">GSTR‑1 · 11th</span>
+            <span class="chip warn">PMT‑06 · 25th</span>
+            <span class="chip error">GSTR‑3B · 22nd</span>
+          </div>
+        </div>
+        <div class="grid" style="grid-template-columns:2fr 1fr;margin-top:12px">
+          <div class="card">
+            <h3>Exceptions</h3>
+            <ul>
+              <li>5 invoices missing HSN</li>
+              <li>3 purchase bills unmatched in 2B</li>
+              <li>1 e‑invoice failed sign</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Quick actions</h3>
+            <div class="row">
+              <button class="btn primary" onclick="goRoute('invoices')">Prepare GSTR‑1</button>
+              <button class="btn" onclick="goRoute('returns')">Compute 3B</button>
+              <button class="btn" onclick="goRoute('reco')">Run 2B Reco</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INVOICES -->
+      <section id="page-invoices" hidden>
+        <div class="toolbar">
+          <h2 style="margin:0">Invoices</h2>
+          <div class="row">
+            <input type="file" id="csvInput" accept=".csv" hidden />
+            <button class="btn" onclick="document.getElementById('csvInput').click()">Import CSV</button>
+            <button class="btn primary" onclick="mockIRN()">Generate IRN</button>
+            <button class="btn" onclick="mockEWB()">Generate E‑Way Bill</button>
+            <button class="btn success" onclick="openDrawerNew()">Add Invoice</button>
+          </div>
+        </div>
+        <div class="card" style="padding:0">
+          <table class="table" id="invTable">
+            <thead>
+              <tr>
+                <th>Doc No</th><th>Date</th><th>Party</th><th>POS</th><th>Taxable</th><th>Tax</th><th>IRN</th><th>E‑Way</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PURCHASES -->
+      <section id="page-purchases" hidden>
+        <div class="toolbar">
+          <h2 style="margin:0">Purchases</h2>
+          <div class="row">
+            <button class="btn" onclick="toast('Fetched latest GSTR‑2B')">Fetch 2B</button>
+            <button class="btn primary" onclick="toast('Recon suggestions ready')">Run Reco</button>
+          </div>
+        </div>
+        <div class="card" style="padding:0">
+          <table class="table" id="pTable">
+            <thead>
+              <tr><th>Supplier GSTIN</th><th>Doc No</th><th>Date</th><th>Taxable</th><th>Tax</th><th>ITC</th><th>2B Ref</th><th>Match</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RECONCILIATION -->
+      <section id="page-reco" hidden>
+        <div class="toolbar">
+          <h2 style="margin:0">Reconciliation – GSTR‑2B</h2>
+          <div class="row">
+            <span class="pill">Filters: <select onchange="filterReco(this.value)"><option value="all">All</option><option value="unmatched">Unmatched</option><option value="mismatch">Mismatch</option></select></span>
+            <button class="btn success" onclick="resolveAll()">Accept all matches</button>
+          </div>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="card">
+            <h3>Your Purchase</h3>
+            <pre id="recoLeft" style="white-space:pre-wrap"></pre>
+          </div>
+          <div class="card">
+            <h3>GSTR‑2B Entry</h3>
+            <pre id="recoRight" style="white-space:pre-wrap"></pre>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button class="btn success" onclick="acceptMatch()">Accept match</button>
+          <button class="btn" onclick="adjustMatch()">Create adjustment</button>
+          <button class="btn" onclick="nextReco()">Next</button>
+        </div>
+      </section>
+
+      <!-- RETURNS -->
+      <section id="page-returns" hidden>
+        <div class="tabs">
+          <button class="active" data-tab="gstr1" onclick="switchTab(event)">GSTR‑1</button>
+          <button data-tab="gstr3b" onclick="switchTab(event)">GSTR‑3B</button>
+          <button data-tab="gstr9" onclick="switchTab(event)">GSTR‑9</button>
+          <button data-tab="pmt06" onclick="switchTab(event)">PMT‑06</button>
+        </div>
+
+        <div id="tab-gstr1">
+          <div class="card">
+            <h3>GSTR‑1 composer</h3>
+            <div class="row">
+              <span class="chip info">B2B: <b id="b2bCount">0</b></span>
+              <span class="chip info">B2C: <b id="b2cCount">0</b></span>
+              <span class="chip warn">Missing HSN: <b id="hsnMissing">0</b></span>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <button class="btn primary" onclick="toast('GSTR‑1 draft built')">Build Draft</button>
+              <button class="btn success" onclick="toast('Submitted to portal')">Submit</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-gstr3b" hidden>
+          <div class="card">
+            <div class="stepper">
+              <div class="step active">Outward</div>
+              <div class="step">ITC (2B)</div>
+              <div class="step">RCM</div>
+              <div class="step">Utilization</div>
+              <div class="step">Pay & File</div>
+            </div>
+            <div id="g3bBody">
+              <!-- Filled by JS -->
+            </div>
+            <div class="row" style="margin-top:10px;justify-content:space-between">
+              <button class="btn" onclick="g3bPrev()">Back</button>
+              <div class="row">
+                <button class="btn" onclick="createChallan()">Create PMT‑06</button>
+                <button class="btn primary" onclick="file3B()">File with OTP</button>
+                <button class="btn success" onclick="g3bNext()">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-gstr9" hidden>
+          <div class="card">
+            <h3>GSTR‑9</h3>
+            <p>Annual return compilation based on ledger snapshots.</p>
+            <button class="btn primary" onclick="toast('GSTR‑9 compiled')">Compile</button>
+          </div>
+        </div>
+
+        <div id="tab-pmt06" hidden>
+          <div class="card">
+            <h3>PMT‑06 Payment</h3>
+            <div class="row"><label>Amount</label><input id="pmtAmt" type="number" value="100000" /></div>
+            <button class="btn primary" onclick="toast('Challan created. CIN: 2025XXXX')">Generate Challan</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAYMENTS -->
+      <section id="page-payments" hidden>
+        <div class="card">
+          <h3>Ledgers</h3>
+          <ul>
+            <li>Cash Ledger: ₹ 1,20,000</li>
+            <li>ITC IGST: ₹ 3,50,000 · CGST: ₹ 1,40,000 · SGST: ₹ 1,20,000</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- REPORTS -->
+      <section id="page-reports" hidden>
+        <div class="card">
+          <h3>ITC Utilization Report</h3>
+          <p>Simple mock report. Hook to real data in production.</p>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="page-settings" hidden>
+        <div class="card">
+          <h3>Settings</h3>
+          <div class="row">
+            <span class="pill">e‑Invoice: <select><option>Applicable</option><option>Not applicable</option></select></span>
+            <span class="pill">Language: <select><option>English</option><option>বাংলা</option><option>हिंदी</option><option>मराठी</option></select></span>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 </div>
 
-<div id="vault" class="hidden">
-  <h2>🔒 Secret Vault</h2>
-  <p>Here you could show hidden images/videos.</p>
-  <div class="gallery">
-    <img src="https://via.placeholder.com/150" alt="Hidden 1">
-    <img src="https://via.placeholder.com/150" alt="Hidden 2">
+<!-- Drawer -->
+<div class="drawer" id="drawer">
+  <div class="overlay" onclick="closeDrawer()"></div>
+  <div class="panel">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <h2>Invoice</h2>
+      <button class="btn" onclick="closeDrawer()">✖</button>
+    </div>
+    <div class="field"><label>Doc No</label><input id="fDocNo" /></div>
+    <div class="field"><label>Date</label><input id="fDate" type="date" /></div>
+    <div class="field"><label>Party</label><input id="fParty" /></div>
+    <div class="field"><label>POS (State Code)</label><input id="fPOS" placeholder="27/19/.."/></div>
+    <div class="field"><label>Taxable Value</label><input id="fTaxable" type="number" step="0.01" /></div>
+    <div class="field"><label>Tax Rate (%)</label><input id="fRate" type="number" step="0.1" value="18" /></div>
+    <div class="row">
+      <button class="btn primary" onclick="saveInvoice()">Save</button>
+      <button class="btn" onclick="genIRNRow()">Generate IRN</button>
+      <button class="btn" onclick="genEWBRow()">E‑Way Bill</button>
+    </div>
   </div>
-  <button id="logout">Lock Vault</button>
 </div>
 
-<script src="script.js"></script>
+<!-- Toasts -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* Simple state */
+const state = {
+  route:'dashboard',
+  invoices:[
+    {doc_no:'INV-101', date:'2025-06-02', party:'Nexus Traders', pos:'27', taxable:120000, rate:18, tax:21600, irn:'', ewb:'', status:'DRAFT'},
+    {doc_no:'INV-102', date:'2025-06-05', party:'Sunrise Retail', pos:'19', taxable:84000, rate:18, tax:15120, irn:'IRN-AB12', ewb:'', status:'REPORTED'},
+    {doc_no:'INV-103', date:'2025-06-08', party:'Orbit Foods', pos:'27', taxable:150000, rate:12, tax:18000, irn:'', ewb:'EWB-7788', status:'DRAFT'},
+  ],
+  purchases:[
+    {gstin:'27ZXCVB7890L1Z5', doc:'PB-9001', date:'2025-06-03', taxable:65000, tax:11700, itc:'ELIGIBLE', ref:'', score:0.62},
+    {gstin:'19QWERT5678K1Z2', doc:'PB-9002', date:'2025-06-05', taxable:42000, tax:7560, itc:'ELIGIBLE', ref:'2B-1122', score:0.94},
+    {gstin:'27ZXCVB7890L1Z5', doc:'PB-9003', date:'2025-06-10', taxable:31000, tax:5580, itc:'INELIGIBLE', ref:'', score:0.18},
+  ],
+  recoIndex:0,
+  g3bStep:0,
+};
+/* Routing */
+function goRoute(name){
+  state.route=name;
+  document.querySelectorAll('[data-route]').forEach(a=>{
+    a.classList.toggle('active', a.dataset.route===name);
+  });
+  document.querySelectorAll('main section').forEach(s=>s.hidden=true);
+  document.getElementById('page-'+name).hidden=false;
+  if(name==='invoices'){ renderInvoices(); }
+  if(name==='purchases'){ renderPurchases(); }
+  if(name==='reco'){ renderReco(); }
+  if(name==='returns'){ renderG3B(); updateG1Counts(); }
+}
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();goRoute(a.dataset.route)}));
+/* Toast */
+function toast(msg){ const box=document.getElementById('toast'); const t=document.createElement('div'); t.className='t'; t.textContent=msg; box.appendChild(t); setTimeout(()=>{t.remove();},3000); }
+/* Invoices table */
+function renderInvoices(){
+  const tb=document.querySelector('#invTable tbody'); tb.innerHTML='';
+  state.invoices.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><a href="#" onclick="openDrawer(${i});return false;">${r.doc_no}</a></td>
+      <td>${r.date}</td><td>${r.party}</td><td>${r.pos}</td>
+      <td>₹ ${r.taxable.toLocaleString('en-IN')}</td>
+      <td>₹ ${(r.tax).toLocaleString('en-IN')}</td>
+      <td>${r.irn?'<span class="chip success">'+r.irn+'</span>':'-'}</td>
+      <td>${r.ewb?'<span class="chip info">'+r.ewb+'</span>':'-'}</td>
+      <td><span class="chip ${r.status==='REPORTED'?'success':'warn'}">${r.status}</span></td>`;
+    tb.appendChild(tr);
+  });
+}
+function openDrawer(index){
+  const d=document.getElementById('drawer'); d.classList.add('open');
+  d.dataset.index = index ?? -1;
+  if(index!=null && index>=0){
+    const r=state.invoices[index];
+    fDocNo.value=r.doc_no; fDate.value=r.date; fParty.value=r.party; fPOS.value=r.pos; fTaxable.value=r.taxable; fRate.value=r.rate;
+  }
+}
+function openDrawerNew(){ openDrawer(-1); fDocNo.value=''; fDate.value=''; fParty.value=''; fPOS.value='27'; fTaxable.value=''; fRate.value=18; }
+function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); }
+function saveInvoice(){
+  const row = {
+    doc_no:fDocNo.value, date:fDate.value, party:fParty.value, pos:fPOS.value,
+    taxable: +fTaxable.value||0, rate:+fRate.value||0
+  };
+  row.tax = +(row.taxable * row.rate / 100).toFixed(2);
+  const idx=+document.getElementById('drawer').dataset.index;
+  if(idx>=0){ Object.assign(state.invoices[idx], row); toast('Invoice updated'); }
+  else { state.invoices.unshift({ ...row, irn:'', ewb:'', status:'DRAFT' }); toast('Invoice added'); }
+  renderInvoices(); closeDrawer();
+}
+function genIRNRow(){
+  const idx=+document.getElementById('drawer').dataset.index;
+  if(idx<0){ toast('Save invoice first'); return; }
+  state.invoices[idx].irn='IRN-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  state.invoices[idx].status='REPORTED';
+  renderInvoices(); toast('IRN generated');
+}
+function genEWBRow(){
+  const idx=+document.getElementById('drawer').dataset.index;
+  if(idx<0){ toast('Save invoice first'); return; }
+  state.invoices[idx].ewb='EWB-'+Math.floor(Math.random()*9000+1000);
+  renderInvoices(); toast('E‑Way Bill generated');
+}
+function mockIRN(){ toast('Bulk IRN job queued'); }
+function mockEWB(){ toast('Bulk E‑Way Bill job queued'); }
+/* CSV import */
+document.getElementById('csvInput').addEventListener('change', (e)=>{
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=> {
+    const rows=reader.result.split(/\r?\n/).map(r=>r.split(',')).filter(r=>r.length>=6);
+    // Expect: doc_no,date,party,pos,taxable,rate
+    rows.slice(1).forEach(r=>{
+      if(!r[0]) return;
+      const taxable=+r[4]; const rate=+r[5]; const tax=+(taxable*rate/100).toFixed(2);
+      state.invoices.push({doc_no:r[0],date:r[1],party:r[2],pos:r[3],taxable,rate,tax,irn:'',ewb:'',status:'DRAFT'});
+    });
+    renderInvoices(); toast('CSV imported');
+    e.target.value='';
+  };
+  reader.readAsText(file);
+});
+/* Purchases */
+function renderPurchases(){
+  const tb=document.querySelector('#pTable tbody'); tb.innerHTML='';
+  state.purchases.forEach(p=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.gstin}</td><td>${p.doc}</td><td>${p.date}</td>
+      <td>₹ ${p.taxable.toLocaleString('en-IN')}</td><td>₹ ${p.tax.toLocaleString('en-IN')}</td>
+      <td><span class="chip ${p.itc==='ELIGIBLE'?'success':'warn'}">${p.itc}</span></td>
+      <td>${p.ref||'-'}</td><td>${Math.round(p.score*100)}%</td>`;
+    tb.appendChild(tr);
+  });
+}
+/* Reco */
+function renderReco(){
+  const i=state.recoIndex % state.purchases.length;
+  const p=state.purchases[i];
+  const twoB = { supplier_gstin:p.gstin, inv_no:p.doc, inv_date:p.date, taxable:p.taxable+ (Math.random()<.5?0:100), tax:p.tax, ref: p.ref || ('2B-'+Math.floor(Math.random()*9000+1000)) };
+  document.getElementById('recoLeft').textContent = JSON.stringify(p,null,2);
+  document.getElementById('recoRight').textContent = JSON.stringify(twoB,null,2);
+}
+function nextReco(){ state.recoIndex++; renderReco(); }
+function acceptMatch(){ toast('Match accepted'); }
+function adjustMatch(){ toast('Adjustment created'); }
+function filterReco(){ toast('Filter applied'); }
+function resolveAll(){ toast('All matches accepted'); }
+/* Returns tabs */
+function switchTab(e){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  ['gstr1','gstr3b','gstr9','pmt06'].forEach(t=>{
+    document.getElementById('tab-'+t).hidden = (e.target.dataset.tab!==t);
+  });
+}
+/* GSTR-1 counts */
+function updateG1Counts(){
+  const b2b = state.invoices.filter(i=>i.party.toLowerCase().includes('traders')).length;
+  const b2c = state.invoices.length - b2b;
+  const hsnMissing = state.invoices.filter(i=>!i.hsn).length; // demo
+  document.getElementById('b2bCount').textContent=b2b;
+  document.getElementById('b2cCount').textContent=b2c;
+  document.getElementById('hsnMissing').textContent=hsnMissing;
+}
+/* GSTR-3B wizard */
+function g3bCompute(){
+  const outward = state.invoices.reduce((a,r)=>a + r.tax, 0);
+  const itcElig = state.purchases.filter(p=>p.itc==='ELIGIBLE').reduce((a,p)=>a+p.tax,0);
+  const rcm = Math.round(outward*0.02); // mock RCM 2%
+  const net = Math.max(0, outward + rcm - itcElig);
+  return { outward, itc: itcElig, rcm, net };
+}
+function renderG3B(){
+  const steps = document.querySelectorAll('#tab-gstr3b .stepper .step');
+  steps.forEach((s,i)=>s.classList.toggle('active', i===state.g3bStep));
+  const m=g3bCompute();
+  const el=document.getElementById('g3bBody');
+  const fmt = v=>'₹ '+v.toLocaleString('en-IN');
+  const views=[
+    `<div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px">
+       <div class="card"><h3>Outward tax</h3><div class="big">${fmt(m.outward)}</div></div>
+       <div class="card"><h3>Liability (with RCM)</h3><div class="big">${fmt(m.outward+m.rcm)}</div></div>
+       <div class="card"><h3>RCM tax</h3><div class="big">${fmt(m.rcm)}</div></div>
+     </div>`,
+    `<div class="grid" style="grid-template-columns:repeat(2,1fr);gap:10px">
+       <div class="card"><h3>Eligible ITC (2B)</h3><div class="big">${fmt(m.itc)}</div></div>
+       <div class="card"><h3>Ineligible ITC</h3><div class="big">${fmt(Math.max(0,(state.purchases.reduce((a,p)=>a+p.tax,0)-m.itc)) )}</div></div>
+     </div>`,
+    `<div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px">
+       <div class="card"><h3>RCM on inward</h3><div class="big">${fmt(m.rcm)}</div></div>
+       <div class="card"><h3>Interest (mock)</h3><div class="big">${fmt(0)}</div></div>
+       <div class="card"><h3>Others</h3><div class="big">${fmt(0)}</div></div>
+     </div>`,
+    `<div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px">
+       <div class="card"><h3>Net liability</h3><div class="big">${fmt(m.net)}</div></div>
+       <div class="card"><h3>Use ITC</h3><div class="big">${fmt(Math.min(m.itc, m.outward+m.rcm))}</div></div>
+       <div class="card"><h3>Cash required</h3><div class="big">${fmt(m.net)}</div></div>
+     </div>`,
+    `<div class="card"><h3>Ready to file</h3>
+       <p>Preview prepared. Proceed to create challan and file with OTP/DSC.</p>
+       <div class="row"><span class="chip success">Status: Draft</span></div>
+     </div>`
+  ];
+  el.innerHTML = views[state.g3bStep];
+}
+function g3bNext(){ state.g3bStep = Math.min(4, state.g3bStep+1); renderG3B(); }
+function g3bPrev(){ state.g3bStep = Math.max(0, state.g3bStep-1); renderG3B(); }
+function createChallan(){ const m=g3bCompute(); toast('PMT‑06 created for '+(m.net).toLocaleString('en-IN')); }
+function file3B(){ toast('GSTR‑3B filed. ARN: ARN'+Math.floor(Math.random()*1e6)); }
+/* Init */
+goRoute('dashboard'); renderInvoices(); renderPurchases();
+</script>
 </body>
 </html>
+```
