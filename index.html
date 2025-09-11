@@ -10,7 +10,7 @@
   body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
   header{display:flex;justify-content:space-between;align-items:center;background:var(--panel);padding:10px 16px;border-bottom:1px solid var(--border)}
   .search{padding:8px;border-radius:6px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
-  .btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
+  .btn{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
   .btn.primary{background:var(--primary);border:none;color:#fff}
   select{padding:8px;border-radius:8px;background:#0f1116;color:var(--text);border:1px solid var(--border)}
   .layout{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:16px}
@@ -19,6 +19,9 @@
   .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
   .meta{font-size:14px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
   .desc{margin:8px 0;color:#cfd3d7}
+  .vote{display:flex;align-items:center;gap:6px;margin-top:8px}
+  .vote .count{min-width:28px;text-align:center;padding:2px 6px;border-radius:8px;background:#13151d;border:1px solid var(--border)}
+  .comment{margin-top:6px;padding:6px;border:1px solid var(--border);border-radius:6px;background:#0f1116}
   .leaderboard .row{display:flex;justify-content:space-between;padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:#0f1116}
 </style>
 </head>
@@ -79,15 +82,30 @@
 
 <script>
 const translations = {
-  en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard' },
-  bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড' },
-  hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड' }
+  en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard', commentPh:'Write a comment...' },
+  bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড', commentPh:'কমেন্ট লিখুন...' },
+  hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड', commentPh:'टिप्पणी लिखें...' }
 };
 
 const challenges = [
-  { title:'30-sec Science Fact', category:'Science & Technology', level:'Low', deadline:'2025-09-12', description:'Share a quick science fact.' },
-  { title:'Kitchen Rhythm Beat', category:'Fun Challenges', level:'Medium', deadline:'2025-09-15', description:'Create a beat using kitchen items.' },
-  { title:'Mini Portfolio Landing', category:'Coding & Programming', level:'Hard', deadline:'2025-09-11', description:'Build a single-page portfolio.' }
+  {
+    category:'Education', level:'Low', deadline:'2025-09-12', votes:5,
+    translations:{
+      en:{ title:'30-sec Science Fact', description:'Share a quick science fact.' },
+      bn:{ title:'৩০ সেকেন্ডের বিজ্ঞান তথ্য', description:'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
+      hi:{ title:'30 सेकंड विज्ञान तथ्य', description:'एक त्वरित विज्ञान तथ्य साझा करें।' }
+    },
+    comments:[]
+  },
+  {
+    category:'Entertainment', level:'Medium', deadline:'2025-09-15', votes:8,
+    translations:{
+      en:{ title:'Kitchen Rhythm Beat', description:'Create a beat using kitchen items.' },
+      bn:{ title:'কিচেন রিদম বিট', description:'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
+      hi:{ title:'किचन रिदम बीट', description:'रसोई के सामान से बीट बनाएं।' }
+    },
+    comments:[]
+  }
 ];
 
 const points = { 'Aisha': 12, 'Ravi': 18, 'You': 5 };
@@ -111,51 +129,21 @@ function renderFeed(){
   const t = translations[currentLang];
   let list = challenges
     .filter(c => selectedInterest==='All' || c.category===selectedInterest)
-    .filter(c => !searchQuery || c.title.toLowerCase().includes(searchQuery) || c.description.toLowerCase().includes(searchQuery));
+    .filter(c => {
+      const tr = c.translations[currentLang] || c.translations.en;
+      return !searchQuery || tr.title.toLowerCase().includes(searchQuery) || tr.description.toLowerCase().includes(searchQuery);
+    });
 
   const feed = document.getElementById('challengeFeed');
   feed.innerHTML = '';
-  list.forEach(c=>{
+  list.forEach((c,idx)=>{
+    const tr = c.translations[currentLang] || c.translations.en;
     const card = document.createElement('div');
     card.className='card';
     card.innerHTML = `
-      <h3>${c.title}</h3>
+      <h3>${tr.title}</h3>
       <div class="meta">
         <span><strong>${t.category}:</strong> ${c.category}</span>
         <span><strong>${t.level}:</strong> ${c.level}</span>
         <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
-      </div>
-      <p class="desc">${c.description}</p>
-    `;
-    feed.appendChild(card);
-  });
-}
-
-function applyTranslations(){
-  const t = translations[currentLang];
-  document.getElementById('searchInput').placeholder = t.search;
-  document.getElementById('interestTitle').textContent = t.selectInterests;
-  document.getElementById('leaderboardTitle').textContent = t.leaderboard;
-}
-
-document.getElementById('interestSelect').addEventListener('change', e=>{
-  selectedInterest = e.target.value;
-  renderFeed();
-});
-document.getElementById('searchInput').addEventListener('input', e=>{
-  searchQuery = e.target.value.toLowerCase();
-  renderFeed();
-});
-document.getElementById('languageSelect').addEventListener('change', e=>{
-  currentLang = e.target.value;
-  applyTranslations();
-  renderFeed();
-});
-
-applyTranslations();
-renderLeaderboard();
-renderFeed();
-</script>
-
-</body>
-</html>
+      </div
