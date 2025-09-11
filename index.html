@@ -1,191 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Challenge Web App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #0b0c10;
-        color: #e8eaed;
-    }
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #121318;
-        padding: 10px 16px;
-        border-bottom: 1px solid #23252e;
-    }
-    .search {
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #23252e;
-        background: #0f1116;
-        color: white;
-    }
-    .primary {
-        background: #5b8cff;
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-    .layout {
-        display: grid;
-        grid-template-columns: 1fr 250px;
-        gap: 16px;
-        padding: 16px;
-    }
-    .sidebar {
-        background: #121318;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #23252e;
-    }
-    .sidebar h3 {
-        margin-top: 0;
-    }
-    .feed {
-        display: grid;
-        gap: 12px;
-    }
-    .card {
-        background: #121318;
-        border: 1px solid #23252e;
-        border-radius: 8px;
-        padding: 12px;
-    }
-    .meta {
-        font-size: 14px;
-        color: #9aa0a6;
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-    .actions {
-        margin-top: 10px;
-        display: flex;
-        gap: 8px;
-    }
-    .secondary {
-        background: #1a1c23;
-        color: white;
-        border: 1px solid #23252e;
-        padding: 6px 10px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-    select {
-        padding: 6px;
-        border-radius: 6px;
-        border: 1px solid #23252e;
-        background: #0f1116;
-        color: white;
-    }
+  :root{
+    --bg:#0b0c10;--panel:#121318;--muted:#9aa0a6;--text:#e8eaed;--primary:#5b8cff;--border:#23252e;--accent:#22c55e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{
+    position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;
+    background:var(--panel);padding:10px 16px;border-bottom:1px solid var(--border)
+  }
+  .search{width:320px;max-width:50vw;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
+  .btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
+  .btn.primary{background:var(--primary);border:none;color:#fff}
+  .btn.ghost{background:transparent;border:1px dashed var(--border)}
+  select{padding:8px;border-radius:8px;background:#0f1116;color:var(--text);border:1px solid var(--border)}
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:16px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .panel h3{margin:0 0 8px 0}
+  .sortbar{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  .tab{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
+  .tab.active{background:var(--primary);border:none;color:#fff}
+  .feed{display:grid;gap:12px}
+  .card{display:grid;grid-template-columns:1fr 160px;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .title{margin:0 0 6px}
+  .meta{display:flex;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:14px}
+  .desc{margin:8px 0 12px;color:#cfd3d7}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .media{display:flex;align-items:center;justify-content:center}
+  .media-thumb{width:140px;height:88px;border-radius:10px;background:#0f1116;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)}
+  .vote{display:flex;align-items:center;gap:6px}
+  .vote .count{min-width:28px;text-align:center;padding:2px 6px;border-radius:8px;background:#13151d;border:1px solid var(--border)}
+  .vote .btn{padding:6px 8px}
+  .comments{margin-top:10px;border-top:1px dashed var(--border);padding-top:8px}
+  .comment{padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:8px;background:#0f1116}
+  .comment small{color:var(--muted)}
+  .comment-form{display:flex;gap:8px;margin-top:8px}
+  .input, textarea{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
+  .leaderboard .row{display:flex;justify-content:space-between;padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:#0f1116}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);background:#0f1116;color:var(--muted);font-size:12px}
+  .toast{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:50}
+  .toast .item{background:#11141c;border:1px solid var(--border);color:#cbd5e1;padding:10px 12px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:40}
+  .modal{width:min(640px,92vw);background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px}
+  .modal header{position:static;background:transparent;border:none;padding:0;margin-bottom:8px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .label{display:block;margin:8px 0 4px;color:var(--muted);font-size:14px}
+  .divider{height:1px;background:var(--border);margin:10px 0}
+  @media (max-width:1024px){.layout{grid-template-columns:1fr}.card{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <header>
-    <div>
-        <input type="text" id="searchInput" class="search" placeholder="Search">
-    </div>
-    <div style="display:flex; gap:8px; align-items:center;">
-        <select id="languageSelect">
-            <option value="en">English</option>
-            <option value="bn">বাংলা</option>
-            <option value="hi">हिंदी</option>
-            <option value="all">All</option>
-        </select>
-        <button class="primary" id="postBtn">Post Challenge</button>
-    </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <input id="searchInput" class="search" placeholder="Search" />
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="bn">বাংলা</option>
+      <option value="hi">हिंदी</option>
+      <option value="all">All</option>
+    </select>
+    <button class="btn primary" id="postBtn">Post Challenge</button>
+  </div>
 </header>
 
 <div class="layout">
-    <main>
-        <div class="feed" id="challengeFeed">
-            <!-- Challenges will be injected here -->
-        </div>
-    </main>
+  <main>
+    <div class="panel" style="margin-bottom:12px">
+      <div class="sortbar">
+        <span class="pill" id="feedInfo">Feed</span>
+        <button class="tab active" data-sort="new" id="sortNew">New</button>
+        <button class="tab" data-sort="popular" id="sortPopular">Popular</button>
+        <button class="tab" data-sort="endingSoon" id="sortEnding">Ending Soon</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="pill" id="pillItems">0 items</span>
+        <span class="pill" id="pillInterest">All</span>
+      </div>
+    </div>
+    <div class="feed" id="challengeFeed"></div>
+  </main>
 
-    <aside class="sidebar">
-        <h3 id="interestTitle">Select Interests</h3>
-        <label><input type="radio" name="interest" value="Education" checked> <span id="eduLabel">Education</span></label><br>
-        <label><input type="radio" name="interest" value="Entertainment"> <span id="entLabel">Entertainment</span></label><br>
-        <label><input type="radio" name="interest" value="Mixed"> <span id="mixLabel">Mixed</span></label><br>
-        <label><input type="radio" name="interest" value="All"> <span id="allLabel">All</span></label>
-    </aside>
+  <aside class="panel">
+    <h3 id="interestTitle">Select Interests</h3>
+    <div style="display:grid;gap:6px">
+      <label><input type="radio" name="interest" value="All" checked /> <span id="allLabel">All</span></label>
+      <label><input type="radio" name="interest" value="Education" /> <span id="eduLabel">Education</span></label>
+      <label><input type="radio" name="interest" value="Entertainment" /> <span id="entLabel">Entertainment</span></label>
+      <label><input type="radio" name="interest" value="Mixed" /> <span id="mixLabel">Mixed</span></label>
+    </div>
+    <div class="divider"></div>
+    <h3>Leaderboard</h3>
+    <div id="leaderboard" class="leaderboard"></div>
+  </aside>
 </div>
 
+<!-- Modal: Post Challenge -->
+<div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <header style="display:flex;justify-content:space-between;align-items:center">
+      <h3 id="modalTitle">Post a Challenge</h3>
+      <button class="btn" id="closeModal">✕</button>
+    </header>
+    <div class="grid-2">
+      <div>
+        <label class="label" id="lblTitle">Title</label>
+        <input id="mTitle" class="input" placeholder="e.g., 30-sec Science Fact" />
+      </div>
+      <div>
+        <label class="label" id="lblCategory">Category</label>
+        <select id="mCategory" class="input">
+          <option>Education</option>
+          <option>Entertainment</option>
+          <option>Mixed</option>
+        </select>
+      </div>
+      <div>
+        <label class="label" id="lblLevel">Level</label>
+        <select id="mLevel" class="input">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+      </div>
+      <div>
+        <label class="label" id="lblDeadline">Deadline</label>
+        <input id="mDeadline" type="date" class="input" />
+      </div>
+      <div style="grid-column:1 / -1">
+        <label class="label" id="lblDesc">Description</label>
+        <textarea id="mDesc" rows="4" class="input" placeholder="Describe the challenge..."></textarea>
+      </div>
+      <div>
+        <label class="label" id="lblMedia">Media</label>
+        <select id="mMedia" class="input">
+          <option value="video">Video</option>
+          <option value="audio">Audio</option>
+          <option value="text">Text</option>
+        </select>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" id="cancelPost">Cancel</button>
+      <button class="btn primary" id="savePost">Publish</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts" class="toast"></div>
+
 <script>
-const challenges = [
-    { title: '30-sec Science Fact', category: 'Education', level: 'Low', deadline: '2025-09-12', description: 'Share a quick science fact on video.' },
-    { title: 'Kitchen Rhythm Beat', category: 'Entertainment', level: 'Medium', deadline: '2025-09-15', description: 'Create a beat using kitchen items.' },
-    { title: 'Mini Portfolio Landing', category: 'Mixed', level: 'Hard', deadline: '2025-09-11', description: 'Build a single-page portfolio in HTML/CSS.' }
-];
+  // --- Data & State ---
+  const currentUser = 'You';
 
-const translations = {
-    en: { search: 'Search', post: 'Post Challenge', selectInterests: 'Select Interests', edu: 'Education', ent: 'Entertainment', mix: 'Mixed', all: 'All', category: 'Category', level: 'Level', deadline: 'Deadline', proof: 'Proof', view: 'View Details' },
-    bn: { search: 'সার্চ', post: 'চ্যালেঞ্জ পোস্ট', selectInterests: 'ইন্টারেস্ট সিলেক্ট', edu: 'এডুকেশন', ent: 'এন্টারটেইনমেন্ট', mix: 'মিক্সড', all: 'সব', category: 'ক্যাটাগরি', level: 'লেভেল', deadline: 'ডেডলাইন', proof: 'প্রুফ', view: 'বিস্তারিত দেখুন' },
-    hi: { search: 'खोजें', post: 'चैलेंज पोस्ट', selectInterests: 'इंटरेस्ट चुनें', edu: 'एजुकेशन', ent: 'एंटरटेनमेंट', mix: 'मिक्स्ड', all: 'सभी', category: 'श्रेणी', level: 'स्तर', deadline: 'डेडलाइन', proof: 'प्रूफ', view: 'विवरण देखें' }
-};
+  const challenges = [
+    { id:'c1', title:'30-sec Science Fact', description:'Share a quick science fact on video.', category:'Education', level:'Low', deadline:'2025-09-12', createdAt:'2025-09-10T10:00:00Z', votes:42, mediaType:'video', author:'Aisha', comments:[
+      {author:'Ravi', text:'Love this format!', ts:'2025-09-10T12:00:00Z'}
+    ]},
+    { id:'c2', title:'Kitchen Rhythm Beat', description:'Create a beat using kitchen items.', category:'Entertainment', level:'Medium', deadline:'2025-09-15', createdAt:'2025-09-09T15:00:00Z', votes:90, mediaType:'audio', author:'Ravi', comments:[
+      {author:'Aisha', text:'Super fun!', ts:'2025-09-09T16:00:00Z'}
+    ]},
+    { id:'c3', title:'Mini Portfolio Landing', description:'Build a single-page portfolio in HTML/CSS.', category:'Mixed', level:'Hard', deadline:'2025-09-11', createdAt:'2025-09-11T04:00:00Z', votes:23, mediaType:'text', author:'You', comments:[]}
+  ];
 
-const feedEl = document.getElementById('challengeFeed');
-const searchInput = document.getElementById('searchInput');
-const langSelect = document.getElementById('languageSelect');
-const interestRadios = document.querySelectorAll('input[name="interest"]');
+  // Simple points store (recomputed + live updates)
+  const points = { 'Aisha': 12, 'Ravi': 18, 'You': 5 };
+  // Vote state (simulate per-user memory)
+  const userVotes = {}; // key: challengeId -> 'up'|'down'|undefined
 
-function renderChallenges() {
-    const searchVal = searchInput.value.toLowerCase();
-    const selectedInterest = document.querySelector('input[name="interest"]:checked').value;
-    const lang = langSelect.value;
-    const t = translations[lang] || translations.en;
+  let currentSort = 'new';
+  let selectedInterest = 'All';
+  let searchQuery = '';
+  let currentLang = 'en';
 
-    feedEl.innerHTML = '';
-    challenges
-        .filter(c => (selectedInterest === 'All' || c.category === selectedInterest))
-        .filter(c => c.title.toLowerCase().includes(searchVal) || c.description.toLowerCase().includes(searchVal))
-        .forEach(c => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <h3>${c.title}</h3>
-                <div class="meta">
-                    <span><strong>${t.category}:</strong> ${c.category}</span>
-                    <span><strong>${t.level}:</strong> ${c.level}</span>
-                    <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
+  // --- i18n ---
+  const tDict = {
+    en:{ search:'Search', post:'Post Challenge', selectInterests:'Select Interests', edu:'Education', ent:'Entertainment', mix:'Mixed', all:'All',
+         category:'Category', level:'Level', deadline:'Deadline', proof:'Proof', view:'View Details',
+         items:(n)=>`${n} items`, feed:'Feed', postTitle:'Post a Challenge', title:'Title', desc:'Description', media:'Media',
+         publish:'Publish', cancel:'Cancel', posted:'Challenge published', voteUp:'Upvoted', voteDown:'Downvoted', commentPh:'Write a comment...' },
+    bn:{ search:'সার্চ', post:'চ্যালেঞ্জ পোস্ট', selectInterests:'ইন্টারেস্ট সিলেক্ট', edu:'এডুকেশন', ent:'এন্টারটেইনমেন্ট', mix:'মিক্সড', all:'সব',
+         category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', proof:'প্রুফ', view:'বিস্তারিত', 
+         items:(n)=>`${n}টি আইটেম`, feed:'ফিড', postTitle:'চ্যালেঞ্জ পোস্ট করুন', title:'শিরোনাম', desc:'বিবরণ', media:'মিডিয়া',
+         publish:'পাবলিশ', cancel:'বাতিল', posted:'চ্যালেঞ্জ পাবলিশ হয়েছে', voteUp:'আপভোট করা হয়েছে', voteDown:'ডাউনভোট করা হয়েছে', commentPh:'কমেন্ট লিখুন...' },
+    hi:{ search:'खोजें', post:'चैलेंज पोस्ट', selectInterests:'इंटरेस्ट चुनें', edu:'एजुकेशन', ent:'एंटरटेनमेंट', mix:'मिक्स्ड', all:'सभी',
+         category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', proof:'प्रूफ', view:'विवरण',
+         items:(n)=>`${n} आइटम`, feed:'फ़ीड', postTitle:'चैलेंज पोस्ट करें', title:'शीर्षक', desc:'विवरण', media:'मीडिया',
+         publish:'प्रकाशित करें', cancel:'रद्द', posted:'चैलेंज प्रकाशित', voteUp:'अपवोट किया', voteDown:'डाउनवोट किया', commentPh:'टिप्पणी लिखें...' }
+  };
+  function t(){ const d = tDict[currentLang] || tDict.en; return d; }
+
+  // --- Utilities ---
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => document.querySelectorAll(sel);
+  function toast(msg){
+    const wrap = $('#toasts');
+    const el = document.createElement('div');
+    el.className='item';
+    el.textContent = msg;
+    wrap.appendChild(el);
+    setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(6px)'; }, 2600);
+    setTimeout(()=>{ wrap.removeChild(el); }, 3200);
+  }
+  function fmtDate(iso){ const d = new Date(iso); return d.toLocaleDateString(); }
+
+  // --- Rendering ---
+  function renderLeaderboard(){
+    const lb = $('#leaderboard');
+    // compute sorted
+    const entries = Object.entries(points).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    lb.innerHTML = '';
+    entries.forEach(([user,pts],i)=>{
+      const row = document.createElement('div');
+      row.className='row';
+      row.innerHTML = `<span>#${i+1} ${user}</span><strong>${pts} pts</strong>`;
+      lb.appendChild(row);
+    });
+  }
+
+  function applyTranslations(){
+    // header + labels
+    $('#searchInput').placeholder = t().search;
+    $('#postBtn').textContent = t().post;
+    $('#interestTitle').textContent = t().selectInterests;
+    $('#eduLabel').textContent = t().edu;
+    $('#entLabel').textContent = t().ent;
+    $('#mixLabel').textContent = t().mix;
+    $('#allLabel').textContent = t().all;
+    $('#feedInfo').textContent = t().feed;
+    // modal labels
+    $('#modalTitle').textContent = t().postTitle;
+    $('#lblTitle').textContent = t().title;
+    $('#lblCategory').textContent = t().category;
+    $('#lblLevel').textContent = t().level;
+    $('#lblDeadline').textContent = t().deadline;
+    $('#lblDesc').textContent = t().desc;
+    $('#lblMedia').textContent = t().media;
+    $('#cancelPost').textContent = t().cancel;
+    $('#savePost').textContent = t().publish;
+  }
+
+  function renderFeed(){
+    const feed = $('#challengeFeed');
+
+    // filter by interest + search
+    let list = challenges
+      .filter(c => selectedInterest==='All' || c.category===selectedInterest)
+      .filter(c => !searchQuery || (c.title.toLowerCase().includes(searchQuery) || c.description.toLowerCase().includes(searchQuery)));
+
+    // sort
+    if(currentSort==='popular'){
+      list.sort((a,b)=>b.votes - a.votes);
+    } else if(currentSort==='endingSoon'){
+      list.sort((a,b)=> new Date(a.deadline) - new Date(b.deadline));
+    } else {
+      list.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    // pills
+    $('#pillItems').textContent = t().items(list.length);
+    $('#pillInterest').textContent = selectedInterest;
+
+    feed.innerHTML = '';
+    list.forEach(c=>{
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <div>
+          <h3 class="title">${c.title}</h3>
+          <div class="meta">
+            <span><strong>${t().category}:</strong> ${c.category}</span>
+            <span><strong>${t().level}:</strong> ${c.level}</span>
+            <span><strong>${t().deadline}:</strong> ${fmtDate(c.deadline)}</span>
+            <span class="pill">by ${c.author}</span>
+          </div>
+          <p class="desc">${c.description}</p>
+
+          <div class="actions">
+            <div class="vote">
+              <button class="btn" data-action="up" aria-label="Upvote">👍</button>
+              <span class="count">${c.votes}</span>
+              <button class="btn" data-action="down" aria-label="Downvote">👎</button>
+            </div>
+            <button class="btn">${t().view}</button>
+            <button class="btn primary">${t().proof}</button>
+            <button class="btn ghost" data-toggle="comments">💬 Comments (${c.comments?.length||0})</button>
+          </div>
+
+          <div class="comments" style="display:none">
+            <div class="comment-list">
+              ${(c.comments||[]).map(cm=>`
+                <div class="comment">
+                  <div><strong>${cm.author}</strong> <small>${new Date(cm.ts).toLocaleString()}</small></div>
+                  <div>${cm.text}</div>
                 </div>
-                <p>${c.description}</p>
-                <div class="actions">
-                    <button class="secondary">${t.view}</button>
-                    <button class="primary">${t.proof}</button>
-                </div>
-            `;
-            feedEl.appendChild(card);
-        });
-}
+              `).join('')}
+            </div>
+            <div class="comment-form">
+              <input class="input" type="text" placeholder="${t().commentPh}" />
+              <button class="btn primary" data-add-comment>Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-thumb">${c.mediaType==='video'?'🎬':c.mediaType==='audio'?'🎧':'📝'}</div>
+        </div>
+      `;
+      // Event bindings
+      const up = card.querySelector('[data-action="up"]');
+      const down = card.querySelector('[data-action="down"]');
+      const countEl = card.querySelector('.count');
+      const toggleComments = card.querySelector('[data-toggle="comments"]');
+      const commentsWrap = card.querySelector('.comments');
+      const addBtn = card.querySelector('[data-add-comment"]') || card.querySelector('[data-add-comment]');
+      const input = card.querySelector('.comment-form .input');
 
-function updateLanguageUI() {
-    const lang = langSelect.value;
-    const t = translations[lang] || translations.en;
-    searchInput.placeholder = t.search;
-    document.getElementById('postBtn').textContent = t.post;
-    document.getElementById('interestTitle').textContent = t.selectInterests;
-    document.getElementById('eduLabel').textContent = t.edu;
-    document.getElementById('entLabel').textContent = t.ent;
-    document.getElementById('mixLabel').textContent = t.mix;
-    document.getElementById('allLabel').textContent = t.all;
-    renderChallenges();
-}
+      up.addEventListener('click', ()=>handleVote(c, 'up', countEl));
+      down.addEventListener('click', ()=>handleVote(c, 'down', countEl));
+      toggleComments.addEventListener('click', ()=>{
+        const open = commentsWrap.style.display !== 'none';
+        commentsWrap.style.display = open ? 'none' : 'block';
+      });
+      addBtn.addEventListener('click', ()=>{
+        const text = input.value.trim();
+        if(!text) return;
+        const cm = {author: currentUser, text, ts: new Date().toISOString()};
+        c.comments = c.comments || [];
+        c.comments.push(cm);
+        // Optional: comment gives small points to author
+        points[c.author] = (points[c.author]||0) + 1;
+        input.value='';
+        renderFeed();
+        renderLeaderboard();
+      });
 
-searchInput.addEventListener('input', renderChallenges);
-langSelect.addEventListener('change', updateLanguageUI);
-interestRadios.forEach(r => r.addEventListener('change', renderChallenges));
+      feed.appendChild(card);
+    });
+  }
 
-updateLanguageUI();
+  // --- Interactions ---
+  function handleVote(ch, dir, countEl){
+    const prev = userVotes[ch.id];
+    if(prev === dir){
+      // undo vote
+      if(dir==='up'){ ch.votes -= 1; points[ch.author] = Math.max(0,(points[ch.author]||0)-1); }
+      if(dir==='down'){ ch.votes += 1; /* no point change for down undo */ }
+      userVotes[ch.id] = undefined;
+      countEl.textContent = ch.votes;
+      renderLeaderboard();
+      return;
+    }
+    // apply new vote
+    if(dir==='up'){
+      ch.votes += (prev==='down') ? 2 : 1;
+      points[ch.author] = (points[ch.author]||0) + 1; // upvote gives author +1
+      userVotes[ch.id] = 'up';
+      toast(t().voteUp);
+    } else {
+      ch.votes -= (prev==='up') ? 2 : 1;
+      // no points for downvotes
+      userVotes[ch.id] = 'down';
+      toast(t().voteDown);
+    }
+    countEl.textContent = ch.votes;
+    renderLeaderboard();
+  }
+
+  // --- Modal ---
+  const modal = $('#modalBackdrop');
+  $('#postBtn').addEventListener('click', ()=>{ modal.style.display='flex'; });
+  $('#closeModal').addEventListener('click', ()=>{ modal.style.display='none'; });
+  $('#cancelPost').addEventListener('click', ()=>{ modal.style.display='none'; });
+
+  $('#savePost').addEventListener('click', ()=>{
+    const title = $('#mTitle').value.trim();
+    const category = $('#mCategory').value;
+    const level = $('#mLevel').value;
+    const deadline = $('#mDeadline').value;
+    const description = $('#mDesc').value.trim();
+    const mediaType = $('#mMedia').value;
+
+    if(!title || !deadline || !description){
+      toast('Please fill required fields.'); return;
+    }
+    const id = 'c' + Math.random().toString(36).slice(2,8);
+    challenges.push({
+      id, title, description, category, level, deadline,
+      createdAt: new Date().toISOString(), votes:0, mediaType, author: currentUser, comments:[]
+    });
+    // posting challenge → +5 points
+    points[currentUser] = (points[currentUser]||0) + 5;
+
+    // reset form
+    $('#mTitle').value = ''; $('#mDesc').value = ''; $('#mDeadline').value = '';
+    modal.style.display='none';
+    toast(t().posted);
+    renderFeed();
+    renderLeaderboard();
+  });
+
+  // --- Controls ---
+  $('#languageSelect').addEventListener('change', (e)=>{
+    currentLang = e.target.value;
+    applyTranslations();
+    renderFeed();
+  });
+
+  $('#searchInput').addEventListener('input', (e)=>{
+    searchQuery = e.target.value.toLowerCase();
+    renderFeed();
+  });
+
+  $$('input[name="interest"]').forEach(r=>r.addEventListener('change', (e)=>{
+    selectedInterest = e.target.value;
+    renderFeed();
+  }));
+
+  // Sort buttons
+  const tabs = [$('#sortNew'), $('#sortPopular'), $('#sortEnding')];
+  tabs.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSort = btn.dataset.sort;
+      renderFeed();
+    });
+  });
+
+  // --- Initial ---
+  applyTranslations();
+  renderLeaderboard();
+  renderFeed();
 </script>
 
 </body>
