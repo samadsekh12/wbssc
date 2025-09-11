@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Challenge Web App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root{
     --bg:#0b0c10;--panel:#121318;--muted:#9aa0a6;--text:#e8eaed;--primary:#5b8cff;--border:#23252e;
   }
-  body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
   header{display:flex;justify-content:space-between;align-items:center;background:var(--panel);padding:10px 16px;border-bottom:1px solid var(--border)}
-  .search{padding:8px;border-radius:6px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
+  .search{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#0f1116;color:var(--text);width:320px;max-width:50vw}
   .btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
   .btn.primary{background:var(--primary);border:none;color:#fff}
   select{padding:8px;border-radius:8px;background:#0f1116;color:var(--text);border:1px solid var(--border)}
@@ -20,6 +22,16 @@
   .meta{font-size:14px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
   .desc{margin:8px 0;color:#cfd3d7}
   .leaderboard .row{display:flex;justify-content:space-between;padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:#0f1116}
+  /* Modal */
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:40}
+  .modal{width:min(640px,92vw);background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px}
+  .modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .input, textarea{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
+  .divider{height:1px;background:var(--border);margin:10px 0}
+  .toast{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:50}
+  .toast .item{background:#11141c;border:1px solid var(--border);color:#cbd5e1;padding:10px 12px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+  @media (max-width:1024px){.layout{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -32,7 +44,7 @@
       <option value="bn">বাংলা</option>
       <option value="hi">हिंदी</option>
     </select>
-    <button class="btn primary">Post Challenge</button>
+    <button class="btn primary" id="postBtn">Post Challenge</button>
   </div>
 </header>
 
@@ -43,7 +55,7 @@
 
   <aside class="panel">
     <h3 id="interestTitle">Select Interests</h3>
-    <select id="interestSelect">
+    <select id="interestSelect" class="input">
       <option value="All">🌍 All</option>
       <optgroup label="📚 Education">
         <option value="Language Learning">Language Learning</option>
@@ -77,87 +89,239 @@
   </aside>
 </div>
 
-<script>
-const uiText = {
-  en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard' },
-  bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড' },
-  hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड' }
-};
-
-const challenges = [
-  {
-    category:'Science & Technology', level:'Low', deadline:'2025-09-12',
-    translations:{
-      en:{ title:'30-sec Science Fact', description:'Share a quick science fact.' },
-      bn:{ title:'৩০ সেকেন্ডের বিজ্ঞান তথ্য', description:'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
-      hi:{ title:'30 सेकंड विज्ञान तथ्य', description:'एक त्वरित विज्ञान तथ्य साझा करें।' }
-    }
-  },
-  {
-    category:'Fun Challenges', level:'Medium', deadline:'2025-09-15',
-    translations:{
-      en:{ title:'Kitchen Rhythm Beat', description:'Create a beat using kitchen items.' },
-      bn:{ title:'কিচেন রিদম বিট', description:'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
-      hi:{ title:'किचन रिदम बीट', description:'रसोई के सामान से बीट बनाएं।' }
-    }
-  },
-  {
-    category:'Coding & Programming', level:'Hard', deadline:'2025-09-11',
-    translations:{
-      en:{ title:'Mini Portfolio Landing', description:'Build a single-page portfolio.' },
-      bn:{ title:'মিনি পোর্টফোলিও ল্যান্ডিং', description:'একটি সিঙ্গেল-পেজ পোর্টফোলিও বানান।' },
-      hi:{ title:'मिनी पोर्टफोलियो लैंडिंग', description:'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
-    }
-  }
-];
-
-const points = { 'Aisha': 12, 'Ravi': 18, 'You': 5 };
-
-let selectedInterest = 'All';
-let searchQuery = '';
-let currentLang = 'en';
-
-function renderLeaderboard(){
-  const lb = document.getElementById('leaderboard');
-  lb.innerHTML = '';
-  Object.entries(points).sort((a,b)=>b[1]-a[1]).forEach(([user,pts],i)=>{
-    const row = document.createElement('div');
-    row.className='row';
-    row.innerHTML = `<span>#${i+1} ${user}</span><strong>${pts} pts</strong>`;
-    lb.appendChild(row);
-  });
-}
-
-function renderFeed(){
-  const t = uiText[currentLang];
-  let list = challenges
-    .filter(c => selectedInterest==='All' || c.category===selectedInterest)
-    .filter(c => {
-      const tr = c.translations[currentLang] || c.translations.en;
-      return !searchQuery || tr.title.toLowerCase().includes(searchQuery) || tr.description.toLowerCase().includes(searchQuery);
-    });
-
-  const feed = document.getElementById('challengeFeed');
-  feed.innerHTML = '';
-  list.forEach(c=>{
-    const tr = c.translations[currentLang] || c.translations.en;
-    const card = document.createElement('div');
-    card.className='card';
-    card.innerHTML = `
-      <h3>${tr.title}</h3>
-      <div class="meta">
-        <span><strong>${t.category}:</strong> ${c.category}</span>
-        <span><strong>${t.level}:</strong> ${c.level}</span>
-        <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
+<!-- Post Modal -->
+<div id="backdrop" class="backdrop">
+  <div class="modal">
+    <header>
+      <h3 id="modalTitle">Post a Challenge</h3>
+      <button class="btn" id="closeModal">✕</button>
+    </header>
+    <div class="grid-2">
+      <div>
+        <label id="lblTitle">Title (current language)</label>
+        <input id="mTitle" class="input" placeholder="e.g., 30-sec Science Fact" />
       </div>
-      <p class="desc">${tr.description}</p>
-    `;
-    feed.appendChild(card);
-  });
-}
+      <div>
+        <label id="lblCategory">Category</label>
+        <select id="mCategory" class="input">
+          <option>Science & Technology</option>
+          <option>Fun Challenges</option>
+          <option>Coding & Programming</option>
+          <option>Language Learning</option>
+          <option>Math & Logic Puzzles</option>
+          <option>History & Culture</option>
+          <option>Skill Development</option>
+          <option>Music & Singing</option>
+          <option>Dance & Performance</option>
+          <option>Creative Arts</option>
+          <option>Food & Cooking Challenges</option>
+          <option>Fitness & Sports</option>
+          <option>Travel & Exploration</option>
+          <option>Photography & Videography</option>
+          <option>DIY Projects</option>
+          <option>Social Awareness Challenges</option>
+        </select>
+      </div>
+      <div>
+        <label id="lblLevel">Level</label>
+        <select id="mLevel" class="input">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+      </div>
+      <div>
+        <label id="lblDeadline">Deadline</label>
+        <input id="mDeadline" type="date" class="input" />
+      </div>
+      <div style="grid-column:1/-1">
+        <label id="lblDesc">Description (current language)</label>
+        <textarea id="mDesc" rows="4" class="input" placeholder="Describe the challenge..."></textarea>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" id="cancelPost">Cancel</button>
+      <button class="btn primary" id="savePost">Publish</button>
+    </div>
+  </div>
+</div>
 
-function applyTranslations(){
-  const t = uiText[currentLang];
-  document.getElementById('searchInput').placeholder = t.search;
-  document.getElementById('interestTitle').textContent = t.selectInterests;
-  document
+<div id="toasts" class="toast"></div>
+
+<script>
+  // UI labels
+  const uiText = {
+    en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard',
+          postTitle:'Post a Challenge', title:'Title', desc:'Description', publish:'Publish', cancel:'Cancel', posted:'Challenge published' },
+    bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড',
+          postTitle:'চ্যালেঞ্জ পোস্ট করুন', title:'শিরোনাম', desc:'বিবরণ', publish:'পাবলিশ', cancel:'বাতিল', posted:'চ্যালেঞ্জ পাবলিশ হয়েছে' },
+    hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड',
+          postTitle:'चैलेंज पोस्ट करें', title:'शीर्षक', desc:'विवरण', publish:'प्रकाशित', cancel:'रद्द', posted:'चैलेंज प्रकाशित' }
+  };
+
+  // Example posts with translations
+  const challenges = [
+    {
+      category:'Science & Technology', level:'Low', deadline:'2025-09-12', votes:7,
+      translations:{
+        en:{ title:'30-sec Science Fact', description:'Share a quick science fact.' },
+        bn:{ title:'৩০ সেকেন্ডের বিজ্ঞান তথ্য', description:'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
+        hi:{ title:'30 सेकंड विज्ञान तथ्य', description:'एक त्वरित विज्ञान तथ्य साझा करें।' }
+      }
+    },
+    {
+      category:'Fun Challenges', level:'Medium', deadline:'2025-09-15', votes:12,
+      translations:{
+        en:{ title:'Kitchen Rhythm Beat', description:'Create a beat using kitchen items.' },
+        bn:{ title:'কিচেন রিদম বিট', description:'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
+        hi:{ title:'किचन रिदम बीट', description:'रसोई के सामान से बीट बनाएं।' }
+      }
+    },
+    {
+      category:'Coding & Programming', level:'Hard', deadline:'2025-09-11', votes:4,
+      translations:{
+        en:{ title:'Mini Portfolio Landing', description:'Build a single-page portfolio.' },
+        bn:{ title:'মিনি পোর্টফোলিও ল্যান্ডিং', description:'একটি সিঙ্গেল-পেজ পোর্টফোলিও বানান।' },
+        hi:{ title:'मिनी पोर्टफोलियो लैंडिंग', description:'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
+      }
+    }
+  ];
+
+  // Points / leaderboard
+  const points = { 'Aisha': 12, 'Ravi': 18, 'You': 5 };
+
+  // State
+  let selectedInterest = 'All';
+  let searchQuery = '';
+  let currentLang = 'en';
+
+  // Helpers
+  const $ = s => document.querySelector(s);
+  function toast(msg){
+    const wrap = $('#toasts'); const el = document.createElement('div');
+    el.className='item'; el.textContent=msg; wrap.appendChild(el);
+    setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateY(6px)'; }, 2400);
+    setTimeout(()=>{ wrap.removeChild(el); }, 3000);
+  }
+
+  // Render functions
+  function applyTranslations(){
+    const t = uiText[currentLang];
+    $('#searchInput').placeholder = t.search;
+    $('#interestTitle').textContent = t.selectInterests;
+    $('#leaderboardTitle').textContent = t.leaderboard;
+    // Modal labels
+    $('#modalTitle').textContent = t.postTitle;
+    $('#lblTitle').textContent = `${t.title} (current language)`;
+    $('#lblDesc').textContent = `${t.desc} (current language)`;
+    $('#lblCategory').textContent = t.category;
+    $('#lblLevel').textContent = t.level;
+    $('#lblDeadline').textContent = t.deadline;
+    $('#savePost').textContent = t.publish;
+    $('#cancelPost').textContent = t.cancel;
+  }
+
+  function renderLeaderboard(){
+    const lb = $('#leaderboard');
+    lb.innerHTML = '';
+    Object.entries(points).sort((a,b)=>b[1]-a[1]).forEach(([user,pts],i)=>{
+      const row = document.createElement('div');
+      row.className='row';
+      row.innerHTML = `<span>#${i+1} ${user}</span><strong>${pts} pts</strong>`;
+      lb.appendChild(row);
+    });
+  }
+
+  function renderFeed(){
+    const t = uiText[currentLang];
+    let list = challenges
+      .filter(c => selectedInterest==='All' || c.category===selectedInterest)
+      .filter(c => {
+        const tr = c.translations[currentLang] || c.translations.en;
+        return !searchQuery || tr.title.toLowerCase().includes(searchQuery) || tr.description.toLowerCase().includes(searchQuery);
+      });
+
+    const feed = $('#challengeFeed');
+    feed.innerHTML = '';
+    list.forEach(c=>{
+      const tr = c.translations[currentLang] || c.translations.en;
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <h3>${tr.title}</h3>
+        <div class="meta">
+          <span><strong>${t.category}:</strong> ${c.category}</span>
+          <span><strong>${t.level}:</strong> ${c.level}</span>
+          <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
+        </div>
+        <p class="desc">${tr.description}</p>
+      `;
+      feed.appendChild(card);
+    });
+  }
+
+  // Modal open/close
+  const backdrop = $('#backdrop');
+  $('#postBtn').addEventListener('click', ()=>{ backdrop.style.display='flex'; });
+  $('#closeModal').addEventListener('click', ()=>{ backdrop.style.display='none'; });
+  $('#cancelPost').addEventListener('click', ()=>{ backdrop.style.display='none'; });
+
+  // Save post
+  $('#savePost').addEventListener('click', ()=>{
+    const title = $('#mTitle').value.trim();
+    const description = $('#mDesc').value.trim();
+    const category = $('#mCategory').value;
+    const level = $('#mLevel').value;
+    const deadline = $('#mDeadline').value;
+
+    if(!title || !description || !deadline){
+      toast('Please fill Title, Description and Deadline'); return;
+    }
+
+    // Create a new challenge with content for the current language
+    const newChallenge = {
+      category, level, deadline, votes:0,
+      translations: {
+        [currentLang]: { title, description }
+      }
+    };
+    // Ensure English fallback if posted in another language
+    if(currentLang !== 'en') {
+      newChallenge.translations.en = { title, description };
+    }
+
+    challenges.unshift(newChallenge); // add to top
+    points['You'] = (points['You']||0) + 5; // posting gives +5
+
+    // reset + close
+    $('#mTitle').value=''; $('#mDesc').value=''; $('#mDeadline').value='';
+    backdrop.style.display='none';
+    toast(uiText[currentLang].posted || 'Posted');
+    renderFeed();
+    renderLeaderboard();
+  });
+
+  // Controls
+  $('#interestSelect').addEventListener('change', e=>{
+    selectedInterest = e.target.value;
+    renderFeed();
+  });
+  $('#searchInput').addEventListener('input', e=>{
+    searchQuery = e.target.value.toLowerCase();
+    renderFeed();
+  });
+  $('#languageSelect').addEventListener('change', e=>{
+    currentLang = e.target.value;
+    applyTranslations();
+    renderFeed();
+  });
+
+  // Init
+  applyTranslations();
+  renderLeaderboard();
+  renderFeed();
+</script>
+
+</body>
+</html>
