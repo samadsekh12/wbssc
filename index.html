@@ -4,79 +4,36 @@
 <meta charset="UTF-8">
 <title>Challenge Web App</title>
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0b0c10;
-    color: #e8eaed;
+  :root{
+    --bg:#0b0c10;--panel:#121318;--muted:#9aa0a6;--text:#e8eaed;--primary:#5b8cff;--border:#23252e;
   }
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #121318;
-    padding: 10px 16px;
-    border-bottom: 1px solid #23252e;
-  }
-  .search {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #23252e;
-    background: #0f1116;
-    color: white;
-  }
-  .btn {
-    background: #5b8cff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr 250px;
-    gap: 16px;
-    padding: 16px;
-  }
-  .panel {
-    background: #121318;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #23252e;
-  }
-  .feed {
-    display: grid;
-    gap: 12px;
-  }
-  .card {
-    background: #121318;
-    border: 1px solid #23252e;
-    border-radius: 8px;
-    padding: 12px;
-  }
-  .meta {
-    font-size: 14px;
-    color: #9aa0a6;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  select {
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #23252e;
-    background: #0f1116;
-    color: white;
-  }
+  body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{display:flex;justify-content:space-between;align-items:center;background:var(--panel);padding:10px 16px;border-bottom:1px solid var(--border)}
+  .search{padding:8px;border-radius:6px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
+  .btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
+  .btn.primary{background:var(--primary);border:none;color:#fff}
+  select{padding:8px;border-radius:8px;background:#0f1116;color:var(--text);border:1px solid var(--border)}
+  .layout{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:16px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .feed{display:grid;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .meta{font-size:14px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+  .desc{margin:8px 0;color:#cfd3d7}
+  .leaderboard .row{display:flex;justify-content:space-between;padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:#0f1116}
 </style>
 </head>
 <body>
 
 <header>
   <input type="text" id="searchInput" class="search" placeholder="Search">
-  <button class="btn">Post Challenge</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="bn">বাংলা</option>
+      <option value="hi">हिंदी</option>
+    </select>
+    <button class="btn primary">Post Challenge</button>
+  </div>
 </header>
 
 <div class="layout">
@@ -85,7 +42,7 @@
   </main>
 
   <aside class="panel">
-    <h3>Select Interests</h3>
+    <h3 id="interestTitle">Select Interests</h3>
     <select id="interestSelect">
       <option value="All">🌍 All</option>
       <optgroup label="📚 Education">
@@ -112,52 +69,91 @@
         <option value="Social Awareness Challenges">Social Awareness Challenges</option>
       </optgroup>
     </select>
+
+    <div style="margin-top:12px">
+      <h3 id="leaderboardTitle">Leaderboard</h3>
+      <div id="leaderboard" class="leaderboard"></div>
+    </div>
   </aside>
 </div>
 
 <script>
+const translations = {
+  en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard' },
+  bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড' },
+  hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड' }
+};
+
 const challenges = [
-  { title: '30-sec Science Fact', category: 'Science & Technology', level: 'Low', deadline: '2025-09-12', description: 'Share a quick science fact.' },
-  { title: 'Kitchen Rhythm Beat', category: 'Fun Challenges', level: 'Medium', deadline: '2025-09-15', description: 'Create a beat using kitchen items.' },
-  { title: 'Mini Portfolio Landing', category: 'Coding & Programming', level: 'Hard', deadline: '2025-09-11', description: 'Build a single-page portfolio.' }
+  { title:'30-sec Science Fact', category:'Science & Technology', level:'Low', deadline:'2025-09-12', description:'Share a quick science fact.' },
+  { title:'Kitchen Rhythm Beat', category:'Fun Challenges', level:'Medium', deadline:'2025-09-15', description:'Create a beat using kitchen items.' },
+  { title:'Mini Portfolio Landing', category:'Coding & Programming', level:'Hard', deadline:'2025-09-11', description:'Build a single-page portfolio.' }
 ];
+
+const points = { 'Aisha': 12, 'Ravi': 18, 'You': 5 };
 
 let selectedInterest = 'All';
 let searchQuery = '';
+let currentLang = 'en';
 
-function renderFeed() {
+function renderLeaderboard(){
+  const lb = document.getElementById('leaderboard');
+  lb.innerHTML = '';
+  Object.entries(points).sort((a,b)=>b[1]-a[1]).forEach(([user,pts],i)=>{
+    const row = document.createElement('div');
+    row.className='row';
+    row.innerHTML = `<span>#${i+1} ${user}</span><strong>${pts} pts</strong>`;
+    lb.appendChild(row);
+  });
+}
+
+function renderFeed(){
+  const t = translations[currentLang];
   let list = challenges
-    .filter(c => selectedInterest === 'All' || c.category === selectedInterest)
+    .filter(c => selectedInterest==='All' || c.category===selectedInterest)
     .filter(c => !searchQuery || c.title.toLowerCase().includes(searchQuery) || c.description.toLowerCase().includes(searchQuery));
 
   const feed = document.getElementById('challengeFeed');
   feed.innerHTML = '';
-  list.forEach(c => {
+  list.forEach(c=>{
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className='card';
     card.innerHTML = `
       <h3>${c.title}</h3>
       <div class="meta">
-        <span><strong>Category:</strong> ${c.category}</span>
-        <span><strong>Level:</strong> ${c.level}</span>
-        <span><strong>Deadline:</strong> ${c.deadline}</span>
+        <span><strong>${t.category}:</strong> ${c.category}</span>
+        <span><strong>${t.level}:</strong> ${c.level}</span>
+        <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
       </div>
-      <p>${c.description}</p>
+      <p class="desc">${c.description}</p>
     `;
     feed.appendChild(card);
   });
 }
 
-document.getElementById('interestSelect').addEventListener('change', e => {
+function applyTranslations(){
+  const t = translations[currentLang];
+  document.getElementById('searchInput').placeholder = t.search;
+  document.getElementById('interestTitle').textContent = t.selectInterests;
+  document.getElementById('leaderboardTitle').textContent = t.leaderboard;
+}
+
+document.getElementById('interestSelect').addEventListener('change', e=>{
   selectedInterest = e.target.value;
   renderFeed();
 });
-
-document.getElementById('searchInput').addEventListener('input', e => {
+document.getElementById('searchInput').addEventListener('input', e=>{
   searchQuery = e.target.value.toLowerCase();
   renderFeed();
 });
+document.getElementById('languageSelect').addEventListener('change', e=>{
+  currentLang = e.target.value;
+  applyTranslations();
+  renderFeed();
+});
 
+applyTranslations();
+renderLeaderboard();
 renderFeed();
 </script>
 
