@@ -10,7 +10,7 @@
   body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
   header{display:flex;justify-content:space-between;align-items:center;background:var(--panel);padding:10px 16px;border-bottom:1px solid var(--border)}
   .search{padding:8px;border-radius:6px;border:1px solid var(--border);background:#0f1116;color:var(--text)}
-  .btn{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
+  .btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#1a1c23;color:var(--text);cursor:pointer}
   .btn.primary{background:var(--primary);border:none;color:#fff}
   select{padding:8px;border-radius:8px;background:#0f1116;color:var(--text);border:1px solid var(--border)}
   .layout{display:grid;grid-template-columns:1fr 320px;gap:16px;padding:16px}
@@ -81,7 +81,7 @@
 </div>
 
 <script>
-const translations = {
+const uiText = {
   en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard', commentPh:'Write a comment...' },
   bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড', commentPh:'কমেন্ট লিখুন...' },
   hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड', commentPh:'टिप्पणी लिखें...' }
@@ -89,7 +89,7 @@ const translations = {
 
 const challenges = [
   {
-    category:'Education', level:'Low', deadline:'2025-09-12', votes:5,
+    category:'Science & Technology', level:'Low', deadline:'2025-09-12', votes:5,
     translations:{
       en:{ title:'30-sec Science Fact', description:'Share a quick science fact.' },
       bn:{ title:'৩০ সেকেন্ডের বিজ্ঞান তথ্য', description:'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
@@ -98,11 +98,20 @@ const challenges = [
     comments:[]
   },
   {
-    category:'Entertainment', level:'Medium', deadline:'2025-09-15', votes:8,
+    category:'Fun Challenges', level:'Medium', deadline:'2025-09-15', votes:8,
     translations:{
       en:{ title:'Kitchen Rhythm Beat', description:'Create a beat using kitchen items.' },
       bn:{ title:'কিচেন রিদম বিট', description:'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
       hi:{ title:'किचन रिदम बीट', description:'रसोई के सामान से बीट बनाएं।' }
+    },
+    comments:[]
+  },
+  {
+    category:'Coding & Programming', level:'Hard', deadline:'2025-09-11', votes:3,
+    translations:{
+      en:{ title:'Mini Portfolio Landing', description:'Build a single-page portfolio.' },
+      bn:{ title:'মিনি পোর্টফোলিও ল্যান্ডিং', description:'একটি সিঙ্গেল-পেজ পোর্টফোলিও বানান।' },
+      hi:{ title:'मिनी पोर्टफोलियो लैंडिंग', description:'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
     },
     comments:[]
   }
@@ -126,7 +135,7 @@ function renderLeaderboard(){
 }
 
 function renderFeed(){
-  const t = translations[currentLang];
+  const t = uiText[currentLang];
   let list = challenges
     .filter(c => selectedInterest==='All' || c.category===selectedInterest)
     .filter(c => {
@@ -143,5 +152,4 @@ function renderFeed(){
     card.innerHTML = `
       <h3>${tr.title}</h3>
       <div class="meta">
-        <span><strong>${t.category}:</strong> ${c.category}</span>
-        <span
+        <span><strong>${t.category}:</
