@@ -1,31 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Challenge Club</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Challenge Web App</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0b0c10;
+        color: #e8eaed;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #121318;
+        padding: 10px 16px;
+        border-bottom: 1px solid #23252e;
+    }
+    .search {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #23252e;
+        background: #0f1116;
+        color: white;
+    }
+    .primary {
+        background: #5b8cff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 250px;
+        gap: 16px;
+        padding: 16px;
+    }
+    .sidebar {
+        background: #121318;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #23252e;
+    }
+    .sidebar h3 {
+        margin-top: 0;
+    }
+    .feed {
+        display: grid;
+        gap: 12px;
+    }
+    .card {
+        background: #121318;
+        border: 1px solid #23252e;
+        border-radius: 8px;
+        padding: 12px;
+    }
+    .meta {
+        font-size: 14px;
+        color: #9aa0a6;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+    }
+    .secondary {
+        background: #1a1c23;
+        color: white;
+        border: 1px solid #23252e;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    select {
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid #23252e;
+        background: #0f1116;
+        color: white;
+    }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Daily Challenge Club</h1>
-    <p>Enjoy doing something new every day!</p>
-  </header>
+<header>
+    <div>
+        <input type="text" id="searchInput" class="search" placeholder="Search">
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="bn">বাংলা</option>
+            <option value="hi">हिंदी</option>
+            <option value="all">All</option>
+        </select>
+        <button class="primary" id="postBtn">Post Challenge</button>
+    </div>
+</header>
 
-  <main>
-    <section id="challenge-section">
-      <h2>Today's Challenge</h2>
-      <div id="challenge-text">Loading...</div>
-      <button id="complete-btn">✅ I’ve Completed It</button>
-    </section>
+<div class="layout">
+    <main>
+        <div class="feed" id="challengeFeed">
+            <!-- Challenges will be injected here -->
+        </div>
+    </main>
 
-    <section id="progress-section">
-      <h2>My Progress</h2>
-      <p>Total challenges completed: <span id="completed-count">0</span></p>
-    </section>
-  </main>
+    <aside class="sidebar">
+        <h3 id="interestTitle">Select Interests</h3>
+        <label><input type="radio" name="interest" value="Education" checked> <span id="eduLabel">Education</span></label><br>
+        <label><input type="radio" name="interest" value="Entertainment"> <span id="entLabel">Entertainment</span></label><br>
+        <label><input type="radio" name="interest" value="Mixed"> <span id="mixLabel">Mixed</span></label><br>
+        <label><input type="radio" name="interest" value="All"> <span id="allLabel">All</span></label>
+    </aside>
+</div>
 
-  <script src="script.js"></script>
+<script>
+const challenges = [
+    { title: '30-sec Science Fact', category: 'Education', level: 'Low', deadline: '2025-09-12', description: 'Share a quick science fact on video.' },
+    { title: 'Kitchen Rhythm Beat', category: 'Entertainment', level: 'Medium', deadline: '2025-09-15', description: 'Create a beat using kitchen items.' },
+    { title: 'Mini Portfolio Landing', category: 'Mixed', level: 'Hard', deadline: '2025-09-11', description: 'Build a single-page portfolio in HTML/CSS.' }
+];
+
+const translations = {
+    en: { search: 'Search', post: 'Post Challenge', selectInterests: 'Select Interests', edu: 'Education', ent: 'Entertainment', mix: 'Mixed', all: 'All', category: 'Category', level: 'Level', deadline: 'Deadline', proof: 'Proof', view: 'View Details' },
+    bn: { search: 'সার্চ', post: 'চ্যালেঞ্জ পোস্ট', selectInterests: 'ইন্টারেস্ট সিলেক্ট', edu: 'এডুকেশন', ent: 'এন্টারটেইনমেন্ট', mix: 'মিক্সড', all: 'সব', category: 'ক্যাটাগরি', level: 'লেভেল', deadline: 'ডেডলাইন', proof: 'প্রুফ', view: 'বিস্তারিত দেখুন' },
+    hi: { search: 'खोजें', post: 'चैलेंज पोस्ट', selectInterests: 'इंटरेस्ट चुनें', edu: 'एजुकेशन', ent: 'एंटरटेनमेंट', mix: 'मिक्स्ड', all: 'सभी', category: 'श्रेणी', level: 'स्तर', deadline: 'डेडलाइन', proof: 'प्रूफ', view: 'विवरण देखें' }
+};
+
+const feedEl = document.getElementById('challengeFeed');
+const searchInput = document.getElementById('searchInput');
+const langSelect = document.getElementById('languageSelect');
+const interestRadios = document.querySelectorAll('input[name="interest"]');
+
+function renderChallenges() {
+    const searchVal = searchInput.value.toLowerCase();
+    const selectedInterest = document.querySelector('input[name="interest"]:checked').value;
+    const lang = langSelect.value;
+    const t = translations[lang] || translations.en;
+
+    feedEl.innerHTML = '';
+    challenges
+        .filter(c => (selectedInterest === 'All' || c.category === selectedInterest))
+        .filter(c => c.title.toLowerCase().includes(searchVal) || c.description.toLowerCase().includes(searchVal))
+        .forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h3>${c.title}</h3>
+                <div class="meta">
+                    <span><strong>${t.category}:</strong> ${c.category}</span>
+                    <span><strong>${t.level}:</strong> ${c.level}</span>
+                    <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
+                </div>
+                <p>${c.description}</p>
+                <div class="actions">
+                    <button class="secondary">${t.view}</button>
+                    <button class="primary">${t.proof}</button>
+                </div>
+            `;
+            feedEl.appendChild(card);
+        });
+}
+
+function updateLanguageUI() {
+    const lang = langSelect.value;
+    const t = translations[lang] || translations.en;
+    searchInput.placeholder = t.search;
+    document.getElementById('postBtn').textContent = t.post;
+    document.getElementById('interestTitle').textContent = t.selectInterests;
+    document.getElementById('eduLabel').textContent = t.edu;
+    document.getElementById('entLabel').textContent = t.ent;
+    document.getElementById('mixLabel').textContent = t.mix;
+    document.getElementById('allLabel').textContent = t.all;
+    renderChallenges();
+}
+
+searchInput.addEventListener('input', renderChallenges);
+langSelect.addEventListener('change', updateLanguageUI);
+interestRadios.forEach(r => r.addEventListener('change', renderChallenges));
+
+updateLanguageUI();
+</script>
+
 </body>
 </html>
