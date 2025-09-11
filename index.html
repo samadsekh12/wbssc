@@ -19,9 +19,6 @@
   .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px}
   .meta{font-size:14px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
   .desc{margin:8px 0;color:#cfd3d7}
-  .vote{display:flex;align-items:center;gap:6px;margin-top:8px}
-  .vote .count{min-width:28px;text-align:center;padding:2px 6px;border-radius:8px;background:#13151d;border:1px solid var(--border)}
-  .comment{margin-top:6px;padding:6px;border:1px solid var(--border);border-radius:6px;background:#0f1116}
   .leaderboard .row{display:flex;justify-content:space-between;padding:8px;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:#0f1116}
 </style>
 </head>
@@ -82,38 +79,35 @@
 
 <script>
 const uiText = {
-  en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard', commentPh:'Write a comment...' },
-  bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড', commentPh:'কমেন্ট লিখুন...' },
-  hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड', commentPh:'टिप्पणी लिखें...' }
+  en: { search:'Search', selectInterests:'Select Interests', category:'Category', level:'Level', deadline:'Deadline', leaderboard:'Leaderboard' },
+  bn: { search:'সার্চ', selectInterests:'ইন্টারেস্ট সিলেক্ট', category:'ক্যাটাগরি', level:'লেভেল', deadline:'ডেডলাইন', leaderboard:'লিডারবোর্ড' },
+  hi: { search:'खोजें', selectInterests:'इंटरेस्ट चुनें', category:'श्रेणी', level:'स्तर', deadline:'डेडलाइन', leaderboard:'लीडरबोर्ड' }
 };
 
 const challenges = [
   {
-    category:'Science & Technology', level:'Low', deadline:'2025-09-12', votes:5,
+    category:'Science & Technology', level:'Low', deadline:'2025-09-12',
     translations:{
       en:{ title:'30-sec Science Fact', description:'Share a quick science fact.' },
       bn:{ title:'৩০ সেকেন্ডের বিজ্ঞান তথ্য', description:'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
       hi:{ title:'30 सेकंड विज्ञान तथ्य', description:'एक त्वरित विज्ञान तथ्य साझा करें।' }
-    },
-    comments:[]
+    }
   },
   {
-    category:'Fun Challenges', level:'Medium', deadline:'2025-09-15', votes:8,
+    category:'Fun Challenges', level:'Medium', deadline:'2025-09-15',
     translations:{
       en:{ title:'Kitchen Rhythm Beat', description:'Create a beat using kitchen items.' },
       bn:{ title:'কিচেন রিদম বিট', description:'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
       hi:{ title:'किचन रिदम बीट', description:'रसोई के सामान से बीट बनाएं।' }
-    },
-    comments:[]
+    }
   },
   {
-    category:'Coding & Programming', level:'Hard', deadline:'2025-09-11', votes:3,
+    category:'Coding & Programming', level:'Hard', deadline:'2025-09-11',
     translations:{
       en:{ title:'Mini Portfolio Landing', description:'Build a single-page portfolio.' },
       bn:{ title:'মিনি পোর্টফোলিও ল্যান্ডিং', description:'একটি সিঙ্গেল-পেজ পোর্টফোলিও বানান।' },
       hi:{ title:'मिनी पोर्टफोलियो लैंडिंग', description:'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
-    },
-    comments:[]
+    }
   }
 ];
 
@@ -145,12 +139,25 @@ function renderFeed(){
 
   const feed = document.getElementById('challengeFeed');
   feed.innerHTML = '';
-  list.forEach((c,idx)=>{
+  list.forEach(c=>{
     const tr = c.translations[currentLang] || c.translations.en;
     const card = document.createElement('div');
     card.className='card';
     card.innerHTML = `
       <h3>${tr.title}</h3>
       <div class="meta">
-        <span><strong>${t.category}:</
-        
+        <span><strong>${t.category}:</strong> ${c.category}</span>
+        <span><strong>${t.level}:</strong> ${c.level}</span>
+        <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
+      </div>
+      <p class="desc">${tr.description}</p>
+    `;
+    feed.appendChild(card);
+  });
+}
+
+function applyTranslations(){
+  const t = uiText[currentLang];
+  document.getElementById('searchInput').placeholder = t.search;
+  document.getElementById('interestTitle').textContent = t.selectInterests;
+  document
