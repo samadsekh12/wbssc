@@ -218,7 +218,7 @@
       </div>
       <div class="divider"></div>
       <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button type="button" class="btn" id="cancelPost\">Cancel</button>
+        <button type="button" class="btn" id="cancelPost">Cancel</button>
         <button type="submit" class="btn primary" id="savePost">Publish</button>
       </div>
     </form>
@@ -408,6 +408,9 @@
           <span><strong>${t.category}:</strong> ${c.category}</span>
           <span><strong>${t.level}:</strong> ${c.level}</span>
           <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
+          <span><strong>${t.deadlineTime}:</strong> ${c.deadlineTime}</span>
+          <span><strong>${t.entryFee}:</strong> ${c.entryFee}</span>
+          <span><strong>${t.prizeAmount}:</strong> ${c.prizeAmount}</span>
         </div>
         <p class="desc">${tr.description}</p>
         ${mediaContent ? `<div class="media-container">${mediaContent}</div>` : ''}
