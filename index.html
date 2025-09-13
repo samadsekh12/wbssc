@@ -64,6 +64,15 @@
       top: 0;
       opacity: 0;
     }
+    .file-input-button {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1a1c23;
+      color: var(--text);
+      cursor: pointer;
+      transition: background .2s;
+    }
   </style>
 </head>
 <body>
@@ -179,7 +188,7 @@
         <div style="grid-column:1/-1" id="mediaInputContainer">
           <label id="lblMedia">Upload Media</label>
           <div class="file-input-container">
-            <button class="btn">Select File</button>
+            <div class="file-input-button">Select File</div>
             <input type="file" id="mMedia" accept="audio/*, video/*" />
           </div>
           <span id="file-name">No file chosen</span>
