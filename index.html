@@ -35,6 +35,20 @@
     .toast { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 50 }
     .toast .item { background: #11141c; border: 1px solid var(--border); color: #cbd5e1; padding: 10px 12px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.3); transition: opacity .5s, transform .5s }
     @media (max-width:1024px) { .layout { grid-template-columns: 1fr } }
+
+    /* Styles for media display */
+    .media-container {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .media-container audio,
+    .media-container video {
+      width: 100%;
+      max-width: 500px; /* Adjust as needed */
+    }
   </style>
 </head>
 <body>
@@ -137,6 +151,21 @@
           <label for="mDeadline" id="lblDeadline">Deadline</label>
           <input id="mDeadline" type="date" class="input" required />
         </div>
+
+        <div>
+          <label for="mMediaType" id="lblMediaType">Media Type</label>
+          <select id="mMediaType" class="input" required>
+            <option value="text">Text</option>
+            <option value="audio">Audio</option>
+            <option value="video">Video</option>
+          </select>
+        </div>
+
+        <div style="grid-column:1/-1" id="mediaInputContainer">
+          <label for="mMedia" id="lblMedia">Media (URL)</label>
+          <input type="url" id="mMedia" class="input" placeholder="Enter URL for audio/video" />
+        </div>
+
         <div style="grid-column:1/-1">
           <label for="mDesc" id="lblDesc">Description (current language)</label>
           <textarea id="mDesc" rows="4" class="input" placeholder="Describe the challenge..." required></textarea>
@@ -158,15 +187,18 @@
   const uiText = {
     en: {
       search: 'Search', selectInterests: 'Select Interests', category: 'Category', level: 'Level', deadline: 'Deadline', leaderboard: 'Leaderboard',
-      postTitle: 'Post a Challenge', title: 'Title', desc: 'Description', publish: 'Publish', cancel: 'Cancel', posted: 'Challenge published'
+      postTitle: 'Post a Challenge', title: 'Title', desc: 'Description', publish: 'Publish', cancel: 'Cancel', posted: 'Challenge published',
+      mediaType: 'Media Type', mediaURL: 'Media (URL)'
     },
     bn: {
       search: 'সার্চ', selectInterests: 'ইন্টারেস্ট সিলেক্ট', category: 'ক্যাটাগরি', level: 'লেভেল', deadline: 'ডেডলাইন', leaderboard: 'লিডারবোর্ড',
-      postTitle: 'চ্যালেঞ্জ পোস্ট করুন', title: 'শিরোনাম', desc: 'বিবরণ', publish: 'পাবলিশ', cancel: 'বাতিল', posted: 'চ্যালেঞ্জ পাবলিশ হয়েছে'
+      postTitle: 'চ্যালেঞ্জ পোস্ট করুন', title: 'শিরোনাম', desc: 'বিবরণ', publish: 'পাবলিশ', cancel: 'বাতিল', posted: 'চ্যালেঞ্জ পাবলিশ হয়েছে',
+      mediaType: 'মিডিয়া ধরণ', mediaURL: 'মিডিয়া (URL)'
     },
     hi: {
       search: 'खोजें', selectInterests: 'इंटरेस्ट चुनें', category: 'श्रेणी', level: 'स्तर', deadline: 'डेडलाइन', leaderboard: 'लीडरबोर्ड',
-      postTitle: 'चैलेंज पोस्ट करें', title: 'शीर्षक', desc: 'विवरण', publish: 'प्रकाशित', cancel: 'रद्द', posted: 'चैलेंज प्रकाशित हुआ'
+      postTitle: 'चैलेंज पोस्ट करें', title: 'शीर्षक', desc: 'विवरण', publish: 'प्रकाशित', cancel: 'रद्द', posted: 'चैलेंज प्रकाशित हुआ',
+      mediaType: 'मीडिया प्रकार', mediaURL: 'मीडिया (URL)'
     }
   };
 
@@ -178,7 +210,9 @@
         en: { title: '30-sec Science Fact', description: 'Share a quick science fact.' },
         bn: { title: '৩০ সেকেন্ডের বিজ্ঞান তথ্য', description: 'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
         hi: { title: '30 सेकंड विज्ञान तथ्य', description: 'एक त्वरित विज्ञान तथ्य साझा करें।' }
-      }
+      },
+      mediaType: 'text',
+      mediaURL: ''
     },
     {
       category: 'Fun Challenges', level: 'Medium', deadline: '2025-09-15', votes: 12,
@@ -186,7 +220,9 @@
         en: { title: 'Kitchen Rhythm Beat', description: 'Create a beat using kitchen items.' },
         bn: { title: 'কিচেন রিদম বিট', description: 'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
         hi: { title: 'किचन रिदम बीट', description: 'रसोई के सामान से बीट बनाएं।' }
-      }
+      },
+      mediaType: 'audio',
+      mediaURL: 'https://www.example.com/audio.mp3'
     },
     {
       category: 'Coding & Programming', level: 'Hard', deadline: '2025-09-11', votes: 4,
@@ -194,7 +230,9 @@
         en: { title: 'Mini Portfolio Landing', description: 'Build a single-page portfolio.' },
         bn: { title: 'মিনি পোর্টফোলিও ল্যান্ডিং', description: 'একটি সিঙ্গেল-পেজ পোর্টফোলিও বানান।' },
         hi: { title: 'मिनी पोर्टफोलियो लैंडिंग', description: 'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
-      }
+      },
+      mediaType: 'video',
+      mediaURL: 'https://www.example.com/video.mp4'
     }
   ];
 
@@ -217,6 +255,8 @@
   const $lblCategory = $('#lblCategory');
   const $lblLevel = $('#lblLevel');
   const $lblDeadline = $('#lblDeadline');
+  const $lblMediaType = $('#lblMediaType');
+  const $lblMedia = $('#lblMedia');
   const $savePost = $('#savePost');
   const $cancelPost = $('#cancelPost');
   const $challengeForm = $('#challengeForm');
@@ -233,6 +273,9 @@
   const $mCategory = $('#mCategory');
   const $mLevel = $('#mLevel');
   const $mDeadline = $('#mDeadline');
+  const $mMediaType = $('#mMediaType');
+  const $mMedia = $('#mMedia');
+  const $mediaInputContainer = $('#mediaInputContainer');
 
   function toast(msg) {
     const el = document.createElement('div');
@@ -260,6 +303,8 @@
     $lblCategory.textContent = t.category;
     $lblLevel.textContent = t.level;
     $lblDeadline.textContent = t.deadline;
+    $lblMediaType.textContent = t.mediaType;
+    $lblMedia.textContent = t.mediaURL;
     $savePost.textContent = t.publish;
     $cancelPost.textContent = t.cancel;
   }
@@ -292,6 +337,14 @@
       const tr = c.translations[currentLang] || c.translations.en;
       const card = document.createElement('div');
       card.className = 'card';
+
+      let mediaContent = '';
+      if (c.mediaType === 'audio' && c.mediaURL) {
+        mediaContent = `<audio controls src="${c.mediaURL}"></audio>`;
+      } else if (c.mediaType === 'video' && c.mediaURL) {
+        mediaContent = `<video controls src="${c.mediaURL}"></video>`;
+      }
+
       card.innerHTML = `
         <h3>${tr.title}</h3>
         <div class="meta">
@@ -300,6 +353,7 @@
           <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
         </div>
         <p class="desc">${tr.description}</p>
+        ${mediaContent ? `<div class="media-container">${mediaContent}</div>` : ''}
       `;
       $challengeFeed.appendChild(card);
     });
@@ -323,6 +377,16 @@
     }
   });
 
+  // Handle media type selection
+  $mMediaType.addEventListener('change', () => {
+    const mediaType = $mMediaType.value;
+    if (mediaType === 'text') {
+      $mediaInputContainer.style.display = 'none';
+    } else {
+      $mediaInputContainer.style.display = 'block';
+    }
+  });
+
   // Save post (form submit)
   $challengeForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -331,6 +395,8 @@
     const category = $mCategory.value;
     const level = $mLevel.value;
     const deadline = $mDeadline.value;
+    const mediaType = $mMediaType.value;
+    const mediaURL = $mMedia.value.trim();
 
     if (!title || !description || !deadline) {
       toast('Please fill Title, Description and Deadline');
@@ -342,7 +408,9 @@
       category, level, deadline, votes: 0,
       translations: {
         [currentLang]: { title, description }
-      }
+      },
+      mediaType,
+      mediaURL
     };
     // Ensure English fallback if posted in another language
     if (currentLang !== 'en') {
@@ -379,6 +447,9 @@
   applyTranslations();
   renderLeaderboard();
   renderFeed();
+
+  // Initially hide the media input
+  $mediaInputContainer.style.display = 'none';
 
 </script>
 </body>
