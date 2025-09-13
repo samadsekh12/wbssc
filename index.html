@@ -33,7 +33,7 @@
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
     .divider { height: 1px; background: var(--border); margin: 10px 0 }
     .toast { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 50 }
-    .toast .item { background: #11141c; border: 1px solid var(--border); color: #cbd5e1; padding: 10px 12px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.3); transition: opacity .5s, transform .5s }
+    .toast .item { background: #11141c; border: 1px solid var(--border); color: #cbd5e1; padding: 10px 12px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.3); transition: opacity .5s, transf[...]
     @media (max-width:1024px) { .layout { grid-template-columns: 1fr } }
 
     /* Styles for media display */
@@ -178,6 +178,21 @@
         </div>
 
         <div>
+          <label for="mEntryFee" id="lblEntryFee">Entry Fee (USD)</label>
+          <input id="mEntryFee" type="number" class="input" placeholder="e.g., 10" />
+        </div>
+
+        <div>
+          <label for="mPrizeAmount" id="lblPrizeAmount">Prize Amount (USD)</label>
+          <input id="mPrizeAmount" type="number" class="input" placeholder="e.g., 100" />
+        </div>
+
+        <div>
+          <label for="mDeadlineTime" id="lblDeadlineTime">Deadline Time</label>
+          <input id="mDeadlineTime" type="time" class="input" required />
+        </div>
+
+        <div>
           <label for="mMediaType" id="lblMediaType">Media Type</label>
           <select id="mMediaType" class="input" required>
             <option value="text">Text</option>
@@ -203,7 +218,7 @@
       </div>
       <div class="divider"></div>
       <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button type="button" class="btn" id="cancelPost">Cancel</button>
+        <button type="button" class="btn" id="cancelPost\">Cancel</button>
         <button type="submit" class="btn primary" id="savePost">Publish</button>
       </div>
     </form>
@@ -218,17 +233,17 @@
     en: {
       search: 'Search', selectInterests: 'Select Interests', category: 'Category', level: 'Level', deadline: 'Deadline', leaderboard: 'Leaderboard',
       postTitle: 'Post a Challenge', title: 'Title', desc: 'Description', publish: 'Publish', cancel: 'Cancel', posted: 'Challenge published',
-      mediaType: 'Media Type', mediaUpload: 'Upload Media'
+      mediaType: 'Media Type', mediaUpload: 'Upload Media', entryFee: 'Entry Fee (USD)', prizeAmount: 'Prize Amount (USD)', deadlineTime: 'Deadline Time'
     },
     bn: {
       search: 'সার্চ', selectInterests: 'ইন্টারেস্ট সিলেক্ট', category: 'ক্যাটাগরি', level: 'লেভেল', deadline: 'ডেডলাইন', leaderboard: 'লিডারবোর্ড',
-      postTitle: 'চ্যালেঞ্জ পোস্ট করুন', title: 'শিরোনাম', desc: 'বিবরণ', publish: 'পাবলিশ', cancel: 'বাতিল', posted: 'চ্যালেঞ্জ পাবলিশ হয়েছে',
-      mediaType: 'মিডিয়া ধরণ', mediaUpload: 'মিডিয়া আপলোড করুন'
+      postTitle: 'চ্যালেঞ্জ পোস্ট করুন', title: 'শিরোনাম', desc: 'বিবরণ', publish: 'পাবলিশ', cancel: 'বাতিল', posted: 'চ্যালেঞ্জ পাবলিশ হয়েছে',
+      mediaType: 'মিডিয়া ধরণ', mediaUpload: 'মিডিয়া আপলোড করুন', entryFee: 'এন্ট্রি ফি (USD)', prizeAmount: 'পুরস্কারের পরিমাণ (USD)', deadlineTime: 'সময়সীমা সময়'
     },
     hi: {
       search: 'खोजें', selectInterests: 'इंटरेस्ट चुनें', category: 'श्रेणी', level: 'स्तर', deadline: 'डेडलाइन', leaderboard: 'लीडरबोर्ड',
       postTitle: 'चैलेंज पोस्ट करें', title: 'शीर्षक', desc: 'विवरण', publish: 'प्रकाशित', cancel: 'रद्द', posted: 'चैलेंज प्रकाशित हुआ',
-      mediaType: 'मीडिया प्रकार', mediaUpload: 'मीडिया अपलोड करें'
+      mediaType: 'मीडिया प्रकार', mediaUpload: 'मीडिया अपलोड करें', entryFee: 'प्रवेश शुल्क (USD)', prizeAmount: 'पुरस्कार राशि (USD)', deadlineTime: 'समय सीमा समय'
     }
   };
 
@@ -285,8 +300,11 @@
   const $lblCategory = $('#lblCategory');
   const $lblLevel = $('#lblLevel');
   const $lblDeadline = $('#lblDeadline');
+  const $lblDeadlineTime = $('#lblDeadlineTime');
   const $lblMediaType = $('#lblMediaType');
   const $lblMedia = $('#lblMedia');
+  const $lblEntryFee = $('#lblEntryFee');
+  const $lblPrizeAmount = $('#lblPrizeAmount');
   const $savePost = $('#savePost');
   const $cancelPost = $('#cancelPost');
   const $challengeForm = $('#challengeForm');
@@ -303,8 +321,11 @@
   const $mCategory = $('#mCategory');
   const $mLevel = $('#mLevel');
   const $mDeadline = $('#mDeadline');
+  const $mDeadlineTime = $('#mDeadlineTime');
   const $mMediaType = $('#mMediaType');
   const $mMedia = $('#mMedia');
+  const $mEntryFee = $('#mEntryFee');
+  const $mPrizeAmount = $('#mPrizeAmount');
   const $mediaInputContainer = $('#mediaInputContainer');
   const $fileName = $('#file-name');
 
@@ -334,8 +355,11 @@
     $lblCategory.textContent = t.category;
     $lblLevel.textContent = t.level;
     $lblDeadline.textContent = t.deadline;
+    $lblDeadlineTime.textContent = t.deadlineTime;
     $lblMediaType.textContent = t.mediaType;
     $lblMedia.textContent = t.mediaUpload;
+    $lblEntryFee.textContent = t.entryFee;
+    $lblPrizeAmount.textContent = t.prizeAmount;
     $savePost.textContent = t.publish;
     $cancelPost.textContent = t.cancel;
   }
@@ -437,11 +461,14 @@
     const category = $mCategory.value;
     const level = $mLevel.value;
     const deadline = $mDeadline.value;
+    const deadlineTime = $mDeadlineTime.value;
     const mediaType = $mMediaType.value;
     const mediaFile = $mMedia.files[0]; // Get the file object
+    const entryFee = $mEntryFee.value;
+    const prizeAmount = $mPrizeAmount.value;
 
-    if (!title || !description || !deadline) {
-      toast('Please fill Title, Description and Deadline');
+    if (!title || !description || !deadline || !deadlineTime) {
+      toast('Please fill Title, Description, Deadline and Deadline Time');
       return;
     }
 
@@ -451,7 +478,7 @@
 
     // Create a new challenge with content for the current language
     const newChallenge = {
-      category, level, deadline, votes: 0,
+      category, level, deadline, deadlineTime, entryFee, prizeAmount, votes: 0,
       translations: {
         [currentLang]: { title, description }
       },
