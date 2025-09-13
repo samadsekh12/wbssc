@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --bg: #0b0c10;
-      --panel: #121318;
+      --bg: #0b0c10; /* Background color */
+      --panel: #121318; /* Panel color */
       --muted: #9aa0a6;
-      --text: #e8eaed;
+      --text: #e8eaed; /* Text color */
       --primary: #5b8cff;
       --border: #23252e;
     }
@@ -182,6 +182,7 @@
             <option value="text">Text</option>
             <option value="audio">Audio</option>
             <option value="video">Video</option>
+             <option value="file">File</option>
           </select>
         </div>
 
@@ -189,7 +190,7 @@
           <label id="lblMedia">Upload Media</label>
           <div class="file-input-container">
             <div class="file-input-button">Select File</div>
-            <input type="file" id="mMedia" accept="audio/*, video/*" />
+            <input type="file" id="mMedia" accept="audio/*, video/*, application/*" />
           </div>
           <span id="file-name">No file chosen</span>
         </div>
@@ -372,6 +373,8 @@
         mediaContent = `<audio controls src="${c.mediaURL}"></audio>`;
       } else if (c.mediaType === 'video' && c.mediaURL) {
         mediaContent = `<video controls src="${c.mediaURL}"></video>`;
+      } else if (c.mediaType === 'file' && c.mediaURL) {
+           mediaContent = `<a href="${c.mediaURL}" download>Download File</a>`;
       }
 
       card.innerHTML = `
