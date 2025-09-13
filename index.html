@@ -49,6 +49,21 @@
       width: 100%;
       max-width: 500px; /* Adjust as needed */
     }
+
+    /* Style for file input */
+    .file-input-container {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-input-container input[type="file"] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
   </style>
 </head>
 <body>
@@ -162,8 +177,12 @@
         </div>
 
         <div style="grid-column:1/-1" id="mediaInputContainer">
-          <label for="mMedia" id="lblMedia">Media (URL)</label>
-          <input type="url" id="mMedia" class="input" placeholder="Enter URL for audio/video" />
+          <label id="lblMedia">Upload Media</label>
+          <div class="file-input-container">
+            <button class="btn">Select File</button>
+            <input type="file" id="mMedia" accept="audio/*, video/*" />
+          </div>
+          <span id="file-name">No file chosen</span>
         </div>
 
         <div style="grid-column:1/-1">
@@ -188,17 +207,17 @@
     en: {
       search: 'Search', selectInterests: 'Select Interests', category: 'Category', level: 'Level', deadline: 'Deadline', leaderboard: 'Leaderboard',
       postTitle: 'Post a Challenge', title: 'Title', desc: 'Description', publish: 'Publish', cancel: 'Cancel', posted: 'Challenge published',
-      mediaType: 'Media Type', mediaURL: 'Media (URL)'
+      mediaType: 'Media Type', mediaUpload: 'Upload Media'
     },
     bn: {
       search: 'সার্চ', selectInterests: 'ইন্টারেস্ট সিলেক্ট', category: 'ক্যাটাগরি', level: 'লেভেল', deadline: 'ডেডলাইন', leaderboard: 'লিডারবোর্ড',
       postTitle: 'চ্যালেঞ্জ পোস্ট করুন', title: 'শিরোনাম', desc: 'বিবরণ', publish: 'পাবলিশ', cancel: 'বাতিল', posted: 'চ্যালেঞ্জ পাবলিশ হয়েছে',
-      mediaType: 'মিডিয়া ধরণ', mediaURL: 'মিডিয়া (URL)'
+      mediaType: 'মিডিয়া ধরণ', mediaUpload: 'মিডিয়া আপলোড করুন'
     },
     hi: {
       search: 'खोजें', selectInterests: 'इंटरेस्ट चुनें', category: 'श्रेणी', level: 'स्तर', deadline: 'डेडलाइन', leaderboard: 'लीडरबोर्ड',
       postTitle: 'चैलेंज पोस्ट करें', title: 'शीर्षक', desc: 'विवरण', publish: 'प्रकाशित', cancel: 'रद्द', posted: 'चैलेंज प्रकाशित हुआ',
-      mediaType: 'मीडिया प्रकार', mediaURL: 'मीडिया (URL)'
+      mediaType: 'मीडिया प्रकार', mediaUpload: 'मीडिया अपलोड करें'
     }
   };
 
@@ -212,7 +231,7 @@
         hi: { title: '30 सेकंड विज्ञान तथ्य', description: 'एक त्वरित विज्ञान तथ्य साझा करें।' }
       },
       mediaType: 'text',
-      mediaURL: ''
+      mediaURL: null
     },
     {
       category: 'Fun Challenges', level: 'Medium', deadline: '2025-09-15', votes: 12,
@@ -222,7 +241,7 @@
         hi: { title: 'किचन रिदम बीट', description: 'रसोई के सामान से बीट बनाएं।' }
       },
       mediaType: 'audio',
-      mediaURL: 'https://www.example.com/audio.mp3'
+      mediaURL: 'audio.mp3'
     },
     {
       category: 'Coding & Programming', level: 'Hard', deadline: '2025-09-11', votes: 4,
@@ -232,7 +251,7 @@
         hi: { title: 'मिनी पोर्टफोलियो लैंडिंग', description: 'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
       },
       mediaType: 'video',
-      mediaURL: 'https://www.example.com/video.mp4'
+      mediaURL: 'video.mp4'
     }
   ];
 
@@ -276,6 +295,7 @@
   const $mMediaType = $('#mMediaType');
   const $mMedia = $('#mMedia');
   const $mediaInputContainer = $('#mediaInputContainer');
+  const $fileName = $('#file-name');
 
   function toast(msg) {
     const el = document.createElement('div');
@@ -304,7 +324,7 @@
     $lblLevel.textContent = t.level;
     $lblDeadline.textContent = t.deadline;
     $lblMediaType.textContent = t.mediaType;
-    $lblMedia.textContent = t.mediaURL;
+    $lblMedia.textContent = t.mediaUpload;
     $savePost.textContent = t.publish;
     $cancelPost.textContent = t.cancel;
   }
@@ -387,6 +407,15 @@
     }
   });
 
+  // Handle file input change
+  $mMedia.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      $fileName.textContent = this.files[0].name;
+    } else {
+      $fileName.textContent = 'No file chosen';
+    }
+  });
+
   // Save post (form submit)
   $challengeForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -396,12 +425,16 @@
     const level = $mLevel.value;
     const deadline = $mDeadline.value;
     const mediaType = $mMediaType.value;
-    const mediaURL = $mMedia.value.trim();
+    const mediaFile = $mMedia.files[0]; // Get the file object
 
     if (!title || !description || !deadline) {
       toast('Please fill Title, Description and Deadline');
       return;
     }
+
+    // In a real application, you would upload the media file to a server here
+    // For this example, we'll just store the file name
+    let mediaURL = mediaFile ? mediaFile.name : null;
 
     // Create a new challenge with content for the current language
     const newChallenge = {
