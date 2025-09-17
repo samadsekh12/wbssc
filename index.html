@@ -1,532 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <title>Challenge Web App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #0b0c10; /* Background color */
-      --panel: #121318; /* Panel color */
-      --muted: #9aa0a6;
-      --text: #e8eaed; /* Text color */
-      --primary: #5b8cff;
-      --border: #23252e;
-    }
-    * { box-sizing: border-box }
-    body { margin: 0; font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text) }
-    header { display: flex; justify-content: space-between; align-items: center; background: var(--panel); padding: 10px 16px; border-bottom: 1px solid var(--border) }
-    .search { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #0f1116; color: var(--text); width: 320px; max-width: 50vw }
-    .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #1a1c23; color: var(--text); cursor: pointer; transition: background .2s }
-    .btn.primary { background: var(--primary); border: none; color: #fff }
-    select, .input, textarea { padding: 8px; border-radius: 8px; background: #0f1116; color: var(--text); border: 1px solid var(--border) }
-    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; padding: 16px }
-    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px }
-    .feed { display: grid; gap: 12px }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px }
-    .meta { font-size: 14px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap }
-    .desc { margin: 8px 0; color: #cfd3d7 }
-    .leaderboard .row { display: flex; justify-content: space-between; padding: 8px; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; background: #0f1116 }
-    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 40 }
-    .modal { width: min(640px,92vw); background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px }
-    .modal header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
-    .divider { height: 1px; background: var(--border); margin: 10px 0 }
-    .toast { position: fixed; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 50 }
-    .toast .item { background: #11141c; border: 1px solid var(--border); color: #cbd5e1; padding: 10px 12px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.3); transition: opacity .5s, transf[...]
-    @media (max-width:1024px) { .layout { grid-template-columns: 1fr } }
-
-    /* Styles for media display */
-    .media-container {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .media-container audio,
-    .media-container video {
-      width: 100%;
-      max-width: 500px; /* Adjust as needed */
-    }
-
-    /* Style for file input */
-    .file-input-container {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-    }
-
-    .file-input-container input[type="file"] {
-      font-size: 100px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-    }
-    .file-input-button {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: #1a1c23;
-      color: var(--text);
-      cursor: pointer;
-      transition: background .2s;
-      background-color: #5b8cff; /* Blue color for the button */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>WBSSC Group D Mock Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #2c3e50; }
+        .question { margin-bottom: 20px; }
+        .options label { display: block; margin-left: 20px; }
+        .section { margin-top: 40px; }
+    </style>
 </head>
 <body>
+    <h1>WBSSC Group D Mock Test</h1>
 
-<header>
-  <input type="text" id="searchInput" class="search" placeholder="Search" aria-label="Search Challenges">
-  <div style="display:flex;gap:8px;align-items:center">
-    <select id="languageSelect" aria-label="Select Language">
-      <option value="en">English</option>
-      <option value="bn">বাংলা</option>
-      <option value="hi">हिंदी</option>
-    </select>
-    <button class="btn primary" id="postBtn">Post Challenge</button>
-  </div>
-</header>
-
-<div class="layout">
-  <main>
-    <div class="feed" id="challengeFeed"></div>
-  </main>
-
-  <aside class="panel">
-    <h3 id="interestTitle">Select Interests</h3>
-    <select id="interestSelect" class="input" aria-label="Select Interests">
-      <option value="All">🌍 All</option>
-      <optgroup label="📚 Education">
-        <option value="Language Learning">Language Learning</option>
-        <option value="Science & Technology">Science & Technology</option>
-        <option value="Math & Logic Puzzles">Math & Logic Puzzles</option>
-        <option value="History & Culture">History & Culture</option>
-        <option value="Coding & Programming">Coding & Programming</option>
-        <option value="Skill Development">Skill Development</option>
-      </optgroup>
-      <optgroup label="🎭 Entertainment">
-        <option value="Fun Challenges">Fun Challenges</option>
-        <option value="Creative Arts">Creative Arts</option>
-        <option value="Music & Singing">Music & Singing</option>
-        <option value="Dance & Performance">Dance & Performance</option>
-        <option value="Storytelling / Acting">Storytelling / Acting</option>
-        <option value="Food & Cooking Challenges">Food & Cooking Challenges</option>
-      </optgroup>
-      <optgroup label="⚡ Mixed / Lifestyle">
-        <option value="Fitness & Sports">Fitness & Sports</option>
-        <option value="Travel & Exploration">Travel & Exploration</option>
-        <option value="Photography & Videography">Photography & Videography</option>
-        <option value="DIY Projects">DIY Projects</option>
-        <option value="Social Awareness Challenges">Social Awareness Challenges</option>
-      </optgroup>
-    </select>
-    <div style="margin-top:12px">
-      <h3 id="leaderboardTitle">Leaderboard</h3>
-      <div id="leaderboard" class="leaderboard"></div>
+    <div class="section">
+        <h2>General Knowledge</h2>
+        <div class="question">
+            <p>1. ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?</p>
+            <div class="options">
+                <label><input type="radio" name="q1"> A. প্রতিভা পাটিল</label>
+                <label><input type="radio" name="q1"> B. ইন্দিরা গান্ধী</label>
+                <label><input type="radio" name="q1"> C. মীরা কুমার</label>
+                <label><input type="radio" name="q1"> D. সোনিয়া গান্ধী</label>
+            </div>
+        </div>
+        <!-- আরও প্রশ্ন এখানে যোগ করুন -->
     </div>
-  </aside>
-</div>
 
-<!-- Post Modal -->
-<div id="backdrop" class="backdrop" aria-modal="true" role="dialog">
-  <div class="modal">
-    <header>
-      <h3 id="modalTitle">Post a Challenge</h3>
-      <button class="btn" id="closeModal" aria-label="Close Modal">✕</button>
-    </header>
-    <form id="challengeForm" autocomplete="off">
-      <div class="grid-2">
-        <div>
-          <label for="mTitle" id="lblTitle">Title (current language)</label>
-          <input id="mTitle" class="input" placeholder="e.g., 30-sec Science Fact" required />
+    <div class="section">
+        <h2>Current Affairs</h2>
+        <div class="question">
+            <p>16. 2024 সালে ভারতের প্রধানমন্ত্রী কে ছিলেন?</p>
+            <div class="options">
+                <label><input type="radio" name="q16"> A. নরেন্দ্র মোদী</label>
+                <label><input type="radio" name="q16"> B. রাহুল গান্ধী</label>
+                <label><input type="radio" name="q16"> C. অমিত শাহ</label>
+                <label><input type="radio" name="q16"> D. মমতা বন্দ্যোপাধ্যায়</label>
+            </div>
         </div>
-        <div>
-          <label for="mCategory" id="lblCategory">Category</label>
-          <select id="mCategory" class="input" required>
-            <option>Science & Technology</option>
-            <option>Fun Challenges</option>
-            <option>Coding & Programming</option>
-            <option>Language Learning</option>
-            <option>Math & Logic Puzzles</option>
-            <option>History & Culture</option>
-            <option>Skill Development</option>
-            <option>Music & Singing</option>
-            <option>Dance & Performance</option>
-            <option>Creative Arts</option>
-            <option>Food & Cooking Challenges</option>
-            <option>Fitness & Sports</option>
-            <option>Travel & Exploration</option>
-            <option>Photography & Videography</option>
-            <option>DIY Projects</option>
-            <option>Social Awareness Challenges</option>
-          </select>
+        <!-- আরও প্রশ্ন এখানে যোগ করুন -->
+    </div>
+
+    <div class="section">
+        <h2>Arithmetic</h2>
+        <div class="question">
+            <p>31. 25% of 240 কত?</p>
+            <div class="options">
+                <label><input type="radio" name="q31"> A. 60</label>
+                <label><input type="radio" name="q31"> B. 48</label>
+                <label><input type="radio" name="q31"> C. 72</label>
+                <label><input type="radio" name="q31"> D. 80</label>
+            </div>
         </div>
-        <div>
-          <label for="mLevel" id="lblLevel">Level</label>
-          <select id="mLevel" class="input" required>
-            <option>Low</option>
-            <option>Medium</option>
-            <option>Hard</option>
-          </select>
-        </div>
-        <div>
-          <label for="mDeadline" id="lblDeadline">Last date </label>
-          <input id="mDeadline" type="date" class="input" required />
-        </div>
-
-        <div>
-          <label for="mEntryFee" id="lblEntryFee">Entry Fee (USD)</label>
-          <input id="mEntryFee" type="number" class="input" placeholder="e.g., 10" />
-        </div>
-
-        <div>
-          <label for="mPrizeAmount" id="lblPrizeAmount">Prize Amount (USD)</label>
-          <input id="mPrizeAmount" type="number" class="input" placeholder="e.g., 100" />
-        </div>
-
-        <div>
-          <label for="mDeadlineTime" id="lblDeadlineTime">Deadline Time</label>
-          <input id="mDeadlineTime" type="time" class="input" required />
-        </div>
-
-        <div>
-          <label for="mMediaType" id="lblMediaType">Media Type</label>
-          <select id="mMediaType" class="input" required>
-            <option value="text">Text</option>
-            <option value="audio">Audio</option>
-            <option value="video">Video</option>
-             <option value="file">File</option>
-          </select>
-        </div>
-
-        <div style="grid-column:1/-1" id="mediaInputContainer">
-          <label id="lblMedia">Upload Media</label>
-          <div class="file-input-container">
-            <div class="file-input-button">Select File</div>
-            <input type="file" id="mMedia" accept="audio/*, video/*, application/*" />
-          </div>
-          <span id="file-name">No file chosen</span>
-        </div>
-
-        <div style="grid-column:1/-1">
-          <label for="mDesc" id="lblDesc">Description (current language)</label>
-          <textarea id="mDesc" rows="4" class="input" placeholder="Describe the challenge..." required></textarea>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button type="button" class="btn" id="cancelPost">Cancel</button>
-        <button type="submit" class="btn primary" id="savePost">Publish</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div id="toasts" class="toast" aria-live="polite"></div>
-
-<script>
-  // UI labels (make sure all translations are complete)
-  const uiText = {
-    en: {
-      search: 'Search', selectInterests: 'Select Interests', category: 'Category', level: 'Level', deadline: 'Deadline', leaderboard: 'Leaderboard',
-      postTitle: 'Post a Challenge', title: 'Title', desc: 'Description', publish: 'Publish', cancel: 'Cancel', posted: 'Challenge published',
-      mediaType: 'Media Type', mediaUpload: 'Upload Media', entryFee: 'Entry Fee (USD)', prizeAmount: 'Prize Amount (USD)', deadlineTime: 'Deadline Time'
-    },
-    bn: {
-      search: 'সার্চ', selectInterests: 'ইন্টারেস্ট সিলেক্ট', category: 'ক্যাটাগরি', level: 'লেভেল', deadline: 'ডেডলাইন', leaderboard: 'লিডারবোর্ড',
-      postTitle: 'চ্যালেঞ্জ পোস্ট করুন', title: 'শিরোনাম', desc: 'বিবরণ', publish: 'পাবলিশ', cancel: 'বাতিল', posted: 'চ্যালেঞ্জ পাবলিশ হয়েছে',
-      mediaType: 'মিডিয়া ধরণ', mediaUpload: 'মিডিয়া আপলোড করুন', entryFee: 'এন্ট্রি ফি (USD)', prizeAmount: 'পুরস্কারের পরিমাণ (USD)', deadlineTime: 'সময়সীমা সময়'
-    },
-    hi: {
-      search: 'खोजें', selectInterests: 'इंटरेस्ट चुनें', category: 'श्रेणी', level: 'स्तर', deadline: 'डेडलाइन', leaderboard: 'लीडरबोर्ड',
-      postTitle: 'चैलेंज पोस्ट करें', title: 'शीर्षक', desc: 'विवरण', publish: 'प्रकाशित', cancel: 'रद्द', posted: 'चैलेंज प्रकाशित हुआ',
-      mediaType: 'मीडिया प्रकार', mediaUpload: 'मीडिया अपलोड करें', entryFee: 'प्रवेश शुल्क (USD)', prizeAmount: 'पुरस्कार राशि (USD)', deadlineTime: 'समय सीमा समय'
-    }
-  };
-
-  // Example posts with translations (ensure all translations are complete)
-  const challenges = [
-    {
-      category: 'Science & Technology', level: 'Low', deadline: '2025-09-12', votes: 7,
-      translations: {
-        en: { title: '30-sec Science Fact', description: 'Share a quick science fact.' },
-        bn: { title: '৩০ সেকেন্ডের বিজ্ঞান তথ্য', description: 'দ্রুত একটি বিজ্ঞান তথ্য শেয়ার করুন।' },
-        hi: { title: '30 सेकंड विज्ञान तथ्य', description: 'एक त्वरित विज्ञान तथ्य साझा करें।' }
-      },
-      mediaType: 'text',
-      mediaURL: null
-    },
-    {
-      category: 'Fun Challenges', level: 'Medium', deadline: '2025-09-15', votes: 12,
-      translations: {
-        en: { title: 'Kitchen Rhythm Beat', description: 'Create a beat using kitchen items.' },
-        bn: { title: 'কিচেন রিদম বিট', description: 'রান্নাঘরের জিনিস দিয়ে বিট তৈরি করুন।' },
-        hi: { title: 'किचन रिदम बीट', description: 'रसोई के सामान से बीट बनाएं।' }
-      },
-      mediaType: 'audio',
-      mediaURL: 'audio.mp3'
-    },
-    {
-      category: 'Coding & Programming', level: 'Hard', deadline: '2025-09-11', votes: 4,
-      translations: {
-        en: { title: 'Mini Portfolio Landing', description: 'Build a single-page portfolio.' },
-        bn: { title: 'মিনি পোর্টফোলিও ল্যান্ডিং', description: 'একটি সিঙ্গেল-পেজ পোর্টফোলিও বানান।' },
-        hi: { title: 'मिनी पोर्टफोलियो लैंडिंग', description: 'एक सिंगल-पेज पोर्टफोलियो बनाएं।' }
-      },
-      mediaType: 'video',
-      mediaURL: 'video.mp4'
-    }
-  ];
-
-  // Points / leaderboard
-  const points = { 'Aisha': 12, 'Ravi': 18, 'You': 5 };
-
-  // State
-  let selectedInterest = 'All';
-  let searchQuery = '';
-  let currentLang = 'en';
-
-  // Cache DOM elements for performance
-  const $ = selector => document.querySelector(selector);
-  const $searchInput = $('#searchInput');
-  const $interestTitle = $('#interestTitle');
-  const $leaderboardTitle = $('#leaderboardTitle');
-  const $modalTitle = $('#modalTitle');
-  const $lblTitle = $('#lblTitle');
-  const $lblDesc = $('#lblDesc');
-  const $lblCategory = $('#lblCategory');
-  const $lblLevel = $('#lblLevel');
-  const $lblDeadline = $('#lblDeadline');
-  const $lblDeadlineTime = $('#lblDeadlineTime');
-  const $lblMediaType = $('#lblMediaType');
-  const $lblMedia = $('#lblMedia');
-  const $lblEntryFee = $('#lblEntryFee');
-  const $lblPrizeAmount = $('#lblPrizeAmount');
-  const $savePost = $('#savePost');
-  const $cancelPost = $('#cancelPost');
-  const $challengeForm = $('#challengeForm');
-  const $backdrop = $('#backdrop');
-  const $challengeFeed = $('#challengeFeed');
-  const $leaderboard = $('#leaderboard');
-  const $toasts = $('#toasts');
-  const $interestSelect = $('#interestSelect');
-  const $languageSelect = $('#languageSelect');
-  const $postBtn = $('#postBtn');
-  const $closeModal = $('#closeModal');
-  const $mTitle = $('#mTitle');
-  const $mDesc = $('#mDesc');
-  const $mCategory = $('#mCategory');
-  const $mLevel = $('#mLevel');
-  const $mDeadline = $('#mDeadline');
-  const $mDeadlineTime = $('#mDeadlineTime');
-  const $mMediaType = $('#mMediaType');
-  const $mMedia = $('#mMedia');
-  const $mEntryFee = $('#mEntryFee');
-  const $mPrizeAmount = $('#mPrizeAmount');
-  const $mediaInputContainer = $('#mediaInputContainer');
-  const $fileName = $('#file-name');
-
-  function toast(msg) {
-    const el = document.createElement('div');
-    el.className = 'item';
-    el.textContent = msg;
-    $toasts.appendChild(el);
-    setTimeout(() => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(6px)';
-    }, 2400);
-    setTimeout(() => {
-      $toasts.removeChild(el);
-    }, 3000);
-  }
-
-  function applyTranslations() {
-    const t = uiText[currentLang];
-    $searchInput.placeholder = t.search;
-    $interestTitle.textContent = t.selectInterests;
-    $leaderboardTitle.textContent = t.leaderboard;
-    // Modal labels
-    $modalTitle.textContent = t.postTitle;
-    $lblTitle.textContent = `${t.title} (${currentLang})`;
-    $lblDesc.textContent = `${t.desc} (${currentLang})`;
-    $lblCategory.textContent = t.category;
-    $lblLevel.textContent = t.level;
-    $lblDeadline.textContent = t.deadline;
-    $lblDeadlineTime.textContent = t.deadlineTime;
-    $lblMediaType.textContent = t.mediaType;
-    $lblMedia.textContent = t.mediaUpload;
-    $lblEntryFee.textContent = t.entryFee;
-    $lblPrizeAmount.textContent = t.prizeAmount;
-    $savePost.textContent = t.publish;
-    $cancelPost.textContent = t.cancel;
-  }
-
-  function renderLeaderboard() {
-    $leaderboard.innerHTML = '';
-    Object.entries(points).sort((a, b) => b[1] - a[1]).forEach(([user, pts], i) => {
-      const row = document.createElement('div');
-      row.className = 'row';
-      row.innerHTML = `<span>#${i + 1} ${user}</span><strong>${pts} pts</strong>`;
-      $leaderboard.appendChild(row);
-    });
-  }
-
-  function renderFeed() {
-    const t = uiText[currentLang];
-    let list = challenges
-      .filter(c => selectedInterest === 'All' || c.category === selectedInterest)
-      .filter(c => {
-        const tr = c.translations[currentLang] || c.translations.en;
-        return !searchQuery || tr.title.toLowerCase().includes(searchQuery) || tr.description.toLowerCase().includes(searchQuery);
-      });
-
-    $challengeFeed.innerHTML = '';
-    if (list.length === 0) {
-      $challengeFeed.innerHTML = `<div class="card">${t.search}: No challenges found.</div>`;
-      return;
-    }
-    list.forEach(c => {
-      const tr = c.translations[currentLang];
-      const card = document.createElement('div');
-      card.className = 'card';
-
-      let mediaContent = '';
-      if (c.mediaType === 'audio' && c.mediaURL) {
-        mediaContent = `<audio controls src="${c.mediaURL}"></audio>`;
-      } else if (c.mediaType === 'video' && c.mediaURL) {
-        mediaContent = `<video controls src="${c.mediaURL}"></video>`;
-      } else if (c.mediaType === 'file' && c.mediaURL) {
-           mediaContent = `<a href="${c.mediaURL}" download>Download File</a>`;
-      }
-
-      card.innerHTML = `
-        <h3>${tr.title}</h3>
-        <div class="meta">
-          <span><strong>${t.category}:</strong> ${c.category}</span>
-          <span><strong>${t.level}:</strong> ${c.level}</span>
-          <span><strong>${t.deadline}:</strong> ${c.deadline}</span>
-          <span><strong>${t.deadlineTime}:</strong> ${c.deadlineTime}</span>
-          <span><strong>${t.entryFee}:</strong> ${c.entryFee}</span>
-          <span><strong>${t.prizeAmount}:</strong> ${c.prizeAmount}</span>
-        </div>
-        <p class="desc">${tr.description}</p>
-        ${mediaContent ? `<div class="media-container">${mediaContent}</div>` : ''}
-      `;
-      $challengeFeed.appendChild(card);
-    });
-  }
-
-  // Modal open/close
-  $postBtn.addEventListener('click', () => {
-    $backdrop.style.display = 'flex';
-    $mTitle.focus();
-  });
-  $closeModal.addEventListener('click', () => {
-    $backdrop.style.display = 'none';
-  });
-  $cancelPost.addEventListener('click', () => {
-    $backdrop.style.display = 'none';
-  });
-  // Allow closing modal with Escape key
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && $backdrop.style.display === 'flex') {
-      $backdrop.style.display = 'none';
-    }
-  });
-
-  // Handle media type selection
-  $mMediaType.addEventListener('change', () => {
-    const mediaType = $mMediaType.value;
-    if (mediaType === 'text') {
-      $mediaInputContainer.style.display = 'none';
-    } else {
-      $mediaInputContainer.style.display = 'block';
-    }
-  });
-
-  // Handle file input change
-  $mMedia.addEventListener('change', function() {
-    if (this.files && this.files[0]) {
-      $fileName.textContent = this.files[0].name;
-    } else {
-      $fileName.textContent = 'No file chosen';
-    }
-  });
-
-  // Save post (form submit)
-  $challengeForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const title = $mTitle.value.trim();
-    const description = $mDesc.value.trim();
-    const category = $mCategory.value;
-    const level = $mLevel.value;
-    const deadline = $mDeadline.value;
-    const deadlineTime = $mDeadlineTime.value;
-    const mediaType = $mMediaType.value;
-    const mediaFile = $mMedia.files[0]; // Get the file object
-    const entryFee = $mEntryFee.value;
-    const prizeAmount = $mPrizeAmount.value;
-
-    if (!title || !description || !deadline || !deadlineTime) {
-      toast('Please fill Title, Description, Deadline and Deadline Time');
-      return;
-    }
-
-    // In a real application, you would upload the media file to a server here
-    // For this example, we'll just store the file name
-    let mediaURL = mediaFile ? mediaFile.name : null;
-
-    // Create a new challenge with content for the current language
-    const newChallenge = {
-      category, level, deadline, deadlineTime, entryFee, prizeAmount, votes: 0,
-      translations: {
-        [currentLang]: { title, description }
-      },
-      mediaType,
-      mediaURL
-    };
-    // Ensure English fallback if posted in another language
-    if (currentLang !== 'en') {
-      newChallenge.translations.en = { title, description };
-    }
-
-    challenges.unshift(newChallenge); // add to top
-    points['You'] = (points['You'] || 0) + 5; // posting gives +5
-
-    // reset + close
-    $challengeForm.reset();
-    $backdrop.style.display = 'none';
-    toast(uiText[currentLang].posted || 'Posted');
-    renderFeed();
-    renderLeaderboard();
-  });
-
-  // Controls
-  $interestSelect.addEventListener('change', e => {
-    selectedInterest = e.target.value;
-    renderFeed();
-  });
-  $searchInput.addEventListener('input', e => {
-    searchQuery = e.target.value.toLowerCase();
-    renderFeed();
-  });
-  $languageSelect.addEventListener('change', e => {
-    currentLang = e.target.value;
-    applyTranslations();
-    renderFeed();
-  });
-
-  // Init
-  applyTranslations();
-  renderLeaderboard();
-  renderFeed();
-
-  // Initially hide the media input
-  $mediaInputContainer.style.display = 'none';
-
-</script>
+        <!-- আরও প্রশ্ন এখানে যোগ করুন -->
+    </div>
 </body>
 </html>
