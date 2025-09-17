@@ -1,130 +1,207 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <title>WBSSC Group D Mock Test</title>
+  <meta charset="UTF-8" />
+  <title>45 প্রশ্নের কুইজ — GK 15, Math 15, Current Affairs 15</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .question { margin-bottom: 20px; }
-    .options label { display: block; margin-left: 20px; }
-    .section { margin-top: 40px; }
-    #result { font-weight: bold; font-size: 18px; color: green; margin-top: 30px; }
-    #timer { font-size: 20px; color: red; font-weight: bold; margin-bottom: 20px; }
-    .correct { color: green; font-weight: bold; }
-    .incorrect { color: red; font-weight: bold; }
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.5; }
+    h1 { margin-bottom: 6px; }
+    .meta { color: #555; margin-bottom: 16px; }
+    .question { margin: 16px 0; padding: 12px; border: 1px solid #eee; border-radius: 8px; }
+    .badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 12px; margin-left: 8px; background: #f2f2f2; color: #333; }
+    .options label { display: block; margin: 6px 0 0 0; cursor: pointer; }
+    #result { font-weight: bold; font-size: 18px; color: #0a7a0a; margin-top: 18px; }
+    #timer { font-size: 18px; color: #b00020; font-weight: bold; margin: 10px 0 16px; }
+    .correct { color: #0a7a0a; font-weight: bold; }
+    .incorrect { color: #b00020; font-weight: bold; }
+    .controls { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    button { cursor: pointer; padding: 8px 14px; border: none; border-radius: 6px; background: #1f73b7; color: #fff; }
+    button.secondary { background: #6c757d; }
+    .legend { font-size: 12px; color: #666; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <h1>WBSSC Group D Mock Test</h1>
-  <div id="timer">Time Remaining: 60:00</div>
+  <h1>45 প্রশ্নের কুইজ</h1>
+  <div class="meta">বিভাগ: GK 15 • Math 15 • Current Affairs 15 — মোট 45 প্রশ্ন, প্রতি প্রশ্নে ১ নম্বর</div>
+  <div id="timer">সময় বাকি: 60:00</div>
+
   <form id="quizForm">
-    <div class="section" id="questionsContainer"></div>
-    <button type="button" onclick="calculateScore()">Submit</button>
+    <div id="questionsContainer"></div>
+    <div class="controls">
+      <button type="button" id="submitBtn">Submit</button>
+      <button type="button" class="secondary" id="resetBtn">Reset</button>
+      <button type="button" class="secondary" id="showAnsBtn">Show/Hide Answers</button>
+    </div>
+    <div class="legend">সাবমিটের পর সব সঠিক অপশন সবুজ হবে; ভুলভাবে নির্বাচিত অপশন লাল দেখাবে।</div>
     <div id="result"></div>
   </form>
+
   <script>
-  const questions = [
-    // প্রথম 15টি
-    { q: "ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?", opts: ["প্রতিভা পাটিল", "ইন্দিরা গান্ধী", "মীরা কুমার", "সোনিয়া গান্ধী"], ans: "A" },
-    { q: "পশ্চিমবঙ্গের রাজধানী কোথায়?", opts: ["কলকাতা", "দার্জিলিং", "শিলিগুড়ি", "আসানসোল"], ans: "A" },
-    { q: "'গীতাঞ্জলি' গ্রন্থের রচয়িতা কে?", opts: ["রবীন্দ্রনাথ ঠাকুর", "বঙ্কিমচন্দ্র", "কাজী নজরুল", "শরৎচন্দ্র"], ans: "A" },
-    { q: "ভারতের জাতীয় পশু কোনটি?", opts: ["সিংহ", "বাঘ", "হরিণ", "গণ্ডার"], ans: "B" },
-    { q: "মানবদেহে রক্ত পরিশোধন করে কোন অঙ্গ?", opts: ["হৃদপিণ্ড", "যকৃত", "কিডনি", "ফুসফুস"], ans: "C" },
-    { q: "25% এর 200 কত?", opts: ["25", "50", "75", "100"], ans: "B" },
-    { q: "ভারতের জাতীয় খেলা কোনটি?", opts: ["ক্রিকেট", "হকি", "ফুটবল", "কাবাডি"], ans: "B" },
-    { q: "পৃথিবীর উপগ্রহের নাম কী?", opts: ["চাঁদ", "সূর্য", "মঙ্গল", "শুক্র"], ans: "A" },
-    { q: "বাংলাদেশের রাজধানী কোনটি?", opts: ["ঢাকা", "চট্টগ্রাম", "খুলনা", "রাজশাহী"], ans: "A" },
-    { q: "100 এর 10% কত?", opts: ["5", "10", "15", "20"], ans: "B" },
-    { q: "ভারতের জাতীয় ফুল কোনটি?", opts: ["গোলাপ", "পদ্ম", "সূর্যমুখী", "শাপলা"], ans: "B" },
-    { q: "Discovery of India' বইটির লেখক কে?", opts: ["বিপিনচন্দ্র পাল", "মহাত্মা গান্ধী", "জওহরলাল নেহরু", "সুভাষচন্দ্র বসু"], ans: "C" },
-    { q: "ভারতের পতাকায় কতটি রং আছে?", opts: ["২", "৩", "৪", "৫"], ans: "B" },
-    { q: "বিপ্লবী ক্ষুদিরাম বসুর জন্মস্থান কোথায়?", opts: ["মেদিনীপুর", "হাওড়া", "নদিয়া", "বীরভূম"], ans: "A" },
-    { q: "40 এর 25% কত?", opts: ["10", "8", "12", "15"], ans: "A" },
+    // 45 প্রশ্ন: 15 GK, 15 Math, 15 Current Affairs
+    const questions = [
+      // GK (15)
+      { cat:"GK", q:"ভারতের জাতীয় পশু কোনটি?", opts:["সিংহ","বাঘ","হরিণ","গণ্ডার"], ans:"B" },
+      { cat:"GK", q:"ভারতের জাতীয় সংগীত কে রচনা করেছেন?", opts:["কাজী নজরুল ইসলাম","রবীন্দ্রনাথ ঠাকুর","ব্যাংকিমচন্দ্র চট্টোপাধ্যায়","সুভাষচন্দ্র বসু"], ans:"B" },
+      { cat:"GK", q:"তাজমহল কোথায় অবস্থিত?", opts:["দিল্লি","আগ্রা","লখনউ","জয়পুর"], ans:"B" },
+      { cat:"GK", q:"ভারতের প্রথম প্রধানমন্ত্রী কে?", opts:["লাল বাহাদুর শাস্ত্রী","ইন্দিরা গান্ধী","জওহরলাল নেহরু","রাজেন্দ্র প্রসাদ"], ans:"C" },
+      { cat:"GK", q:"ভারতের জাতীয় ফুল কোনটি?", opts:["গোলাপ","পদ্ম","জুঁই","শিউলি"], ans:"B" },
+      { cat:"GK", q:"পৃথিবীর সবচেয়ে বড় মহাসাগর কোনটি?", opts:["আটলান্টিক","প্রশান্ত","ভারত মহাসাগর","আর্কটিক"], ans:"B" },
+      { cat:"GK", q:"বিশ্বের দীর্ঘতম নদী কোনটি?", opts:["আমাজন","নাইল","ইয়াংসি","গঙ্গা"], ans:"B" },
+      { cat:"GK", q:"ভারতের মুদ্রার নাম কী?", opts:["রুপি","টাকা","দিনার","ডলার"], ans:"A" },
+      { cat:"GK", q:"পৃথিবীর প্রাকৃতিক উপগ্রহের নাম কী?", opts:["চাঁদ","সূর্য","মঙ্গল","শুক্র"], ans:"A" },
+      { cat:"GK", q:"ভারতের জাতীয় পাখি কোনটি?", opts:["ময়ূর","গঙ্গাফড়িং","চিল","কাক"], ans:"A" },
+      { cat:"GK", q:"মানবদেহের সবচেয়ে বড় অঙ্গ কোনটি?", opts:["হৃদপিণ্ড","যকৃত","ত্বক","ফুসফুস"], ans:"C" },
+      { cat:"GK", q:"গীতাঞ্জলি গ্রন্থের রচয়িতা কে?", opts:["শরৎচন্দ্র","বঙ্কিমচন্দ্র","রবীন্দ্রনাথ ঠাকুর","কাজী নজরুল"], ans:"C" },
+      { cat:"GK", q:"পৃথিবীর সবচেয়ে বড় মরুভূমি কোনটি?", opts:["সাহারা","আরব","গোবি","অ্যান্টার্কটিকা"], ans:"D" },
+      { cat:"GK", q:"ভারতের পতাকায় কতটি রং আছে?", opts:["২","৩","৪","৫"], ans:"B" },
+      { cat:"GK", q:"ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?", opts:["ইন্দিরা গান্ধী","প্রতিভা পাটিল","মীরা কুমার","সোনিয়া গান্ধী"], ans:"B" },
 
-    // পরের 15টি
-    { q: "ভারতের প্রথম প্রধানমন্ত্রী কে?", opts: ["লাল বাহাদুর শাস্ত্রী", "ইন্দিরা গান্ধী", "জওহরলাল নেহরু", "রাজীব গান্ধী"], ans: "C" },
-    { q: "তাজমহল কোথায় অবস্থিত?", opts: ["দিল্লি", "আগ্রা", "লখনউ", "জয়পুর"], ans: "B" },
-    { q: "পৃথিবীর সবচেয়ে বড় মহাসাগর কোনটি?", opts: ["আটলান্টিক", "প্রশান্ত", "ভারত মহাসাগর", "আর্কটিক"], ans: "B" },
-    { q: "ভারতের জাতীয় পাখি কোনটি?", opts: ["ময়ূর", "কাক", "পায়রা", "চিল"], ans: "A" },
-    { q: "মানবদেহে মোট কতটি হাড় আছে?", opts: ["২০৬", "২১০", "২০০", "২১৫"], ans: "A" },
-    { q: "পশ্চিমবঙ্গের সরকারি ভাষা কোনটি?", opts: ["বাংলা", "হিন্দি", "ইংরেজি", "উর্দু"], ans: "A" },
-    { q: "সূর্যের সবচেয়ে কাছের গ্রহ কোনটি?", opts: ["শুক্র", "বুধ", "পৃথিবী", "মঙ্গল"], ans: "B" },
-    { q: "ভারতের মুদ্রার নাম কী?", opts: ["রুপি", "টাকা", "ডলার", "দিনার"], ans: "A" },
-    { q: "বিশ্বের দীর্ঘতম নদী কোনটি?", opts: ["নাইল", "আমাজন", "গঙ্গা", "ইয়াংসি"], ans: "A" },
-    { q: "পৃথিবীর প্রাকৃতিক উপগ্রহের নাম কী?", opts: ["চাঁদ", "সূর্য", "মঙ্গল", "শুক্র"], ans: "A" },
-    { q: "ভারতের জাতীয় সংগীতের রচয়িতা কে?", opts: ["কাজী নজরুল ইসলাম", "রবীন্দ্রনাথ ঠাকুর", "ব্যাংকিমচন্দ্র চট্টোপাধ্যায়", "সুভাষচন্দ্র বসু"], ans: "B" },
-    { q: "পশ্চিমবঙ্গের বর্তমান রাজধানী কোনটি?", opts: ["কলকাতা", "দার্জিলিং", "শিলিগুড়ি", "আসানসোল"], ans: "A" },
-    { q: "মানবদেহের সবচেয়ে বড় অঙ্গ কোনটি?", opts: ["হৃদপিণ্ড", "যকৃত", "ত্বক", "ফুসফুস"], ans: "C" },
-    { q: "ভারতের জাতীয় ফল কোনটি?", opts: ["আম", "কলা", "লিচু", "পেয়ারা"], ans: "A" },
-    { q: "পৃথিবীর সবচেয়ে উঁচু পর্বত কোনটি?", opts: ["কাঞ্চনজঙ্ঘা", "মাউন্ট এভারেস্ট", "নন্দাদেবী", "আন্নপূর্ণা"], ans: "B" },
+      // Math (15)
+      { cat:"Math", q:"100 এর 10% কত?", opts:["5","10","15","20"], ans:"B" },
+      { cat:"Math", q:"25% এর 200 কত?", opts:["25","50","75","100"], ans:"B" },
+      { cat:"Math", q:"40 এর 25% কত?", opts:["10","8","12","15"], ans:"A" },
+      { cat:"Math", q:"একটি সংখ্যার 1/3 হল 12, সংখ্যাটি কত?", opts:["18","24","36","48"], ans:"B" },
+      { cat:"Math", q:"সরল সুদ: মূলধন ₹5000, হার 10% বার্ষিক, সময় 2 বছর — সুদ কত?", opts:["₹500","₹750","₹1000","₹1500"], ans:"C" },
+      { cat:"Math", q:"গড়: 6, 8, 10 এর গড় কত?", opts:["6","7","8","9"], ans:"C" },
+      { cat:"Math", q:"অনুপাত 3:4 = ? এর 9:12 এ মান কত?", opts:["সমান","বেশি","কম","জানা যায় না"], ans:"A" },
+      { cat:"Math", q:"একটি পণ্যের মূল ₹1200, 20% ছাড়ের পর দাম?", opts:["₹960","₹1000","₹1040","₹940"], ans:"A" },
+      { cat:"Math", q:"সরলীকরণ: 12 ÷ 3 × 2 =", opts:["2","6","8","4"], ans:"C" },
+      { cat:"Math", q:"বর্গসংখ্যা: কোনটি পারফেক্ট স্কয়ার?", opts:["45","50","64","70"], ans:"C" },
+      { cat:"Math", q:"সময়ের রূপান্তর: 2 ঘন্টা 30 মিনিট = কত মিনিট?", opts:["120","130","140","150"], ans:"D" },
+      { cat:"Math", q:"ক্ষেত্রফল: 10m × 8m আয়তক্ষেত্রের ক্ষেত্রফল?", opts:["18 m²","80 m²","40 m²","100 m²"], ans:"B" },
+      { cat:"Math", q:"ভাগশেষ: 17 কে 5 দিয়ে ভাগ করলে ভাগশেষ?", opts:["0","1","2","3"], ans:"C" },
+      { cat:"Math", q:"শতকরা: একটি সংখ্যা 200 থেকে 10% বাড়লে কত?", opts:["210","215","220","230"], ans:"C" },
+      { cat:"Math", q:"LCM(6, 8) কত?", opts:["12","16","24","48"], ans:"C" },
 
-    // শেষ 15টি
-    { q: "ভারতের স্বাধীনতা দিবস কবে পালিত হয়?", opts: ["২৬ জানুয়ারি", "১৫ আগস্ট", "২ অক্টোবর", "১৪ নভেম্বর"], ans: "B" },
-    { q: "পশ্চিমবঙ্গের রাজ্যপাল কে?", opts: ["সিভি আনন্দ বোস", "জগদীপ ধনখড়", "কেশরীনাথ ত্রিপাঠী", "গোপালকৃষ্ণ গান্ধী"], ans: "A" },
-    { q: "ভারতের প্রথম উপ-রাষ্ট্রপতি কে ছিলেন?", opts: ["ড. সর্বপল্লী রাধাকৃষ্ণন", "ড. রাজেন্দ্র প্রসাদ", "জাকির হুসেন", "ভি. ভি. গিরি"], ans: "A" },
-    { q: "পৃথিবীর সবচেয়ে বড় মরুভূমি কোনটি?", opts: ["সাহারা", "গোবি", "কালাহারি", "অ্যান্টার্কটিকা"], ans: "D" },
-    { q: "ভারতের জাতীয় সঙ্গীতের দৈর্ঘ্য কত সেকেন্ড?", opts: ["৪০", "৫২", "৬০", "৭০"], ans: "B" },
-    { q: "পশ্চিমবঙ্গের সরকারি প্রতীক কোন ফুল?", opts: ["শিউলি", "শাপলা", "চাঁপা", "পদ্ম"], ans: "C" },
-    { q: "ভারতের প্রথম মহিলা প্রধানমন্ত্রী কে?", opts: ["ইন্দিরা গান্ধী", "প্রতিভা পাটিল", "সোনিয়া গান্ধী", "মীরা কুমার"], ans: "A" },
-    { q: "বিশ্বের সবচেয়ে উঁচু জলপ্রপাত কোনটি?", opts: ["নায়াগ্রা", "অ্যাঞ্জেল ফলস", "ভিক্টোরিয়া ফলস", "ইগুয়াজু"], ans: "B" },
-    { q: "ভারতের প্রথম লোকসভা নির্বাচন কবে হয়েছিল?", opts: ["১৯৪৭", "১৯৫০", "১৯৫১-৫২", "১৯৫৫"], ans: "C" },
-    { q: "পশ্চিমবঙ্গের সবচেয়ে বড় জেলা কোনটি (আয়তনে)?", opts: ["পুরুলিয়া", "পশ্চিম মেদিনীপুর", "দক্ষিণ ২৪ পরগনা", "বীরভূম"], ans: "C" },
-    { q: "ভারতের জাতীয় ক্যালেন্ডার কোনটি?", opts: ["শকাব্দ", "বিক্রম সম্বৎ", "গ্রেগরিয়ান", "হিজরি"], ans: "A" },
-    { q: "ভারতের প্রথম উপগ্রহের নাম কী?", opts: ["ভাস্কর", "আর্যভট্ট", "ইনসাট-১বি", "রোহিণী"], ans: "B" },
-    { q: "পৃথিবীর সবচেয়ে গভীর মহাসাগর কোনটি?", opts: ["আটলান্টিক", "প্রশান্ত", "ভারত মহাসাগর", "আর্কটিক"], ans: "B" },
-    { q: "ভারতের জাতীয় খনিজ কোনটি?", opts: ["কয়লা", "লোহা", "চুনাপাথর", "মাইকা"], ans: "D" },
-    { q: "পশ্চিমবঙ্গের প্রথম মুখ্যমন্ত্রী কে ছিলেন?", opts: ["বিদান চন্দ্র রায়", "প্রফুল্ল চন্দ্র ঘোষ", "জ্যোতি বসু", "সিদ্ধার্থশঙ্কর রায়"], ans: "B" }
-  ];
+      // Current Affairs (15) — সাম্প্রতিক প্রাসঙ্গিক সাধারণ জ্ঞানধর্মী
+      { cat:"CA", q:"ভারতের স্বাধীনতা দিবস কবে পালিত হয়?", opts:["২৬ জানুয়ারি","১৫ আগস্ট","২ অক্টোবর","১৪ নভেম্বর"], ans:"B" },
+      { cat:"CA", q:"ভারতের বর্তমান রাষ্ট্রপতি পদটি কে প্রথম নারী হিসেবে ধারণ করেছিলেন?", opts:["দ্রৌপদী মুর্মু","প্রতিভা পাটিল","সোনিয়া গান্ধী","মীরা কুমার"], ans:"B" },
+      { cat:"CA", q:"G20-এর স্থায়ী সদস্য নয় কোনটি?", opts:["ভারত","ইন্দোনেশিয়া","সিঙ্গাপুর","জাপান"], ans:"C" },
+      { cat:"CA", q:"UN-এর সদর দপ্তর কোথায়?", opts:["জেনেভা","নিউইয়র্ক","প্যারিস","ভিয়েনা"], ans:"B" },
+      { cat:"CA", q:"IOC যে অলিম্পিক গেমস আয়োজন করে, IOC-এর পূর্ণরূপ?", opts:["Indian Olympic Council","International Olympic Committee","International Organization of Culture","International Olympic Council"], ans:"B" },
+      { cat:"CA", q:"‘চন্দ্রযান-3’ মিশন কোন সংস্থার?", opts:["নাসা","ইস্রো","ইএসএ","রসকসমস"], ans:"B" },
+      { cat:"CA", q:"নোবেল শান্তি পুরস্কার কে দেয়?", opts:["সুইডিশ একাডেমি","নরওয়েজিয়ান নোবেল কমিটি","রয়্যাল সোসাইটি","ইউনেস্কো"], ans:"B" },
+      { cat:"CA", q:"COP জলবায়ু সম্মেলনের মূল উদ্দেশ্য কী?", opts:["বাণিজ্য নীতি","জলবায়ু পরিবর্তন মোকাবিলা","শান্তিরক্ষা","খেলাধুলা উন্নয়ন"], ans:"B" },
+      { cat:"CA", q:"ভারতের সংসদের নিম্নকক্ষের নাম?", opts:["লোকসভা","রাজ্যসভা","বিধানসভা","ফেডারেল হাউস"], ans:"A" },
+      { cat:"CA", q:"GST-এর পূর্ণরূপ কী?", opts:["Goods and Service Tax","Goods and Services Tax","General Sales Tax","Global Services Tariff"], ans:"B" },
+      { cat:"CA", q:"বেসিক সেভিংস ব্যাংক অ্যাকাউন্ট কোন স্কিমের অংশ?", opts:["PMJDY","PM-KISAN","MNREGA","UDAY"], ans:"A" },
+      { cat:"CA", q:"ভারতের নির্বাচন কমিশনের প্রধানকে কী বলা হয়?", opts:["চিফ এডিটর","চিফ ইলেকশন কমিশনার","চিফ জাস্টিস","কন্ট্রোলার জেনারেল"], ans:"B" },
+      { cat:"CA", q:"আন্তর্জাতিক যোগ দিবস কবে পালিত হয়?", opts:["১ মে","২১ জুন","১ জুলাই","১৫ আগস্ট"], ans:"B" },
+      { cat:"CA", q:"ভারতের সংবিধানের প্রস্তাবনায় ‘সমাজতান্ত্রিক’ শব্দটি কোন সংশোধনীতে যুক্ত হয়?", opts:["২৪তম","৪০তম","৪২তম","৪৪তম"], ans:"C" },
+      { cat:"CA", q:"ভারতের প্রথম উপগ্রহ ‘আর্যভট্ট’ উৎক্ষেপণ হয় কোন বছরে?", opts:["১৯৭২","১৯৭৫","১৯৭৭","১৯৮০"], ans:"B" }
+    ];
 
-  const container = document.getElementById("questionsContainer");
-  questions.forEach((item, index) => {
-    const qNum = index + 1;
-    const div = document.createElement("div");
-    div.className = "question";
-    div.innerHTML = `<p>${qNum}. ${item.q}</p><div class="options">` +
-      item.opts.map((opt, i) => {
-        const optLabel = String.fromCharCode(65 + i);
-        return `<label><input type="radio" name="q${qNum}" value="${optLabel}"> ${optLabel}. ${opt}</label>`;
-      }).join("") + `</div>`;
-    container.appendChild(div);
-  });
+    const container = document.getElementById("questionsContainer");
 
-  function calculateScore() {
-    let score = 0;
-    questions.forEach((item, index) => {
-      const qNum = index + 1;
-      const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
-      const options = document.getElementsByName(`q${qNum}`);
-      options.forEach(opt => {
-        opt.parentElement.classList.remove("correct", "incorrect");
-        if (opt.value === item.ans) {
-          opt.parentElement.classList.add("correct");
+    function renderQuestions() {
+      container.innerHTML = "";
+      questions.forEach((item, index) => {
+        const qNum = index + 1;
+        const div = document.createElement("div");
+        div.className = "question";
+        const badgeColor =
+          item.cat === "GK" ? "#e8f5e9" :
+          item.cat === "Math" ? "#e3f2fd" : "#fff8e1";
+
+        div.style.background = badgeColor;
+
+        const header = `<p><strong>${qNum}.</strong> ${item.q} <span class="badge">${item.cat}</span></p>`;
+        const optsHtml = item.opts.map((opt, i) => {
+          const optLabel = String.fromCharCode(65 + i);
+          return `<label><input type="radio" name="q${qNum}" value="${optLabel}" /> ${optLabel}. ${opt}</label>`;
+        }).join("");
+
+        div.innerHTML = `${header}<div class="options">${optsHtml}</div>`;
+        container.appendChild(div);
+      });
+    }
+
+    renderQuestions();
+
+    function calculateScore() {
+      let score = 0;
+      questions.forEach((item, index) => {
+        const qNum = index + 1;
+        const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
+        const options = document.getElementsByName(`q${qNum}`);
+
+        options.forEach(opt => {
+          opt.parentElement.classList.remove("correct", "incorrect");
+          if (opt.value === item.ans) {
+            opt.parentElement.classList.add("correct");
+          }
+        });
+
+        if (selected && selected.value !== item.ans) {
+          selected.parentElement.classList.add("incorrect");
+        }
+        if (selected && selected.value === item.ans) {
+          score++;
         }
       });
-      if (selected && selected.value !== item.ans) {
-        selected.parentElement.classList.add("incorrect");
-      }
-      if (selected && selected.value === item.ans) {
-        score++;
-      }
-    });
-    document.getElementById("result").innerText = `আপনার স্কোর: ${score} / ${questions.length}`;
-  }
-
-  let totalSeconds = 60 * 60;
-  const timerDisplay = document.getElementById("timer");
-  function updateTimer() {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    timerDisplay.textContent = `Time Remaining: ${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-    if (totalSeconds <= 0) {
-      clearInterval(timerInterval);
-      calculateScore();
-      alert("সময় শেষ! আপনার উত্তর জমা দেওয়া হয়েছে।");
+      const gkScore = sectionScore("GK");
+      const mathScore = sectionScore("Math");
+      const caScore = sectionScore("CA");
+      document.getElementById("result").innerText =
+        `মোট স্কোর: ${score} / ${questions.length}  —  GK: ${gkScore}/15, Math: ${mathScore}/15, CA: ${caScore}/15`;
     }
-    totalSeconds--;
-  }
-  const timerInterval = setInterval(updateTimer, 1000);
+
+    function sectionScore(cat) {
+      let s = 0;
+      let idx = 0;
+      questions.forEach((item, index) => {
+        if (item.cat === cat) {
+          idx++;
+          const qNum = index + 1;
+          const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
+          if (selected && selected.value === item.ans) s++;
+        }
+      });
+      return s;
+    }
+
+    let showAnswers = false;
+    function toggleAnswers() {
+      showAnswers = !showAnswers;
+      // Highlight correct answers without needing submit
+      questions.forEach((item, index) => {
+        const qNum = index + 1;
+        const options = document.getElementsByName(`q${qNum}`);
+        options.forEach(opt => {
+          opt.parentElement.classList.remove("correct", "incorrect");
+          if (showAnswers && opt.value === item.ans) {
+            opt.parentElement.classList.add("correct");
+          }
+        });
+      });
+      if (!showAnswers) {
+        document.getElementById("result").innerText = "";
+      }
+    }
+
+    document.getElementById("submitBtn").addEventListener("click", calculateScore);
+    document.getElementById("showAnsBtn").addEventListener("click", toggleAnswers);
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("quizForm").reset();
+      document.querySelectorAll(".correct, .incorrect").forEach(el => el.classList.remove("correct","incorrect"));
+      document.getElementById("result").innerText = "";
+    });
+
+    // 60 মিনিট টাইমার
+    let totalSeconds = 60 * 60;
+    const timerDisplay = document.getElementById("timer");
+    const timerInterval = setInterval(() => {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      timerDisplay.textContent = `সময় বাকি: ${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+      if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        calculateScore();
+        alert("সময় শেষ! আপনার উত্তর জমা দেওয়া হয়েছে।");
+      }
+      totalSeconds--;
+    }, 1000);
   </script>
 </body>
 </html>
