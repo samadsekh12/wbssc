@@ -9,51 +9,76 @@
         .question { margin-bottom: 20px; }
         .options label { display: block; margin-left: 20px; }
         .section { margin-top: 40px; }
+        #result { font-weight: bold; font-size: 18px; color: green; margin-top: 30px; }
     </style>
 </head>
 <body>
     <h1>WBSSC Group D Mock Test</h1>
-
-    <div class="section">
-        <h2>General Knowledge</h2>
-        <div class="question">
-            <p>1. ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?</p>
-            <div class="options">
-                <label><input type="radio" name="q1"> A. প্রতিভা পাটিল</label>
-                <label><input type="radio" name="q1"> B. ইন্দিরা গান্ধী</label>
-                <label><input type="radio" name="q1"> C. মীরা কুমার</label>
-                <label><input type="radio" name="q1"> D. সোনিয়া গান্ধী</label>
+    <form id="quizForm">
+        <!-- প্রশ্ন ১ থেকে ৪৫ পর্যন্ত -->
+        <!-- উদাহরণস্বরূপ প্রশ্ন ১ -->
+        <div class="section">
+            <h2>General Knowledge</h2>
+            <div class="question">
+                <p>1. ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="A"> A. প্রতিভা পাটিল</label>
+                    <label><input type="radio" name="q1" value="B"> B. ইন্দিরা গান্ধী</label>
+                    <label><input type="radio" name="q1" value="C"> C. মীরা কুমার</label>
+                    <label><input type="radio" name="q1" value="D"> D. সোনিয়া গান্ধী</label>
+                </div>
             </div>
+            <!-- প্রশ্ন ২ থেকে ১৫ এখানে একইভাবে যোগ করুন -->
         </div>
-        <!-- আরও প্রশ্ন এখানে যোগ করুন -->
-    </div>
 
-    <div class="section">
-        <h2>Current Affairs</h2>
-        <div class="question">
-            <p>16. 2024 সালে ভারতের প্রধানমন্ত্রী কে ছিলেন?</p>
-            <div class="options">
-                <label><input type="radio" name="q16"> A. নরেন্দ্র মোদী</label>
-                <label><input type="radio" name="q16"> B. রাহুল গান্ধী</label>
-                <label><input type="radio" name="q16"> C. অমিত শাহ</label>
-                <label><input type="radio" name="q16"> D. মমতা বন্দ্যোপাধ্যায়</label>
+        <div class="section">
+            <h2>Current Affairs</h2>
+            <div class="question">
+                <p>16. 2024 সালে ভারতের প্রধানমন্ত্রী কে ছিলেন?</p>
+                <div class="options">
+                    <label><input type="radio" name="q16" value="A"> A. নরেন্দ্র মোদী</label>
+                    <label><input type="radio" name="q16" value="B"> B. রাহুল গান্ধী</label>
+                    <label><input type="radio" name="q16" value="C"> C. অমিত শাহ</label>
+                    <label><input type="radio" name="q16" value="D"> D. মমতা বন্দ্যোপাধ্যায়</label>
+                </div>
             </div>
+            <!-- প্রশ্ন ১৭ থেকে ৩০ এখানে একইভাবে যোগ করুন -->
         </div>
-        <!-- আরও প্রশ্ন এখানে যোগ করুন -->
-    </div>
 
-    <div class="section">
-        <h2>Arithmetic</h2>
-        <div class="question">
-            <p>31. 25% of 240 কত?</p>
-            <div class="options">
-                <label><input type="radio" name="q31"> A. 60</label>
-                <label><input type="radio" name="q31"> B. 48</label>
-                <label><input type="radio" name="q31"> C. 72</label>
-                <label><input type="radio" name="q31"> D. 80</label>
+        <div class="section">
+            <h2>Arithmetic</h2>
+            <div class="question">
+                <p>31. 25% of 240 কত?</p>
+                <div class="options">
+                    <label><input type="radio" name="q31" value="A"> A. 60</label>
+                    <label><input type="radio" name="q31" value="B"> B. 48</label>
+                    <label><input type="radio" name="q31" value="C"> C. 72</label>
+                    <label><input type="radio" name="q31" value="D"> D. 80</label>
+                </div>
             </div>
+            <!-- প্রশ্ন ৩২ থেকে ৪৫ এখানে একইভাবে যোগ করুন -->
         </div>
-        <!-- আরও প্রশ্ন এখানে যোগ করুন -->
-    </div>
+
+        <button type="button" onclick="calculateScore()">Submit</button>
+        <div id="result"></div>
+    </form>
+
+    <script>
+        function calculateScore() {
+            let score = 0;
+            const answers = {
+                q1: "A", q16: "A", q31: "A"
+                // বাকি প্রশ্নের সঠিক উত্তর এখানে যোগ করুন, যেমন:
+                // q2: "B", q3: "A", ..., q45: "A"
+            };
+            for (let q in answers) {
+                const selected = document.querySelector('input[name="' + q + '"]:checked');
+                if (selected && selected.value === answers[q]) {
+                    score += 1;
+                }
+            }
+            document.getElementById("result").innerText = "আপনার স্কোর: " + score + " / 45";
+        }
+    </script>
 </body>
 </html>
