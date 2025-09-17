@@ -1,87 +1,61 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <title>WBSSC Group D Mock Test</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { color: #2c3e50; }
-    .question { margin-bottom: 20px; }
-    .options label { display: block; margin-left: 20px; }
-    .section { margin-top: 40px; }
-    #result { font-weight: bold; font-size: 18px; color: green; margin-top: 30px; }
-    #timer { font-size: 20px; color: red; font-weight: bold; margin-bottom: 20px; }
-    .correct { color: green; font-weight: bold; }
-    .incorrect { color: red; font-weight: bold; }
-  </style>
-</head>
-<body>
-  <h1>WBSSC Group D Mock Test</h1>
-  <div id="timer">Time Remaining: 60:00</div>
-  <form id="quizForm">
-    <div class="section" id="questionsContainer"></div>
-    <button type="button" onclick="calculateScore()">Submit</button>
-    <div id="result"></div>
-  </form>
+<script>
+  const questions = [
+    { q: "ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?", opts: ["প্রতিভা পাটিল", "ইন্দিরা গান্ধী", "মীরা কুমার", "সোনিয়া গান্ধী"], ans: "A" },
+    { q: "পশ্চিমবঙ্গের রাজধানী কোথায়?", opts: ["কলকাতা", "দার্জিলিং", "শিলিগুড়ি", "আসানসোল"], ans: "A" },
+    { q: "'গীতাঞ্জলি' গ্রন্থের রচয়িতা কে?", opts: ["রবীন্দ্রনাথ ঠাকুর", "বঙ্কিমচন্দ্র", "কাজী নজরুল", "শরৎচন্দ্র"], ans: "A" },
+    // ... (এভাবে সব ৪৫টি প্রশ্ন যুক্ত থাকবে)
+    { q: "40 এর 25% কত?", opts: ["10", "8", "12", "15"], ans: "A" }
+  ];
 
-  <script>
-    const answers = {};
-    const container = document.getElementById("questionsContainer");
+  const container = document.getElementById("questionsContainer");
+  questions.forEach((item, index) => {
+    const qNum = index + 1;
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `<p>${qNum}. ${item.q}</p><div class="options">` +
+      item.opts.map((opt, i) => {
+        const optLabel = String.fromCharCode(65 + i);
+        return `<label><input type="radio" name="q${qNum}" value="${optLabel}"> ${optLabel}. ${opt}</label>`;
+      }).join("") + `</div>`;
+    container.appendChild(div);
+  });
 
-    for (let i = 1; i <= 45; i++) {
-      answers["q" + i] = "A"; // সঠিক উত্তর "A" ধরে নেওয়া হয়েছে (ডেমো)
-      const div = document.createElement("div");
-      div.className = "question";
-      div.innerHTML = `
-        <p>${i}. প্রশ্ন নম্বর ${i}</p>
-        <div class="options">
-          <label><input type="radio" name="q${i}" value="A"> A. অপশন A</label>
-          <label><input type="radio" name="q${i}" value="B"> B. অপশন B</label>
-          <label><input type="radio" name="q${i}" value="C"> C. অপশন C</label>
-          <label><input type="radio" name="q${i}" value="D"> D. অপশন D</label>
-        </div>
-      `;
-      container.appendChild(div);
-    }
-
-    function calculateScore() {
-      let score = 0;
-      for (let q in answers) {
-        const selected = document.querySelector('input[name="' + q + '"]:checked');
-        const options = document.getElementsByName(q);
-        options.forEach(opt => {
-          opt.parentElement.classList.remove("correct", "incorrect");
-          if (opt.value === answers[q]) {
-            opt.parentElement.classList.add("correct");
-          }
-        });
-        if (selected) {
-          if (selected.value === answers[q]) {
-            score += 1;
-          } else {
-            selected.parentElement.classList.add("incorrect");
-          }
+  function calculateScore() {
+    let score = 0;
+    questions.forEach((item, index) => {
+      const qNum = index + 1;
+      const selected = document.querySelector('input[name="q' + qNum + '"]:checked');
+      const options = document.getElementsByName("q" + qNum);
+      options.forEach(opt => {
+        opt.parentElement.classList.remove("correct", "incorrect");
+        if (opt.value === item.ans) {
+          opt.parentElement.classList.add("correct");
         }
+      });
+      if (selected && selected.value !== item.ans) {
+        selected.parentElement.classList.add("incorrect");
       }
-      document.getElementById("result").innerText = "আপনার স্কোর: " + score + " / 45";
-    }
-
-    let totalSeconds = 60 * 60;
-    const timerDisplay = document.getElementById("timer");
-
-    function updateTimer() {
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      timerDisplay.textContent = `Time Remaining: ${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-      if (totalSeconds <= 0) {
-        clearInterval(timerInterval);
-        calculateScore();
-        alert("সময় শেষ! আপনার উত্তর জমা দেওয়া হয়েছে।");
+      if (selected && selected.value === item.ans) {
+        score += 1;
       }
-      totalSeconds--;
-    }
+    });
+    document.getElementById("result").innerText = "আপনার স্কোর: " + score + " / 45";
+  }
 
-    const timerInterval = setInterval(updateTimer, 1000);
-  </script>
+  let totalSeconds = 60 * 60;
+  const timerDisplay = document.getElementById("timer");
+  function updateTimer() {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    timerDisplay.textContent = `Time Remaining: ${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    if (totalSeconds <= 0) {
+      clearInterval(timerInterval);
+      calculateScore();
+      alert("সময় শেষ! আপনার উত্তর জমা দেওয়া হয়েছে।");
+    }
+    totalSeconds--;
+  }
+  const timerInterval = setInterval(updateTimer, 1000);
+</script>
 </body>
 </html>
