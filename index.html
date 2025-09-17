@@ -2,157 +2,184 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <title>45 প্রশ্নের কুইজ — GK 15, Math 15, Current Affairs 15</title>
+  <title>Group C মিশ্র মক টেস্ট — ৬০ প্রশ্ন</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root{
+      --gk:#e8f5e9; --ca:#fff8e1; --en:#e1f5fe; --ar:#f3e5f5;
+      --ok:#0a7a0a; --bad:#b00020; --muted:#666; --brand:#1f73b7;
+    }
     body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.5; }
-    h1 { margin-bottom: 6px; }
-    .meta { color: #555; margin-bottom: 16px; }
-    .question { margin: 16px 0; padding: 12px; border: 1px solid #eee; border-radius: 8px; }
-    .badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 12px; margin-left: 8px; background: #f2f2f2; color: #333; }
-    .options label { display: block; margin: 6px 0 0 0; cursor: pointer; }
-    #result { font-weight: bold; font-size: 18px; color: #0a7a0a; margin-top: 18px; }
-    #timer { font-size: 18px; color: #b00020; font-weight: bold; margin: 10px 0 16px; }
-    .correct { color: #0a7a0a; font-weight: bold; }
-    .incorrect { color: #b00020; font-weight: bold; }
+    h1 { margin: 0 0 6px; }
+    .meta { color: #444; margin-bottom: 14px; }
+    .legend { font-size: 12px; color: var(--muted); margin: 6px 0 16px; }
+    .question { margin: 14px 0; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+    .GK { background: var(--gk); }
+    .CA { background: var(--ca); }
+    .EN { background: var(--en); }
+    .AR { background: var(--ar); }
+    .options label { display: block; margin-top: 6px; cursor: pointer; }
+    .badge { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: #ccc; margin-left: 8px; }
     .controls { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
-    button { cursor: pointer; padding: 8px 14px; border: none; border-radius: 6px; background: #1f73b7; color: #fff; }
+    button { cursor: pointer; padding: 8px 14px; border: none; border-radius: 6px; background: var(--brand); color: #fff; }
     button.secondary { background: #6c757d; }
-    .legend { font-size: 12px; color: #666; margin-top: 8px; }
+    #timer { font-weight: bold; color: var(--bad); margin: 8px 0 12px; }
+    #result { margin-top: 12px; font-weight: bold; color: var(--ok); }
+    #splitScore { margin-top: 4px; color: #222; }
+    .correct { color: var(--ok); font-weight: bold; }
+    .incorrect { color: var(--bad); font-weight: bold; }
+    .section-title { margin-top: 18px; font-size: 18px; }
+    .sticky { position: sticky; top: 0; background: #fff; padding: 6px 0; }
+    .hr { border: 0; border-top: 1px dashed #ddd; margin: 14px 0; }
   </style>
 </head>
 <body>
-  <h1>45 প্রশ্নের কুইজ</h1>
-  <div class="meta">বিভাগ: GK 15 • Math 15 • Current Affairs 15 — মোট 45 প্রশ্ন, প্রতি প্রশ্নে ১ নম্বর</div>
-  <div id="timer">সময় বাকি: 60:00</div>
+  <div class="sticky">
+    <h1>Group C মিশ্র মক টেস্ট — ৬০ প্রশ্ন</h1>
+    <div class="meta">GK (15) • Current Affairs (15) • General English (15) • Arithmetic (15)</div>
+    <div id="timer">সময় বাকি: 90:00</div>
+  </div>
 
   <form id="quizForm">
     <div id="questionsContainer"></div>
     <div class="controls">
       <button type="button" id="submitBtn">Submit</button>
+      <button type="button" class="secondary" id="showAnsBtn">Show/Hide Answers</button>
       <button type="button" class="secondary" id="resetBtn">Reset</button>
     </div>
-    <div class="legend">সাবমিটের পর সব সঠিক অপশন সবুজ হবে; ভুলভাবে নির্বাচিত অপশন লাল দেখাবে।</div>
+    <div class="legend">Submit-এর পর সঠিক অপশন সবুজ, ভুলভাবে নির্বাচিত অপশন লাল রঙে দেখাবে।</div>
     <div id="result"></div>
+    <div id="splitScore"></div>
   </form>
 
+  <hr class="hr" />
+  <div class="legend">
+    টিপস: শেষের দিকে গিয়ে একসাথে সাবমিট না করে প্রতিটি সেকশন শেষ হলেই দ্রুত মার্কিং দেখে নিলে টাইম ম্যানেজমেন্ট সহজ হয়।
+  </div>
+
   <script>
-    // 45 প্রশ্ন: 15 GK, 15 Math, 15 Current Affairs
+    // ৬০ প্রশ্ন: GK 15, CA 15, EN 15, AR 15
     const questions = [
       // GK (15)
       { cat:"GK", q:"ভারতের জাতীয় পশু কোনটি?", opts:["সিংহ","বাঘ","হরিণ","গণ্ডার"], ans:"B" },
-      { cat:"GK", q:"ভারতের জাতীয় সংগীত কে রচনা করেছেন?", opts:["কাজী নজরুল ইসলাম","রবীন্দ্রনাথ ঠাকুর","ব্যাংকিমচন্দ্র চট্টোপাধ্যায়","সুভাষচন্দ্র বসু"], ans:"B" },
-      { cat:"GK", q:"তাজমহল কোথায় অবস্থিত?", opts:["দিল্লি","আগ্রা","লখনউ","জয়পুর"], ans:"B" },
+      { cat:"GK", q:"ভারতের জাতীয় সংগীত কে রচনা করেছেন?", opts:["কাজী নজরুল ইসলাম","রবীন্দ্রনাথ ঠাকুর","ব্যাংকিমচন্দ্র চট্টোপাধ্যায়","ইশ্বরচন্দ্র বিদ্যাসাগর"], ans:"B" },
       { cat:"GK", q:"ভারতের প্রথম প্রধানমন্ত্রী কে?", opts:["লাল বাহাদুর শাস্ত্রী","ইন্দিরা গান্ধী","জওহরলাল নেহরু","রাজেন্দ্র প্রসাদ"], ans:"C" },
-      { cat:"GK", q:"ভারতের জাতীয় ফুল কোনটি?", opts:["গোলাপ","পদ্ম","জুঁই","শিউলি"], ans:"B" },
+      { cat:"GK", q:"ভারতের জাতীয় ফুল কোনটি?", opts:["গোলাপ","পদ্ম","সূর্যমুখী","জুঁই"], ans:"B" },
+      { cat:"GK", q:"তাজমহল কোথায় অবস্থিত?", opts:["দিল্লি","আগ্রা","লখনউ","জয়পুর"], ans:"B" },
       { cat:"GK", q:"পৃথিবীর সবচেয়ে বড় মহাসাগর কোনটি?", opts:["আটলান্টিক","প্রশান্ত","ভারত মহাসাগর","আর্কটিক"], ans:"B" },
       { cat:"GK", q:"বিশ্বের দীর্ঘতম নদী কোনটি?", opts:["আমাজন","নাইল","ইয়াংসি","গঙ্গা"], ans:"B" },
-      { cat:"GK", q:"ভারতের মুদ্রার নাম কী?", opts:["রুপি","টাকা","দিনার","ডলার"], ans:"A" },
-      { cat:"GK", q:"পৃথিবীর প্রাকৃতিক উপগ্রহের নাম কী?", opts:["চাঁদ","সূর্য","মঙ্গল","শুক্র"], ans:"A" },
-      { cat:"GK", q:"ভারতের জাতীয় পাখি কোনটি?", opts:["ময়ূর","গঙ্গাফড়িং","চিল","কাক"], ans:"A" },
-      { cat:"GK", q:"মানবদেহের সবচেয়ে বড় অঙ্গ কোনটি?", opts:["হৃদপিণ্ড","যকৃত","ত্বক","ফুসফুস"], ans:"C" },
-      { cat:"GK", q:"গীতাঞ্জলি গ্রন্থের রচয়িতা কে?", opts:["শরৎচন্দ্র","বঙ্কিমচন্দ্র","রবীন্দ্রনাথ ঠাকুর","কাজী নজরুল"], ans:"C" },
+      { cat:"GK", q:"ভারতের জাতীয় পাখি কোনটি?", opts:["ময়ূর","চিল","কাক","রাজহাঁস"], ans:"A" },
+      { cat:"GK", q:"পৃথিবীর প্রাকৃতিক উপগ্রহের নাম?", opts:["সূর্য","চাঁদ","মঙ্গল","শুক্র"], ans:"B" },
+      { cat:"GK", q:"‘গীতাঞ্জলি’ কার রচনা?", opts:["রবীন্দ্রনাথ ঠাকুর","বঙ্কিমচন্দ্র","কাজী নজরুল","শরৎচন্দ্র"], ans:"A" },
       { cat:"GK", q:"পৃথিবীর সবচেয়ে বড় মরুভূমি কোনটি?", opts:["সাহারা","আরব","গোবি","অ্যান্টার্কটিকা"], ans:"D" },
-      { cat:"GK", q:"ভারতের পতাকায় কতটি রং আছে?", opts:["২","৩","৪","৫"], ans:"B" },
+      { cat:"GK", q:"ভারতের মুদ্রার নাম কী?", opts:["রুপি","টাকা","ডলার","দিনার"], ans:"A" },
+      { cat:"GK", q:"ভারতের পতাকায় রঙের সংখ্যা কত?", opts:["২","৩","৪","৫"], ans:"B" },
       { cat:"GK", q:"ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?", opts:["ইন্দিরা গান্ধী","প্রতিভা পাটিল","মীরা কুমার","সোনিয়া গান্ধী"], ans:"B" },
+      { cat:"GK", q:"‘ডিসকভারি অফ ইন্ডিয়া’ কার লেখা?", opts:["মহাত্মা গান্ধী","জওহরলাল নেহরু","সুভাষচন্দ্র বসু","বিপিনচন্দ্র পাল"], ans:"B" },
 
-      // Math (15)
-      { cat:"Math", q:"100 এর 10% কত?", opts:["5","10","15","20"], ans:"B" },
-      { cat:"Math", q:"25% এর 200 কত?", opts:["25","50","75","100"], ans:"B" },
-      { cat:"Math", q:"40 এর 25% কত?", opts:["10","8","12","15"], ans:"A" },
-      { cat:"Math", q:"একটি সংখ্যার 1/3 হল 12, সংখ্যাটি কত?", opts:["18","24","36","48"], ans:"B" },
-      { cat:"Math", q:"সরল সুদ: মূলধন ₹5000, হার 10% বার্ষিক, সময় 2 বছর — সুদ কত?", opts:["₹500","₹750","₹1000","₹1500"], ans:"C" },
-      { cat:"Math", q:"গড়: 6, 8, 10 এর গড় কত?", opts:["6","7","8","9"], ans:"C" },
-      { cat:"Math", q:"অনুপাত 3:4 = ? এর 9:12 এ মান কত?", opts:["সমান","বেশি","কম","জানা যায় না"], ans:"A" },
-      { cat:"Math", q:"একটি পণ্যের মূল ₹1200, 20% ছাড়ের পর দাম?", opts:["₹960","₹1000","₹1040","₹940"], ans:"A" },
-      { cat:"Math", q:"সরলীকরণ: 12 ÷ 3 × 2 =", opts:["2","6","8","4"], ans:"C" },
-      { cat:"Math", q:"বর্গসংখ্যা: কোনটি পারফেক্ট স্কয়ার?", opts:["45","50","64","70"], ans:"C" },
-      { cat:"Math", q:"সময়ের রূপান্তর: 2 ঘন্টা 30 মিনিট = কত মিনিট?", opts:["120","130","140","150"], ans:"D" },
-      { cat:"Math", q:"ক্ষেত্রফল: 10m × 8m আয়তক্ষেত্রের ক্ষেত্রফল?", opts:["18 m²","80 m²","40 m²","100 m²"], ans:"B" },
-      { cat:"Math", q:"ভাগশেষ: 17 কে 5 দিয়ে ভাগ করলে ভাগশেষ?", opts:["0","1","2","3"], ans:"C" },
-      { cat:"Math", q:"শতকরা: একটি সংখ্যা 200 থেকে 10% বাড়লে কত?", opts:["210","215","220","230"], ans:"C" },
-      { cat:"Math", q:"LCM(6, 8) কত?", opts:["12","16","24","48"], ans:"C" },
-
-      // Current Affairs (15) — সাম্প্রতিক প্রাসঙ্গিক সাধারণ জ্ঞানধর্মী
+      // CA (15)
       { cat:"CA", q:"ভারতের স্বাধীনতা দিবস কবে পালিত হয়?", opts:["২৬ জানুয়ারি","১৫ আগস্ট","২ অক্টোবর","১৪ নভেম্বর"], ans:"B" },
-      { cat:"CA", q:"ভারতের বর্তমান রাষ্ট্রপতি পদটি কে প্রথম নারী হিসেবে ধারণ করেছিলেন?", opts:["দ্রৌপদী মুর্মু","প্রতিভা পাটিল","সোনিয়া গান্ধী","মীরা কুমার"], ans:"B" },
-      { cat:"CA", q:"G20-এর স্থায়ী সদস্য নয় কোনটি?", opts:["ভারত","ইন্দোনেশিয়া","সিঙ্গাপুর","জাপান"], ans:"C" },
-      { cat:"CA", q:"UN-এর সদর দপ্তর কোথায়?", opts:["জেনেভা","নিউইয়র্ক","প্যারিস","ভিয়েনা"], ans:"B" },
-      { cat:"CA", q:"IOC যে অলিম্পিক গেমস আয়োজন করে, IOC-এর পূর্ণরূপ?", opts:["Indian Olympic Council","International Olympic Committee","International Organization of Culture","International Olympic Council"], ans:"B" },
-      { cat:"CA", q:"‘চন্দ্রযান-3’ মিশন কোন সংস্থার?", opts:["নাসা","ইস্রো","ইএসএ","রসকসমস"], ans:"B" },
-      { cat:"CA", q:"নোবেল শান্তি পুরস্কার কে দেয়?", opts:["সুইডিশ একাডেমি","নরওয়েজিয়ান নোবেল কমিটি","রয়্যাল সোসাইটি","ইউনেস্কো"], ans:"B" },
-      { cat:"CA", q:"COP জলবায়ু সম্মেলনের মূল উদ্দেশ্য কী?", opts:["বাণিজ্য নীতি","জলবায়ু পরিবর্তন মোকাবিলা","শান্তিরক্ষা","খেলাধুলা উন্নয়ন"], ans:"B" },
-      { cat:"CA", q:"ভারতের সংসদের নিম্নকক্ষের নাম?", opts:["লোকসভা","রাজ্যসভা","বিধানসভা","ফেডারেল হাউস"], ans:"A" },
+      { cat:"CA", q:"UN-এর সদর দপ্তর কোথায়?", opts:["প্যারিস","নিউইয়র্ক","জেনেভা","ভিয়েনা"], ans:"B" },
+      { cat:"CA", q:"G20-এর সদস্য নয় কোনটি?", opts:["ভারত","ইন্দোনেশিয়া","সিঙ্গাপুর","জাপান"], ans:"C" },
+      { cat:"CA", q:"IOC-এর পূর্ণরূপ কী?", opts:["Indian Olympic Council","International Olympic Committee","International Organization Council","International Olympic Confederation"], ans:"B" },
+      { cat:"CA", q:"চন্দ্রযান-3 কোন সংস্থার?", opts:["নাসা","ইস্রো","ইএসএ","জাক্সা"], ans:"B" },
+      { cat:"CA", q:"নোবেল শান্তি পুরস্কার কে প্রদান করে?", opts:["সুইডিশ একাডেমি","নরওয়েজিয়ান নোবেল কমিটি","ইউনেস্কো","রয়্যাল সোসাইটি"], ans:"B" },
       { cat:"CA", q:"GST-এর পূর্ণরূপ কী?", opts:["Goods and Service Tax","Goods and Services Tax","General Sales Tax","Global Services Tariff"], ans:"B" },
-      { cat:"CA", q:"বেসিক সেভিংস ব্যাংক অ্যাকাউন্ট কোন স্কিমের অংশ?", opts:["PMJDY","PM-KISAN","MNREGA","UDAY"], ans:"A" },
-      { cat:"CA", q:"ভারতের নির্বাচন কমিশনের প্রধানকে কী বলা হয়?", opts:["চিফ এডিটর","চিফ ইলেকশন কমিশনার","চিফ জাস্টিস","কন্ট্রোলার জেনারেল"], ans:"B" },
-      { cat:"CA", q:"আন্তর্জাতিক যোগ দিবস কবে পালিত হয়?", opts:["১ মে","২১ জুন","১ জুলাই","১৫ আগস্ট"], ans:"B" },
-      { cat:"CA", q:"ভারতের সংবিধানের প্রস্তাবনায় ‘সমাজতান্ত্রিক’ শব্দটি কোন সংশোধনীতে যুক্ত হয়?", opts:["২৪তম","৪০তম","৪২তম","৪৪তম"], ans:"C" },
-      { cat:"CA", q:"ভারতের প্রথম উপগ্রহ ‘আর্যভট্ট’ উৎক্ষেপণ হয় কোন বছরে?", opts:["১৯৭২","১৯৭৫","১৯৭৭","১৯৮০"], ans:"B" }
+      { cat:"CA", q:"লোকসভার অন্য নাম?", opts:["হাউস অফ পিপল","কাউন্সিল অফ স্টেটস","লোয়ার কাউন্সিল","ফেডারেল হাউস"], ans:"A" },
+      { cat:"CA", q:"আন্তর্জাতিক যোগ দিবস কবে?", opts:["১ মে","২১ জুন","১ জুলাই","১৫ আগস্ট"], ans:"B" },
+      { cat:"CA", q:"ভারতের সংবিধান কবে কার্যকর হয়?", opts:["২৬ নভেম্বর ১৯৪৯","১৫ আগস্ট ১৯৪৭","২৬ জানুয়ারি ১৯৫০","২ জানুয়ারি ১৯৫১"], ans:"C" },
+      { cat:"CA", q:"জাতিসংঘের সরকারি ভাষা নয় কোনটি?", opts:["আরবি","চীনা","হিন্দি","রুশ"], ans:"C" },
+      { cat:"CA", q:"WHO-এর সদর দপ্তর কোথায়?", opts:["জেনেভা","নিউইয়র্ক","প্যারিস","রোম"], ans:"A" },
+      { cat:"CA", q:"COP সম্মেলন কোন বিষয়ের সাথে যুক্ত?", opts:["জলবায়ু পরিবর্তন","সামরিক জোট","বাণিজ্য চুক্তি","অর্থনৈতিক শীর্ষ সম্মেলন"], ans:"A" },
+      { cat:"CA", q:"ভারতের পরিকল্পনা নীতি তদারকি করে কোন সংস্থা (বর্তমান)?", opts:["NITI Aayog","Planning Commission","Finance Commission","CAG"], ans:"A" },
+      { cat:"CA", q:"ভারতের নির্বাচন কমিশনের প্রধানের পদবী?", opts:["চিফ জাস্টিস","চিফ ইলেকশন কমিশনার","চিফ কন্ট্রোলার","চিফ সেক্রেটারি"], ans:"B" },
+
+      // EN (15)
+      { cat:"EN", q:"Choose the correct synonym of ‘Begin’.", opts:["Cease","Commence","Abandon","Finish"], ans:"B" },
+      { cat:"EN", q:"Choose the antonym of ‘Ancient’.", opts:["Old","Modern","Antique","Aged"], ans:"B" },
+      { cat:"EN", q:"Fill in the blank: He is good ___ mathematics.", opts:["at","in","on","with"], ans:"A" },
+      { cat:"EN", q:"Correct spelling:", opts:["Recieve","Receive","Recive","Receeve"], ans:"B" },
+      { cat:"EN", q:"One word substitution: A person who writes a dictionary.", opts:["Novelist","Lexicographer","Calligrapher","Dramatist"], ans:"B" },
+      { cat:"EN", q:"Choose the correct article: He is ___ honest man.", opts:["a","an","the","no article"], ans:"B" },
+      { cat:"EN", q:"Passive voice: ‘They built the bridge in 2010.’", opts:["The bridge is built in 2010.","The bridge was built in 2010.","The bridge has built in 2010.","The bridge had built in 2010."], ans:"B" },
+      { cat:"EN", q:"Choose the correct preposition: She is afraid ___ snakes.", opts:["from","to","of","with"], ans:"C" },
+      { cat:"EN", q:"Choose the correct tense: He ___ here since morning.", opts:["is","was","has been","had been"], ans:"C" },
+      { cat:"EN", q:"Antonym of ‘Scarce’.", opts:["Rare","Plentiful","Scanty","Sparse"], ans:"B" },
+      { cat:"EN", q:"Synonym of ‘Brave’.", opts:["Timid","Cowardly","Valiant","Afraid"], ans:"C" },
+      { cat:"EN", q:"Choose the correct form: ‘He suggested that I ___ early.’", opts:["leave","left","leaves","leaving"], ans:"A" },
+      { cat:"EN", q:"Spot the error: ‘He do not know the answer.’", opts:["He","do","not know","the answer"], ans:"B" },
+      { cat:"EN", q:"Choose the correct conjunction: ‘I was tired ___ I kept working.’", opts:["and","so","but","or"], ans:"C" },
+      { cat:"EN", q:"Change to comparative: ‘He is the best player.’", opts:["He is better than any other player.","He is good than others.","He is more good than all.","He is best than all."], ans:"A" },
+
+      // AR (15)
+      { cat:"AR", q:"100 এর 10% কত?", opts:["5","10","15","20"], ans:"B" },
+      { cat:"AR", q:"25% এর 200 কত?", opts:["25","50","75","100"], ans:"B" },
+      { cat:"AR", q:"40 এর 25% কত?", opts:["10","8","12","15"], ans:"A" },
+      { cat:"AR", q:"একটি সংখ্যার 1/3 = 12 ⇒ সংখ্যা কত?", opts:["18","24","36","48"], ans:"C" },
+      { cat:"AR", q:"সরল সুদ: P=₹5000, R=10% p.a., T=2y ⇒ সুদ?", opts:["₹500","₹750","₹1000","₹1500"], ans:"C" },
+      { cat:"AR", q:"গড়: 6, 8, 10 এর গড়?", opts:["6","7","8","9"], ans:"C" },
+      { cat:"AR", q:"অনুপাত 3:4 ও 9:12 —", opts:["সমান","অসমান","জানা যায় না","আংশিক"], ans:"A" },
+      { cat:"AR", q:"₹1200 এ 20% ছাড় ⇒ দাম?", opts:["₹960","₹1000","₹1040","₹940"], ans:"A" },
+      { cat:"AR", q:"12 ÷ 3 × 2 =", opts:["2","6","8","4"], ans:"C" },
+      { cat:"AR", q:"পারফেক্ট স্কয়ার কোনটি?", opts:["45","50","64","70"], ans:"C" },
+      { cat:"AR", q:"2 ঘণ্টা 30 মিনিট = কত মিনিট?", opts:["120","130","140","150"], ans:"D" },
+      { cat:"AR", q:"আয়তক্ষেত্র 10m × 8m ⇒ ক্ষেত্রফল?", opts:["18 m²","80 m²","40 m²","100 m²"], ans:"B" },
+      { cat:"AR", q:"17 ÷ 5 ⇒ ভাগশেষ?", opts:["0","1","2","3"], ans:"C" },
+      { cat:"AR", q:"200 এর উপর 10% বৃদ্ধি ⇒ কত?", opts:["210","215","220","230"], ans:"C" },
+      { cat:"AR", q:"LCM(6, 8) কত?", opts:["12","16","24","48"], ans:"C" }
     ];
 
     const container = document.getElementById("questionsContainer");
 
+    // Render with section headers
     function renderQuestions() {
       container.innerHTML = "";
-      questions.forEach((item, index) => {
-        const qNum = index + 1;
-        const div = document.createElement("div");
-        div.className = "question";
-        const badgeColor =
-          item.cat === "GK" ? "#e8f5e9" :
-          item.cat === "Math" ? "#e3f2fd" : "#fff8e1";
-
-        div.style.background = badgeColor;
-
-        const header = `<p><strong>${qNum}.</strong> ${item.q} <span class="badge">${item.cat}</span></p>`;
-        const optsHtml = item.opts.map((opt, i) => {
-          const optLabel = String.fromCharCode(65 + i);
-          return `<label><input type="radio" name="q${qNum}" value="${optLabel}" /> ${optLabel}. ${opt}</label>`;
-        }).join("");
-
-        div.innerHTML = `${header}<div class="options">${optsHtml}</div>`;
-        container.appendChild(div);
+      const sections = [
+        { key: "GK", title: "Section: General Knowledge", cls: "GK" },
+        { key: "CA", title: "Section: Current Affairs", cls: "CA" },
+        { key: "EN", title: "Section: General English", cls: "EN" },
+        { key: "AR", title: "Section: Arithmetic", cls: "AR" }
+      ];
+      let qIndex = 0;
+      sections.forEach(sec => {
+        const h = document.createElement("h2");
+        h.className = "section-title";
+        h.textContent = sec.title;
+        container.appendChild(h);
+        questions.forEach((item, idx) => {
+          if (item.cat === sec.key) {
+            qIndex++;
+            const div = document.createElement("div");
+            div.className = `question ${item.cat}`;
+            const header = `<p><strong>${qIndex}.</strong> ${item.q} <span class="badge">${item.cat}</span></p>`;
+            const optsHtml = item.opts.map((opt, i) => {
+              const optLabel = String.fromCharCode(65 + i);
+              return `<label><input type="radio" name="q${qIndex}" value="${optLabel}" /> ${optLabel}. ${opt}</label>`;
+            }).join("");
+            div.innerHTML = `${header}<div class="options">${optsHtml}</div>`;
+            container.appendChild(div);
+          }
+        });
+        const hr = document.createElement("hr");
+        hr.className = "hr";
+        container.appendChild(hr);
       });
     }
 
     renderQuestions();
 
-    function calculateScore() {
-      let score = 0;
-      questions.forEach((item, index) => {
-        const qNum = index + 1;
-        const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
-        const options = document.getElementsByName(`q${qNum}`);
-
-        options.forEach(opt => {
-          opt.parentElement.classList.remove("correct", "incorrect");
-          if (opt.value === item.ans) {
-            opt.parentElement.classList.add("correct");
-          }
-        });
-
-        if (selected && selected.value !== item.ans) {
-          selected.parentElement.classList.add("incorrect");
-        }
-        if (selected && selected.value === item.ans) {
-          score++;
-        }
-      });
-      const gkScore = sectionScore("GK");
-      const mathScore = sectionScore("Math");
-      const caScore = sectionScore("CA");
-      document.getElementById("result").innerText =
-        `মোট স্কোর: ${score} / ${questions.length}  —  GK: ${gkScore}/15, Math: ${mathScore}/15, CA: ${caScore}/15`;
-    }
-
     function sectionScore(cat) {
-      let s = 0;
-      let idx = 0;
-      questions.forEach((item, index) => {
+      let s = 0, counter = 0;
+      let globalIndex = 0;
+      // Map rendered order index to question item
+      const rendered = [];
+      ["GK","CA","EN","AR"].forEach(sec => {
+        questions.forEach(q => { if (q.cat === sec) rendered.push(q); });
+      });
+      rendered.forEach((item, idx) => {
         if (item.cat === cat) {
-          idx++;
-          const qNum = index + 1;
+          counter++;
+          const qNum = idx + 1;
           const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
           if (selected && selected.value === item.ans) s++;
         }
@@ -160,15 +187,51 @@
       return s;
     }
 
+    function calculateScore() {
+      let score = 0;
+      // Build rendered order mapping
+      const rendered = [];
+      ["GK","CA","EN","AR"].forEach(sec => {
+        questions.forEach(q => { if (q.cat === sec) rendered.push(q); });
+      });
+
+      rendered.forEach((item, idx) => {
+        const qNum = idx + 1;
+        const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
+        const options = document.getElementsByName(`q${qNum}`);
+        options.forEach(opt => {
+          opt.parentElement.classList.remove("correct","incorrect");
+          if (opt.value === item.ans) {
+            opt.parentElement.classList.add("correct");
+          }
+        });
+        if (selected && selected.value !== item.ans) {
+          selected.parentElement.classList.add("incorrect");
+        }
+        if (selected && selected.value === item.ans) score++;
+      });
+
+      const gk = sectionScore("GK");
+      const ca = sectionScore("CA");
+      const en = sectionScore("EN");
+      const ar = sectionScore("AR");
+
+      document.getElementById("result").innerText = `মোট স্কোর: ${score} / ${questions.length}`;
+      document.getElementById("splitScore").innerText = `বিভাগভিত্তিক: GK ${gk}/15 | CA ${ca}/15 | English ${en}/15 | Arithmetic ${ar}/15`;
+    }
+
     let showAnswers = false;
     function toggleAnswers() {
       showAnswers = !showAnswers;
-      // Highlight correct answers without needing submit
-      questions.forEach((item, index) => {
-        const qNum = index + 1;
+      const rendered = [];
+      ["GK","CA","EN","AR"].forEach(sec => {
+        questions.forEach(q => { if (q.cat === sec) rendered.push(q); });
+      });
+      rendered.forEach((item, idx) => {
+        const qNum = idx + 1;
         const options = document.getElementsByName(`q${qNum}`);
         options.forEach(opt => {
-          opt.parentElement.classList.remove("correct", "incorrect");
+          opt.parentElement.classList.remove("correct","incorrect");
           if (showAnswers && opt.value === item.ans) {
             opt.parentElement.classList.add("correct");
           }
@@ -176,6 +239,7 @@
       });
       if (!showAnswers) {
         document.getElementById("result").innerText = "";
+        document.getElementById("splitScore").innerText = "";
       }
     }
 
@@ -185,10 +249,11 @@
       document.getElementById("quizForm").reset();
       document.querySelectorAll(".correct, .incorrect").forEach(el => el.classList.remove("correct","incorrect"));
       document.getElementById("result").innerText = "";
+      document.getElementById("splitScore").innerText = "";
     });
 
-    // 60 মিনিট টাইমার
-    let totalSeconds = 60 * 60;
+    // 90 মিনিট টাইমার
+    let totalSeconds = 90 * 60;
     const timerDisplay = document.getElementById("timer");
     const timerInterval = setInterval(() => {
       const minutes = Math.floor(totalSeconds / 60);
