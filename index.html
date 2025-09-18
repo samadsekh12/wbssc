@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
- <meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <title>Group C/D মক টেস্ট — ৪৫টি গণিত প্রশ্ন</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
@@ -12,8 +12,7 @@
     h1 { margin: 0 0 6px; }
     .meta { color: #444; margin-bottom: 14px; }
     .legend { font-size: 12px; color: var(--muted); margin: 6px 0 16px; }
-    .question { margin: 14px 0; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
-    .AR { background: var(--ar); }
+    .question { margin: 14px 0; padding: 12px; border-radius: 8px; border: 1px solid #eee; background: var(--ar); }
     .options label { display: block; margin-top: 6px; cursor: pointer; }
     .badge { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: #ccc; margin-left: 8px; }
     .controls { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
@@ -23,7 +22,6 @@
     #result { margin-top: 12px; font-weight: bold; color: var(--ok); }
     .correct { color: var(--ok); font-weight: bold; }
     .incorrect { color: var(--bad); font-weight: bold; }
-    .section-title { margin-top: 18px; font-size: 18px; }
     .sticky { position: sticky; top: 0; background: #fff; padding: 6px 0; }
     .hr { border: 0; border-top: 1px dashed #ddd; margin: 14px 0; }
   </style>
@@ -48,19 +46,19 @@
   <hr class="hr" />
 
   <script>
-    // ৪৫টি Arithmetic প্রশ্ন
+    // শুধুমাত্র ৪৫টি Arithmetic প্রশ্ন
     const questions = [
       { q:"120 এর 25% কত?", opts:["20","25","30","40"], ans:"C" },
       { q:"একটি সংখ্যার 1/5 = 14 ⇒ সংখ্যা কত?", opts:["50","60","70","80"], ans:"C" },
       { q:"সরল সুদ: P=₹2000, R=5% p.a., T=3y ⇒ সুদ?", opts:["₹200","₹250","₹300","₹350"], ans:"C" },
-      { q:"গড়: 12, 15, 18 এর গড়?", opts:["12","14","15","16"], ans:"D" },
+      { q:"গড়: 12, 15, 18 এর গড়?", opts:["12","14","15","16"], ans:"C" },
       { q:"অনুপাত 2:3 ও 8:12 —", opts:["সমান","অসমান","জানা যায় না","আংশিক"], ans:"A" },
       { q:"₹1500 এ 10% ছাড় ⇒ দাম?", opts:["₹1350","₹1400","₹1450","₹1300"], ans:"A" },
       { q:"18 ÷ 3 × 4 =", opts:["20","22","24","26"], ans:"C" },
       { q:"পারফেক্ট স্কয়ার কোনটি?", opts:["81","82","83","85"], ans:"A" },
       { q:"3 ঘণ্টা 15 মিনিট = কত মিনিট?", opts:["180","185","190","195"], ans:"D" },
       { q:"আয়তক্ষেত্র 12m × 5m ⇒ ক্ষেত্রফল?", opts:["50","60","70","60 m²"], ans:"B" },
-      { q:"29 ÷ 4 ⇒ ভাগশেষ?", opts:["0","1","2","3"], ans:"D" },
+      { q:"29 ÷ 4 ⇒ ভাগশেষ?", opts:["0","1","2","3"], ans:"B" },
       { q:"500 এর উপর 20% বৃদ্ধি ⇒ কত?", opts:["550","600","620","700"], ans:"B" },
       { q:"LCM(12, 18) কত?", opts:["24","36","48","60"], ans:"B" },
       { q:"HCF(24, 36) কত?", opts:["6","8","12","18"], ans:"C" },
@@ -68,8 +66,8 @@
       { q:"একটি ট্রেন 60 km/h গতিতে 2.5 ঘণ্টায় কত দূরত্ব অতিক্রম করবে?", opts:["120","130","140","150"], ans:"D" },
       { q:"একটি সংখ্যার 40% = 80 ⇒ সংখ্যা কত?", opts:["180","190","200","210"], ans:"C" },
       { q:"একটি পণ্যের দাম ₹800, 15% ছাড় ⇒ বিক্রয়মূল্য?", opts:["₹650","₹660","₹680","₹700"], ans:"C" },
-      { q:"গড়: 20, 25, 30, 35 এর গড়?", opts:["25","26","27","28"], ans:"B" },
-      { q:"একটি আয়তক্ষেত্রের দৈর্ঘ্য 14m, প্রস্থ 7m ⇒ ক্ষেত্রফল?", opts:["84","88","90","98"], ans:"A" },
+      { q:"গড়: 20, 24, 28, 32 এর গড়?", opts:["24","25","26","27"], ans:"C" },
+      { q:"একটি আয়তক্ষেত্রের দৈর্ঘ্য 14m, প্রস্থ 7m ⇒ ক্ষেত্রফল?", opts:["84","88","90","98"], ans:"D" },
       { q:"একটি সংখ্যার 2/7 = 18 ⇒ সংখ্যা কত?", opts:["54","56","60","63"], ans:"D" },
       { q:"সরল সুদ: P=₹4000, R=12% p.a., T=2y ⇒ সুদ?", opts:["₹800","₹900","₹960","₹1000"], ans:"C" },
       { q:"√400 কত?", opts:["18","19","20","21"], ans:"C" },
@@ -78,82 +76,48 @@
       { q:"LCM(15, 20) কত?", opts:["40","50","60","80"], ans:"C" },
       { q:"HCF(42, 56) কত?", opts:["12","14","16","18"], ans:"B" },
       { q:"√121 কত?", opts:["9","10","11","12"], ans:"C" },
-      { q:"একটি পণ্যের দাম ₹600, 25% ছাড় ⇒ বিক্রয়মূল্য?", opts:["₹400","₹420","₹440","₹450"], ans:"B" },
+      { q:"একটি পণ্যের দাম ₹600, 25% ছাড় ⇒ বিক্রয়মূল্য?", opts:["₹400","₹420","₹440","₹450"], ans:"D" },
       { q:"গড়: 5, 10, 15, 20, 25 এর গড়?", opts:["12","13","14","15"], ans:"D" },
-      { q:"একটি সংখ্যার 3/8 = 24 ⇒ সংখ্যা কত?", opts:["56","60","64","72"], ans:"D" },
+      { q:"একটি সংখ্যার 3/8 = 24 ⇒ সংখ্যা কত?", opts:["56","60","64","72"], ans:"C" },
       { q:"সরল সুদ: P=₹2500, R=8% p.a., T=3y ⇒ সুদ?", opts:["₹500","₹550","₹600","₹650"], ans:"C" },
       { q:"√169 কত?", opts:["11","12","13","14"], ans:"C" },
       { q:"একটি ট্রেন 72 km/h গতিতে 1.5 ঘণ্টায় কত দূরত্ব অতিক্রম করবে?", opts:["100","105","108","110"], ans:"C" },
-      { q:"এক
+      { q:"একটি সংখ্যার 60% = 90 ⇒ সংখ্যা কত?", opts:["140","145","150","155"], ans:"C" },
+      { q:"LCM(9, 12) কত?", opts:["18","24","30","36"], ans:"D" },
+      { q:"HCF(18, 27) কত?", opts:["6","8","9","12"], ans:"C" },
+      { q:"√256 কত?", opts:["14","15","16","17"], ans:"C" },
+      { q:"একটি পণ্যের দাম ₹1000, 30% ছাড় ⇒ বিক্রয়মূল্য?", opts:["₹650","₹670","₹690","₹700"], ans:"D" },
+      { q:"গড়: 8, 12, 16, 20 এর গড়?", opts:["12","13","14","15"], ans:"C" },
+      { q:"একটি সংখ্যার 2/5 = 50 ⇒ সংখ্যা কত?", opts:["110","120","125","150"], ans:"C" },
+      { q:"সরল সুদ: P=₹3000, R=6% p.a., T=5y ⇒ সুদ?", opts:["₹800","₹850","₹900","₹950"], ans:"C" },
+      { q:"√196 কত?", opts:["12","13","14","15"], ans:"C" },
+      { q:"একটি ট্রেন 90 km/h গতিতে 2 ঘণ্টায় কত দূরত্ব অতিক্রম করবে?", opts:["160","170","180","200"], ans:"C" },
+      { q:"একটি সংখ্যার 80% = 160 ⇒ সংখ্যা কত?", opts:["180","190","200","210"], ans:"C" }
     ];
 
     const container = document.getElementById("questionsContainer");
 
-    // Render with section headers
     function renderQuestions() {
       container.innerHTML = "";
-      const sections = [
-        { key: "GK", title: "Section: General Knowledge", cls: "GK" },
-        { key: "CA", title: "Section: Current Affairs", cls: "CA" },
-        { key: "EN", title: "Section: General English", cls: "EN" },
-        { key: "AR", title: "Section: Arithmetic", cls: "AR" }
-      ];
-      let qIndex = 0;
-      sections.forEach(sec => {
-        const h = document.createElement("h2");
-        h.className = "section-title";
-        h.textContent = sec.title;
-        container.appendChild(h);
-        questions.forEach((item, idx) => {
-          if (item.cat === sec.key) {
-            qIndex++;
-            const div = document.createElement("div");
-            div.className = `question ${item.cat}`;
-            const header = `<p><strong>${qIndex}.</strong> ${item.q} <span class="badge">${item.cat}</span></p>`;
-            const optsHtml = item.opts.map((opt, i) => {
-              const optLabel = String.fromCharCode(65 + i);
-              return `<label><input type="radio" name="q${qIndex}" value="${optLabel}" /> ${optLabel}. ${opt}</label>`;
-            }).join("");
-            div.innerHTML = `${header}<div class="options">${optsHtml}</div>`;
-            container.appendChild(div);
-          }
-        });
-        const hr = document.createElement("hr");
-        hr.className = "hr";
-        container.appendChild(hr);
+      questions.forEach((item, idx) => {
+        const qNum = idx + 1;
+        const div = document.createElement("div");
+        div.className = "question";
+        const header = `<p><strong>${qNum}.</strong> ${item.q} <span class="badge">AR</span></p>`;
+        const optsHtml = item.opts.map((opt, i) => {
+          const optLabel = String.fromCharCode(65 + i);
+          return `<label><input type="radio" name="q${qNum}" value="${optLabel}" /> ${optLabel}. ${opt}</label>`;
+        }).join("");
+        div.innerHTML = `${header}<div class="options">${optsHtml}</div>`;
+        container.appendChild(div);
       });
     }
 
     renderQuestions();
 
-    function sectionScore(cat) {
-      let s = 0, counter = 0;
-      let globalIndex = 0;
-      // Map rendered order index to question item
-      const rendered = [];
-      ["GK","CA","EN","AR"].forEach(sec => {
-        questions.forEach(q => { if (q.cat === sec) rendered.push(q); });
-      });
-      rendered.forEach((item, idx) => {
-        if (item.cat === cat) {
-          counter++;
-          const qNum = idx + 1;
-          const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
-          if (selected && selected.value === item.ans) s++;
-        }
-      });
-      return s;
-    }
-
     function calculateScore() {
       let score = 0;
-      // Build rendered order mapping
-      const rendered = [];
-      ["GK","CA","EN","AR"].forEach(sec => {
-        questions.forEach(q => { if (q.cat === sec) rendered.push(q); });
-      });
-
-      rendered.forEach((item, idx) => {
+      questions.forEach((item, idx) => {
         const qNum = idx + 1;
         const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
         const options = document.getElementsByName(`q${qNum}`);
@@ -168,24 +132,13 @@
         }
         if (selected && selected.value === item.ans) score++;
       });
-
-      const gk = sectionScore("GK");
-      const ca = sectionScore("CA");
-      const en = sectionScore("EN");
-      const ar = sectionScore("AR");
-
       document.getElementById("result").innerText = `মোট স্কোর: ${score} / ${questions.length}`;
-      document.getElementById("splitScore").innerText = `বিভাগভিত্তিক: GK ${gk}/15 | CA ${ca}/15 | English ${en}/15 | Arithmetic ${ar}/15`;
     }
 
     let showAnswers = false;
     function toggleAnswers() {
       showAnswers = !showAnswers;
-      const rendered = [];
-      ["GK","CA","EN","AR"].forEach(sec => {
-        questions.forEach(q => { if (q.cat === sec) rendered.push(q); });
-      });
-      rendered.forEach((item, idx) => {
+      questions.forEach((item, idx) => {
         const qNum = idx + 1;
         const options = document.getElementsByName(`q${qNum}`);
         options.forEach(opt => {
@@ -197,7 +150,6 @@
       });
       if (!showAnswers) {
         document.getElementById("result").innerText = "";
-        document.getElementById("splitScore").innerText = "";
       }
     }
 
@@ -207,11 +159,10 @@
       document.getElementById("quizForm").reset();
       document.querySelectorAll(".correct, .incorrect").forEach(el => el.classList.remove("correct","incorrect"));
       document.getElementById("result").innerText = "";
-      document.getElementById("splitScore").innerText = "";
     });
 
-    // 90 মিনিট টাইমার
-    let totalSeconds = 90 * 60;
+    // 60 মিনিট টাইমার
+    let totalSeconds = 60 * 60;
     const timerDisplay = document.getElementById("timer");
     const timerInterval = setInterval(() => {
       const minutes = Math.floor(totalSeconds / 60);
