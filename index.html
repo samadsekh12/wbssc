@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <title>Group C মিশ্র মক টেস্ট — ৬০ প্রশ্ন</title>
+ <meta charset="UTF-8" />
+  <title>Group C/D মক টেস্ট — ৪৫টি গণিত প্রশ্ন</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
-      --gk:#e8f5e9; --ca:#fff8e1; --en:#e1f5fe; --ar:#f3e5f5;
-      --ok:#0a7a0a; --bad:#b00020; --muted:#666; --brand:#1f73b7;
+      --ar:#f3e5f5; --ok:#0a7a0a; --bad:#b00020; --muted:#666; --brand:#1f73b7;
     }
     body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.5; }
     h1 { margin: 0 0 6px; }
     .meta { color: #444; margin-bottom: 14px; }
     .legend { font-size: 12px; color: var(--muted); margin: 6px 0 16px; }
     .question { margin: 14px 0; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
-    .GK { background: var(--gk); }
-    .CA { background: var(--ca); }
-    .EN { background: var(--en); }
     .AR { background: var(--ar); }
     .options label { display: block; margin-top: 6px; cursor: pointer; }
     .badge { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: #ccc; margin-left: 8px; }
@@ -25,7 +21,6 @@
     button.secondary { background: #6c757d; }
     #timer { font-weight: bold; color: var(--bad); margin: 8px 0 12px; }
     #result { margin-top: 12px; font-weight: bold; color: var(--ok); }
-    #splitScore { margin-top: 4px; color: #222; }
     .correct { color: var(--ok); font-weight: bold; }
     .incorrect { color: var(--bad); font-weight: bold; }
     .section-title { margin-top: 18px; font-size: 18px; }
@@ -35,9 +30,9 @@
 </head>
 <body>
   <div class="sticky">
-    <h1>Group C মিশ্র মক টেস্ট — ৬০ প্রশ্ন</h1>
-    <div class="meta">GK (15) • Current Affairs (15) • General English (15) • Arithmetic (15)</div>
-    <div id="timer">সময় বাকি: 90:00</div>
+    <h1>Group C/D মক টেস্ট — ৪৫টি গণিত প্রশ্ন</h1>
+    <div class="meta">Arithmetic (45)</div>
+    <div id="timer">সময় বাকি: 60:00</div>
   </div>
 
   <form id="quizForm">
@@ -49,84 +44,47 @@
     </div>
     <div class="legend">Submit-এর পর সঠিক অপশন সবুজ, ভুলভাবে নির্বাচিত অপশন লাল রঙে দেখাবে।</div>
     <div id="result"></div>
-    <div id="splitScore"></div>
   </form>
-
   <hr class="hr" />
-  <div class="legend">
-    টিপস: শেষের দিকে গিয়ে একসাথে সাবমিট না করে প্রতিটি সেকশন শেষ হলেই দ্রুত মার্কিং দেখে নিলে টাইম ম্যানেজমেন্ট সহজ হয়।
-  </div>
 
   <script>
-    // ৬০ প্রশ্ন: GK 15, CA 15, EN 15, AR 15
+    // ৪৫টি Arithmetic প্রশ্ন
     const questions = [
-      // GK (15)
-      { cat:"GK", q:"ভারতের জাতীয় পশু কোনটি?", opts:["সিংহ","বাঘ","হরিণ","গণ্ডার"], ans:"B" },
-      { cat:"GK", q:"ভারতের জাতীয় সংগীত কে রচনা করেছেন?", opts:["কাজী নজরুল ইসলাম","রবীন্দ্রনাথ ঠাকুর","ব্যাংকিমচন্দ্র চট্টোপাধ্যায়","ইশ্বরচন্দ্র বিদ্যাসাগর"], ans:"B" },
-      { cat:"GK", q:"ভারতের প্রথম প্রধানমন্ত্রী কে?", opts:["লাল বাহাদুর শাস্ত্রী","ইন্দিরা গান্ধী","জওহরলাল নেহরু","রাজেন্দ্র প্রসাদ"], ans:"C" },
-      { cat:"GK", q:"ভারতের জাতীয় ফুল কোনটি?", opts:["গোলাপ","পদ্ম","সূর্যমুখী","জুঁই"], ans:"B" },
-      { cat:"GK", q:"তাজমহল কোথায় অবস্থিত?", opts:["দিল্লি","আগ্রা","লখনউ","জয়পুর"], ans:"B" },
-      { cat:"GK", q:"পৃথিবীর সবচেয়ে বড় মহাসাগর কোনটি?", opts:["আটলান্টিক","প্রশান্ত","ভারত মহাসাগর","আর্কটিক"], ans:"B" },
-      { cat:"GK", q:"বিশ্বের দীর্ঘতম নদী কোনটি?", opts:["আমাজন","নাইল","ইয়াংসি","গঙ্গা"], ans:"B" },
-      { cat:"GK", q:"ভারতের জাতীয় পাখি কোনটি?", opts:["ময়ূর","চিল","কাক","রাজহাঁস"], ans:"A" },
-      { cat:"GK", q:"পৃথিবীর প্রাকৃতিক উপগ্রহের নাম?", opts:["সূর্য","চাঁদ","মঙ্গল","শুক্র"], ans:"B" },
-      { cat:"GK", q:"‘গীতাঞ্জলি’ কার রচনা?", opts:["রবীন্দ্রনাথ ঠাকুর","বঙ্কিমচন্দ্র","কাজী নজরুল","শরৎচন্দ্র"], ans:"A" },
-      { cat:"GK", q:"পৃথিবীর সবচেয়ে বড় মরুভূমি কোনটি?", opts:["সাহারা","আরব","গোবি","অ্যান্টার্কটিকা"], ans:"D" },
-      { cat:"GK", q:"ভারতের মুদ্রার নাম কী?", opts:["রুপি","টাকা","ডলার","দিনার"], ans:"A" },
-      { cat:"GK", q:"ভারতের পতাকায় রঙের সংখ্যা কত?", opts:["২","৩","৪","৫"], ans:"B" },
-      { cat:"GK", q:"ভারতের প্রথম মহিলা রাষ্ট্রপতি কে?", opts:["ইন্দিরা গান্ধী","প্রতিভা পাটিল","মীরা কুমার","সোনিয়া গান্ধী"], ans:"B" },
-      { cat:"GK", q:"‘ডিসকভারি অফ ইন্ডিয়া’ কার লেখা?", opts:["মহাত্মা গান্ধী","জওহরলাল নেহরু","সুভাষচন্দ্র বসু","বিপিনচন্দ্র পাল"], ans:"B" },
-
-      // CA (15)
-      { cat:"CA", q:"ভারতের স্বাধীনতা দিবস কবে পালিত হয়?", opts:["২৬ জানুয়ারি","১৫ আগস্ট","২ অক্টোবর","১৪ নভেম্বর"], ans:"B" },
-      { cat:"CA", q:"UN-এর সদর দপ্তর কোথায়?", opts:["প্যারিস","নিউইয়র্ক","জেনেভা","ভিয়েনা"], ans:"B" },
-      { cat:"CA", q:"G20-এর সদস্য নয় কোনটি?", opts:["ভারত","ইন্দোনেশিয়া","সিঙ্গাপুর","জাপান"], ans:"C" },
-      { cat:"CA", q:"IOC-এর পূর্ণরূপ কী?", opts:["Indian Olympic Council","International Olympic Committee","International Organization Council","International Olympic Confederation"], ans:"B" },
-      { cat:"CA", q:"চন্দ্রযান-3 কোন সংস্থার?", opts:["নাসা","ইস্রো","ইএসএ","জাক্সা"], ans:"B" },
-      { cat:"CA", q:"নোবেল শান্তি পুরস্কার কে প্রদান করে?", opts:["সুইডিশ একাডেমি","নরওয়েজিয়ান নোবেল কমিটি","ইউনেস্কো","রয়্যাল সোসাইটি"], ans:"B" },
-      { cat:"CA", q:"GST-এর পূর্ণরূপ কী?", opts:["Goods and Service Tax","Goods and Services Tax","General Sales Tax","Global Services Tariff"], ans:"B" },
-      { cat:"CA", q:"লোকসভার অন্য নাম?", opts:["হাউস অফ পিপল","কাউন্সিল অফ স্টেটস","লোয়ার কাউন্সিল","ফেডারেল হাউস"], ans:"A" },
-      { cat:"CA", q:"আন্তর্জাতিক যোগ দিবস কবে?", opts:["১ মে","২১ জুন","১ জুলাই","১৫ আগস্ট"], ans:"B" },
-      { cat:"CA", q:"ভারতের সংবিধান কবে কার্যকর হয়?", opts:["২৬ নভেম্বর ১৯৪৯","১৫ আগস্ট ১৯৪৭","২৬ জানুয়ারি ১৯৫০","২ জানুয়ারি ১৯৫১"], ans:"C" },
-      { cat:"CA", q:"জাতিসংঘের সরকারি ভাষা নয় কোনটি?", opts:["আরবি","চীনা","হিন্দি","রুশ"], ans:"C" },
-      { cat:"CA", q:"WHO-এর সদর দপ্তর কোথায়?", opts:["জেনেভা","নিউইয়র্ক","প্যারিস","রোম"], ans:"A" },
-      { cat:"CA", q:"COP সম্মেলন কোন বিষয়ের সাথে যুক্ত?", opts:["জলবায়ু পরিবর্তন","সামরিক জোট","বাণিজ্য চুক্তি","অর্থনৈতিক শীর্ষ সম্মেলন"], ans:"A" },
-      { cat:"CA", q:"ভারতের পরিকল্পনা নীতি তদারকি করে কোন সংস্থা (বর্তমান)?", opts:["NITI Aayog","Planning Commission","Finance Commission","CAG"], ans:"A" },
-      { cat:"CA", q:"ভারতের নির্বাচন কমিশনের প্রধানের পদবী?", opts:["চিফ জাস্টিস","চিফ ইলেকশন কমিশনার","চিফ কন্ট্রোলার","চিফ সেক্রেটারি"], ans:"B" },
-
-      // EN (15)
-      { cat:"EN", q:"Choose the correct synonym of ‘Begin’.", opts:["Cease","Commence","Abandon","Finish"], ans:"B" },
-      { cat:"EN", q:"Choose the antonym of ‘Ancient’.", opts:["Old","Modern","Antique","Aged"], ans:"B" },
-      { cat:"EN", q:"Fill in the blank: He is good ___ mathematics.", opts:["at","in","on","with"], ans:"A" },
-      { cat:"EN", q:"Correct spelling:", opts:["Recieve","Receive","Recive","Receeve"], ans:"B" },
-      { cat:"EN", q:"One word substitution: A person who writes a dictionary.", opts:["Novelist","Lexicographer","Calligrapher","Dramatist"], ans:"B" },
-      { cat:"EN", q:"Choose the correct article: He is ___ honest man.", opts:["a","an","the","no article"], ans:"B" },
-      { cat:"EN", q:"Passive voice: ‘They built the bridge in 2010.’", opts:["The bridge is built in 2010.","The bridge was built in 2010.","The bridge has built in 2010.","The bridge had built in 2010."], ans:"B" },
-      { cat:"EN", q:"Choose the correct preposition: She is afraid ___ snakes.", opts:["from","to","of","with"], ans:"C" },
-      { cat:"EN", q:"Choose the correct tense: He ___ here since morning.", opts:["is","was","has been","had been"], ans:"C" },
-      { cat:"EN", q:"Antonym of ‘Scarce’.", opts:["Rare","Plentiful","Scanty","Sparse"], ans:"B" },
-      { cat:"EN", q:"Synonym of ‘Brave’.", opts:["Timid","Cowardly","Valiant","Afraid"], ans:"C" },
-      { cat:"EN", q:"Choose the correct form: ‘He suggested that I ___ early.’", opts:["leave","left","leaves","leaving"], ans:"A" },
-      { cat:"EN", q:"Spot the error: ‘He do not know the answer.’", opts:["He","do","not know","the answer"], ans:"B" },
-      { cat:"EN", q:"Choose the correct conjunction: ‘I was tired ___ I kept working.’", opts:["and","so","but","or"], ans:"C" },
-      { cat:"EN", q:"Change to comparative: ‘He is the best player.’", opts:["He is better than any other player.","He is good than others.","He is more good than all.","He is best than all."], ans:"A" },
-
-      // AR (15)
-      { cat:"AR", q:"100 এর 10% কত?", opts:["5","10","15","20"], ans:"B" },
-      { cat:"AR", q:"25% এর 200 কত?", opts:["25","50","75","100"], ans:"B" },
-      { cat:"AR", q:"40 এর 25% কত?", opts:["10","8","12","15"], ans:"A" },
-      { cat:"AR", q:"একটি সংখ্যার 1/3 = 12 ⇒ সংখ্যা কত?", opts:["18","24","36","48"], ans:"C" },
-      { cat:"AR", q:"সরল সুদ: P=₹5000, R=10% p.a., T=2y ⇒ সুদ?", opts:["₹500","₹750","₹1000","₹1500"], ans:"C" },
-      { cat:"AR", q:"গড়: 6, 8, 10 এর গড়?", opts:["6","7","8","9"], ans:"C" },
-      { cat:"AR", q:"অনুপাত 3:4 ও 9:12 —", opts:["সমান","অসমান","জানা যায় না","আংশিক"], ans:"A" },
-      { cat:"AR", q:"₹1200 এ 20% ছাড় ⇒ দাম?", opts:["₹960","₹1000","₹1040","₹940"], ans:"A" },
-      { cat:"AR", q:"12 ÷ 3 × 2 =", opts:["2","6","8","4"], ans:"C" },
-      { cat:"AR", q:"পারফেক্ট স্কয়ার কোনটি?", opts:["45","50","64","70"], ans:"C" },
-      { cat:"AR", q:"2 ঘণ্টা 30 মিনিট = কত মিনিট?", opts:["120","130","140","150"], ans:"D" },
-      { cat:"AR", q:"আয়তক্ষেত্র 10m × 8m ⇒ ক্ষেত্রফল?", opts:["18 m²","80 m²","40 m²","100 m²"], ans:"B" },
-      { cat:"AR", q:"17 ÷ 5 ⇒ ভাগশেষ?", opts:["0","1","2","3"], ans:"C" },
-      { cat:"AR", q:"200 এর উপর 10% বৃদ্ধি ⇒ কত?", opts:["210","215","220","230"], ans:"C" },
-      { cat:"AR", q:"LCM(6, 8) কত?", opts:["12","16","24","48"], ans:"C" }
+      { q:"120 এর 25% কত?", opts:["20","25","30","40"], ans:"C" },
+      { q:"একটি সংখ্যার 1/5 = 14 ⇒ সংখ্যা কত?", opts:["50","60","70","80"], ans:"C" },
+      { q:"সরল সুদ: P=₹2000, R=5% p.a., T=3y ⇒ সুদ?", opts:["₹200","₹250","₹300","₹350"], ans:"C" },
+      { q:"গড়: 12, 15, 18 এর গড়?", opts:["12","14","15","16"], ans:"D" },
+      { q:"অনুপাত 2:3 ও 8:12 —", opts:["সমান","অসমান","জানা যায় না","আংশিক"], ans:"A" },
+      { q:"₹1500 এ 10% ছাড় ⇒ দাম?", opts:["₹1350","₹1400","₹1450","₹1300"], ans:"A" },
+      { q:"18 ÷ 3 × 4 =", opts:["20","22","24","26"], ans:"C" },
+      { q:"পারফেক্ট স্কয়ার কোনটি?", opts:["81","82","83","85"], ans:"A" },
+      { q:"3 ঘণ্টা 15 মিনিট = কত মিনিট?", opts:["180","185","190","195"], ans:"D" },
+      { q:"আয়তক্ষেত্র 12m × 5m ⇒ ক্ষেত্রফল?", opts:["50","60","70","60 m²"], ans:"B" },
+      { q:"29 ÷ 4 ⇒ ভাগশেষ?", opts:["0","1","2","3"], ans:"D" },
+      { q:"500 এর উপর 20% বৃদ্ধি ⇒ কত?", opts:["550","600","620","700"], ans:"B" },
+      { q:"LCM(12, 18) কত?", opts:["24","36","48","60"], ans:"B" },
+      { q:"HCF(24, 36) কত?", opts:["6","8","12","18"], ans:"C" },
+      { q:"√225 কত?", opts:["10","12","14","15"], ans:"D" },
+      { q:"একটি ট্রেন 60 km/h গতিতে 2.5 ঘণ্টায় কত দূরত্ব অতিক্রম করবে?", opts:["120","130","140","150"], ans:"D" },
+      { q:"একটি সংখ্যার 40% = 80 ⇒ সংখ্যা কত?", opts:["180","190","200","210"], ans:"C" },
+      { q:"একটি পণ্যের দাম ₹800, 15% ছাড় ⇒ বিক্রয়মূল্য?", opts:["₹650","₹660","₹680","₹700"], ans:"C" },
+      { q:"গড়: 20, 25, 30, 35 এর গড়?", opts:["25","26","27","28"], ans:"B" },
+      { q:"একটি আয়তক্ষেত্রের দৈর্ঘ্য 14m, প্রস্থ 7m ⇒ ক্ষেত্রফল?", opts:["84","88","90","98"], ans:"A" },
+      { q:"একটি সংখ্যার 2/7 = 18 ⇒ সংখ্যা কত?", opts:["54","56","60","63"], ans:"D" },
+      { q:"সরল সুদ: P=₹4000, R=12% p.a., T=2y ⇒ সুদ?", opts:["₹800","₹900","₹960","₹1000"], ans:"C" },
+      { q:"√400 কত?", opts:["18","19","20","21"], ans:"C" },
+      { q:"একটি ট্রেন 45 km/h গতিতে 4 ঘণ্টায় কত দূরত্ব অতিক্রম করবে?", opts:["160","170","180","200"], ans:"C" },
+      { q:"একটি সংখ্যার 75% = 225 ⇒ সংখ্যা কত?", opts:["250","275","300","325"], ans:"C" },
+      { q:"LCM(15, 20) কত?", opts:["40","50","60","80"], ans:"C" },
+      { q:"HCF(42, 56) কত?", opts:["12","14","16","18"], ans:"B" },
+      { q:"√121 কত?", opts:["9","10","11","12"], ans:"C" },
+      { q:"একটি পণ্যের দাম ₹600, 25% ছাড় ⇒ বিক্রয়মূল্য?", opts:["₹400","₹420","₹440","₹450"], ans:"B" },
+      { q:"গড়: 5, 10, 15, 20, 25 এর গড়?", opts:["12","13","14","15"], ans:"D" },
+      { q:"একটি সংখ্যার 3/8 = 24 ⇒ সংখ্যা কত?", opts:["56","60","64","72"], ans:"D" },
+      { q:"সরল সুদ: P=₹2500, R=8% p.a., T=3y ⇒ সুদ?", opts:["₹500","₹550","₹600","₹650"], ans:"C" },
+      { q:"√169 কত?", opts:["11","12","13","14"], ans:"C" },
+      { q:"একটি ট্রেন 72 km/h গতিতে 1.5 ঘণ্টায় কত দূরত্ব অতিক্রম করবে?", opts:["100","105","108","110"], ans:"C" },
+      { q:"এক
     ];
 
     const container = document.getElementById("questionsContainer");
