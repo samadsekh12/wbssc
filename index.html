@@ -3,51 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Server-less Android App আইডিয়া (৫২)</title>
+  <title>Server-less Android App আইডিয়া (৫২) — ট্র্যাকিং + AI + ক্যারিয়ার</title>
   <style>
     :root {
       --bg: #0f172a;
-      --panel: #111827;
+      --panel: #0b1222;
       --text: #e5e7eb;
       --muted: #9ca3af;
       --accent: #22d3ee;
       --accent-2: #7c3aed;
       --border: #1f2937;
       --highlight: #0ea5e9;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warn: #f59e0b;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0; background: linear-gradient(180deg, #0b1022, #0f172a 25%, #0f172a 100%);
-      color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", "Helvetica Neue", Arial;
       line-height: 1.6;
     }
     header {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
     }
-    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-    .title {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    }
-    h1 {
-      margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.3px;
-    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .title { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
     .count-badge {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: white; padding: 6px 10px; border-radius: 999px; font-size: 13px; font-weight: 700;
       box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
     }
     .toolbar {
-      margin-top: 12px; display: grid; grid-template-columns: 1fr auto; gap: 10px;
+      margin-top: 12px; display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center;
+    }
+    .filters {
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end;
     }
     .search {
       display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--border);
       border-radius: 10px; background: #0b1222;
     }
     .search input {
-      flex: 1; background: transparent; border: none; outline: none; color: var(--text);
-      font-size: 14px;
+      flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 14px; min-width: 220px;
     }
     .btn {
       padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
@@ -55,35 +56,41 @@
     }
     .btn:hover { border-color: var(--highlight); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
     .panel {
-      margin-top: 16px; background: #0b1222; border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      margin-top: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
     }
-    table {
-      width: 100%; border-collapse: collapse;
-    }
-    thead {
-      background: #0b1222; position: sticky; top: 61px; z-index: 5;
-      border-bottom: 1px solid var(--border);
-    }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #091222; position: sticky; top: 86px; z-index: 5; border-bottom: 1px solid var(--border); }
     th, td {
-      padding: 12px 14px; text-align: left; vertical-align: top; font-size: 14px;
+      padding: 10px 12px; text-align: left; vertical-align: top; font-size: 14px;
       border-bottom: 1px solid #111827;
     }
-    th {
-      color: #cbd5e1; user-select: none; white-space: nowrap;
-    }
+    th { color: #cbd5e1; user-select: none; white-space: nowrap; }
     th.sortable { cursor: pointer; }
     th.sortable span { color: var(--muted); font-size: 12px; margin-left: 6px; }
-    tbody tr:hover { background: rgba(34, 211, 238, 0.05); }
+    tbody tr:hover { background: rgba(34, 211, 238, 0.06); }
     .muted { color: var(--muted); }
-    footer {
-      border-top: 1px solid var(--border); margin-top: 24px;
-      color: var(--muted); font-size: 13px;
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      border: 1px solid var(--border); color: #93c5fd; background: rgba(59,130,246,0.08);
     }
-    .note {
-      font-size: 13px; color: var(--muted); margin-top: 8px;
+    .ai-yes { color: #34d399; background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); }
+    .ai-no { color: #fca5a5; background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); }
+    .kpi {
+      display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; margin-top: 12px;
+    }
+    .card {
+      background: #0b1222; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; color: var(--muted);
+    }
+    .card b { color: var(--text); font-size: 16px; }
+    .note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+    input[type="number"], select {
+      background: #0b1222; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+    }
+    @media (max-width: 920px) {
+      .kpi { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 720px) {
-      th:nth-child(3), td:nth-child(3) { display: none; } /* কাজ কলাম লম্বা হলে ছোট স্ক্রিনে হাইড */
+      th:nth-child(3), td:nth-child(3) { display: none; } /* কাজ কলাম মোবাইলে লম্বা হলে হাইড */
     }
   </style>
 </head>
@@ -91,20 +98,44 @@
   <header>
     <div class="container">
       <div class="title">
-        <h1>Server-less Android App আইডিয়া</h1>
+        <h1>Server-less Android App আইডিয়া — ট্র্যাকিং ড্যাশবোর্ড</h1>
         <div class="count-badge">মোট ৫২</div>
       </div>
+
       <div class="toolbar">
         <label class="search" aria-label="সার্চ">
           <svg width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="M21 21l-4.3-4.3"></path>
           </svg>
-          <input id="search" type="search" placeholder="নাম/কীওয়ার্ড দিয়ে খুঁজুন (যেমন: calculator, quiz, health)..." />
+          <input id="search" type="search" placeholder="নাম/কীওয়ার্ড দিয়ে খুঁজুন (যেমন: calculator, quiz, health, ai)..." />
         </label>
-        <button class="btn" id="copyBtn">কপি HTML</button>
+
+        <div class="filters">
+          <label style="display:flex;gap:6px;align-items:center;">
+            <input type="checkbox" id="aiOnly" />
+            <span class="muted">শুধু AI</span>
+          </label>
+          <label style="display:flex;gap:6px;align-items:center;">
+            <span class="muted">Min Downloads</span>
+            <input type="number" id="minDownloads" min="0" step="1000" placeholder="যেমন 10000" style="width:130px;" />
+          </label>
+        </div>
+
+        <div class="filters">
+          <button class="btn" id="exportCsv">Export CSV</button>
+          <button class="btn" id="copyBtn">কপি HTML</button>
+        </div>
       </div>
-      <p class="note">টিপ: কলাম হেডারে ক্লিক করে সাজান (Sort)। সার্চ বক্সে টাইপ করলে লাইভ ফিল্টার হবে।</p>
+
+      <div class="kpi">
+        <div class="card"><div class="muted">মোট AI সম্ভাব্য</div><b id="kpiAI">0</b></div>
+        <div class="card"><div class="muted">মোট Downloads (এন্ট্রি)</div><b id="kpiDL">0</b></div>
+        <div class="card"><div class="muted">মোট Earnings (₹)</div><b id="kpiEarn">0</b></div>
+        <div class="card"><div class="muted">Career demand এন্ট্রি</div><b id="kpiJobs">0</b></div>
+      </div>
+
+      <p class="note">টিপ: কলাম হেডারে ক্লিক করে সাজান (Sort)। নিচের টেবিলে ডেটা সেলগুলো সরাসরি এডিট করা যায়।</p>
     </div>
   </header>
 
@@ -116,34 +147,21 @@
             <th class="sortable" data-key="id"># <span>↕</span></th>
             <th class="sortable" data-key="name">অ্যাপ নাম <span>↕</span></th>
             <th>কাজ</th>
+            <th class="sortable" data-key="code">Code (Tech) <span>↕</span></th>
+            <th class="sortable" data-key="jobs">Career demand (jobs/mo) <span>↕</span></th>
+            <th class="sortable" data-key="downloads">Downloads <span>↕</span></th>
+            <th class="sortable" data-key="earnings">Earnings (₹) <span>↕</span></th>
+            <th class="sortable" data-key="ai">AI <span>↕</span></th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
     </section>
-
-    <section class="panel" style="margin-top:16px;">
-      <table id="trackTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>অ্যাপ নাম</th>
-            <th class="muted">ব্যবহারকারী সংখ্যা</th>
-            <th class="muted">ডাউনলোড</th>
-            <th class="muted">আয় (₹)</th>
-          </tr>
-        </thead>
-        <tbody id="trackBody"></tbody>
-      </table>
-    </section>
-
-    <footer class="container">
-      <p>এই তালিকা অফলাইন/সার্ভার-লেস অ্যাপ আইডিয়ার জন্য। নিচের ট্র্যাকিং টেবিলে আপনি ভবিষ্যতের বাস্তব ডেটা আপডেট করতে পারবেন।</p>
-    </footer>
   </main>
 
   <script>
-    const ideas = [
+    // Base ideas
+    const baseIdeas = [
       { id: 1, name: "To-Do List App", work: "কাজের তালিকা তৈরি, সম্পন্ন করা, মুছে ফেলা" },
       { id: 2, name: "Note Taking App", work: "নোট লেখা, সংরক্ষণ, খোঁজা" },
       { id: 3, name: "Expense Tracker", work: "আয়-ব্যয় রেকর্ড রাখা" },
@@ -198,72 +216,137 @@
       { id: 52, name: "Calculator + Media File Hide App", work: "ক্যালকুলেটর + গোপন মিডিয়া ভল্ট (ভিডিও/অডিও/ফটো)" },
     ];
 
+    // Extend with tracking fields (editable)
+    let rows = baseIdeas.map(r => ({
+      ...r,
+      code: "",          // e.g., Kotlin + Room, Jetpack Compose, ML Kit
+      jobs: "",          // monthly job postings count (your estimate)
+      downloads: "",     // total downloads (your target or actual)
+      earnings: "",      // revenue in ₹
+      ai: ""             // Yes/No
+    }));
+
     const tbody = document.getElementById('tbody');
-    const trackBody = document.getElementById('trackBody');
+    const search = document.getElementById('search');
+    const aiOnly = document.getElementById('aiOnly');
+    const minDownloads = document.getElementById('minDownloads');
+    const kpiAI = document.getElementById('kpiAI');
+    const kpiDL = document.getElementById('kpiDL');
+    const kpiEarn = document.getElementById('kpiEarn');
+    const kpiJobs = document.getElementById('kpiJobs');
 
-    function renderTables(rows) {
-      // Main ideas table
-      tbody.innerHTML = rows.map(r => `
-        <tr>
-          <td>${r.id}</td>
-          <td>${r.name}</td>
-          <td class="muted">${r.work}</td>
-        </tr>
-      `).join('');
-
-      // Tracking table (empty fields for future data entry)
-      trackBody.innerHTML = rows.map(r => `
-        <tr>
-          <td>${r.id}</td>
-          <td>${r.name}</td>
-          <td contenteditable="true" class="muted" data-field="users" data-id="${r.id}"></td>
-          <td contenteditable="true" class="muted" data-field="downloads" data-id="${r.id}"></td>
-          <td contenteditable="true" class="muted" data-field="earnings" data-id="${r.id}"></td>
-        </tr>
-      `).join('');
+    function fmtNumber(n) {
+      if (!n) return "";
+      const x = Number(String(n).replace(/,/g, ""));
+      if (!isFinite(x)) return String(n);
+      return x.toLocaleString('en-IN');
     }
 
-    // Initial render
-    renderTables(ideas);
+    function parseNumber(n) {
+      if (!n) return 0;
+      const x = Number(String(n).replace(/,/g, "").trim());
+      return isFinite(x) ? x : 0;
+    }
 
-    // Search / Filter
-    const search = document.getElementById('search');
-    search.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      const filtered = ideas.filter(r =>
-        String(r.id).includes(q) ||
-        r.name.toLowerCase().includes(q) ||
-        r.work.toLowerCase().includes(q)
-      );
-      renderTables(filtered);
+    function aiBadge(val) {
+      const yes = String(val || "").toLowerCase().startsWith("y");
+      const no = String(val || "").toLowerCase().startsWith("n");
+      return yes
+        ? `<span class="tag ai-yes">AI</span>`
+        : no ? `<span class="tag ai-no">No AI</span>` : `<span class="tag">—</span>`;
+    }
+
+    function render() {
+      const q = search.value.toLowerCase().trim();
+      const onlyAI = aiOnly.checked;
+      const minDL = parseNumber(minDownloads.value);
+
+      const filtered = rows.filter(r => {
+        const matchQ =
+          String(r.id).includes(q) ||
+          (r.name || "").toLowerCase().includes(q) ||
+          (r.work || "").toLowerCase().includes(q) ||
+          (r.code || "").toLowerCase().includes(q);
+        const matchAI = !onlyAI || String(r.ai || "").toLowerCase().startsWith("y");
+        const matchDL = !minDL || parseNumber(r.downloads) >= minDL;
+        return matchQ && matchAI && matchDL;
+      });
+
+      tbody.innerHTML = filtered.map(r => `
+        <tr data-id="${r.id}">
+          <td>${r.id}</td>
+          <td contenteditable="true" data-field="name">${r.name}</td>
+          <td contenteditable="true" data-field="work" class="muted">${r.work}</td>
+          <td contenteditable="true" data-field="code" class="muted">${r.code}</td>
+          <td contenteditable="true" data-field="jobs" class="muted">${r.jobs}</td>
+          <td contenteditable="true" data-field="downloads" class="muted">${r.downloads}</td>
+          <td contenteditable="true" data-field="earnings" class="muted">${r.earnings}</td>
+          <td contenteditable="true" data-field="ai" style="min-width:80px;">${r.ai || ""} ${aiBadge(r.ai)}</td>
+        </tr>
+      `).join('');
+
+      // KPIs from filtered rows with numeric entries
+      const aiCount = filtered.filter(r => String(r.ai || "").toLowerCase().startsWith("y")).length;
+      const totalDL = filtered.reduce((s, r) => s + parseNumber(r.downloads), 0);
+      const totalEarn = filtered.reduce((s, r) => s + parseNumber(r.earnings), 0);
+      const jobsFilled = filtered.filter(r => parseNumber(r.jobs) > 0).length;
+
+      kpiAI.textContent = fmtNumber(aiCount);
+      kpiDL.textContent = fmtNumber(totalDL);
+      kpiEarn.textContent = "₹ " + fmtNumber(totalEarn);
+      kpiJobs.textContent = fmtNumber(jobsFilled);
+    }
+
+    // Inline editing handler
+    document.addEventListener('input', (e) => {
+      const td = e.target.closest('td[contenteditable="true"]');
+      if (!td) return;
+      const tr = td.closest('tr');
+      const id = Number(tr.dataset.id);
+      const field = td.dataset.field;
+      const row = rows.find(x => x.id === id);
+      if (!row) return;
+      row[field] = td.textContent.trim();
+
+      // Re-render AI badge if AI field changed
+      if (field === 'ai') {
+        render();
+      }
     });
 
-    // Sort
-    const table = document.getElementById('appsTable');
+    // Sorting
     let sortState = { key: 'id', dir: 1 };
-    function sortRows(key) {
+    function sortBy(key) {
       sortState.dir = (sortState.key === key) ? -sortState.dir : 1;
       sortState.key = key;
-      const sorted = [...ideas].sort((a, b) => {
-        const va = (a[key] + '').toLowerCase();
-        const vb = (b[key] + '').toLowerCase();
+      rows.sort((a, b) => {
+        const va = (a[key] ?? "").toString().toLowerCase();
+        const vb = (b[key] ?? "").toString().toLowerCase();
+
+        // Numeric-aware sort for certain keys
+        const numericKeys = ['id', 'jobs', 'downloads', 'earnings'];
+        if (numericKeys.includes(key)) {
+          const na = parseNumber(a[key]);
+          const nb = parseNumber(b[key]);
+          if (na < nb) return -1 * sortState.dir;
+          if (na > nb) return 1 * sortState.dir;
+          return 0;
+        }
+
         if (va < vb) return -1 * sortState.dir;
         if (va > vb) return 1 * sortState.dir;
         return 0;
       });
-      const q = search.value.toLowerCase().trim();
-      const rows = q ? sorted.filter(r =>
-        String(r.id).includes(q) ||
-        r.name.toLowerCase().includes(q) ||
-        r.work.toLowerCase().includes(q)
-      ) : sorted;
-      renderTables(rows);
+      render();
     }
-    table.querySelectorAll('th.sortable').forEach(th => {
-      th.addEventListener('click', () => sortRows(th.dataset.key));
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.addEventListener('click', () => sortBy(th.dataset.key));
     });
 
-    // Copy HTML button
+    // Filters & search
+    [search, aiOnly, minDownloads].forEach(el => el.addEventListener('input', render));
+
+    // Copy full HTML
     document.getElementById('copyBtn').addEventListener('click', async () => {
       try {
         const html = document.documentElement.outerHTML;
@@ -276,6 +359,54 @@
         alert("কপি করা যায়নি। ব্রাউজারের পারমিশন চেক করুন।");
       }
     });
+
+    // Export CSV of current table view
+    function toCSV(arr) {
+      const headers = ["#", "App Name", "Work", "Code (Tech)", "Career demand (jobs/mo)", "Downloads", "Earnings (₹)", "AI"];
+      const lines = [headers.join(",")];
+      arr.forEach(r => {
+        const row = [
+          r.id,
+          `"${(r.name || "").replace(/"/g, '""')}"`,
+          `"${(r.work || "").replace(/"/g, '""')}"`,
+          `"${(r.code || "").replace(/"/g, '""')}"`,
+          parseNumber(r.jobs),
+          parseNumber(r.downloads),
+          parseNumber(r.earnings),
+          (r.ai || "")
+        ];
+        lines.push(row.join(","));
+      });
+      return lines.join("\n");
+    }
+
+    document.getElementById('exportCsv').addEventListener('click', () => {
+      // Apply current filters to decide which rows to export
+      const q = search.value.toLowerCase().trim();
+      const onlyAI = aiOnly.checked;
+      const minDL = parseNumber(minDownloads.value);
+      const filtered = rows.filter(r => {
+        const matchQ =
+          String(r.id).includes(q) ||
+          (r.name || "").toLowerCase().includes(q) ||
+          (r.work || "").toLowerCase().includes(q) ||
+          (r.code || "").toLowerCase().includes(q);
+        const matchAI = !onlyAI || String(r.ai || "").toLowerCase().startsWith("y");
+        const matchDL = !minDL || parseNumber(r.downloads) >= minDL;
+        return matchQ && matchAI && matchDL;
+      });
+      const csv = toCSV(filtered);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "serverless-android-ideas-tracking.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Initial render
+    render();
   </script>
 </body>
 </html>
