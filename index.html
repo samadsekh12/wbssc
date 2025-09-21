@@ -1,420 +1,289 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Offline/Serverless App Catalog – বাংলা UI</title>
-  <style>
-    :root{
-      --bg:#0f172a; --card:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#22d3ee;
-      --ok:#10b981; --warn:#f59e0b; --chip:#1f2937; --border:#243244;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:linear-gradient(180deg,#0b1220 0%, #0f172a 100%); color:var(--text);
-    }
-    header{
-      position:sticky; top:0; z-index:5; backdrop-filter: blur(8px);
-      background:rgba(15,23,42,.7); border-bottom:1px solid var(--border);
-    }
-    .container{max-width:1200px; margin:0 auto; padding:16px}
-    .topbar{
-      display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:space-between;
-    }
-    .brand{display:flex; align-items:center; gap:10px}
-    .badge{
-      padding:4px 8px; border:1px solid var(--border); border-radius:999px; font-size:.8rem; color:var(--muted)
-    }
-    .pill{
-      background:var(--chip); border:1px solid var(--border); color:var(--text);
-      padding:10px 12px; border-radius:10px; display:flex; gap:8px; align-items:center;
-    }
-    input, select{
-      background:var(--chip); border:1px solid var(--border); color:var(--text);
-      padding:10px 12px; border-radius:10px; outline:none;
-    }
-    .layout{display:grid; grid-template-columns:260px 1fr; gap:16px; margin-top:12px}
-    @media (max-width: 900px){ .layout{grid-template-columns:1fr} }
-    aside{
-      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px;
-    }
-    aside h3{margin:4px 0 10px 0; font-size:1.05rem; color:#cbd5e1}
-    .list{display:flex; flex-direction:column; gap:8px; margin:0; padding:0; list-style:none}
-    .list button{
-      width:100%; text-align:left; background:transparent; color:var(--text);
-      border:1px solid var(--border); border-radius:10px; padding:10px; cursor:pointer;
-    }
-    .list button.active{border-color:var(--accent); box-shadow:0 0 0 2px rgba(34,211,238,.2)}
-    main .controls{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
-    .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
-    @media (max-width:1100px){ .cards{grid-template-columns:repeat(2,1fr)} }
-    @media (max-width:680px){ .cards{grid-template-columns:1fr} }
-    .card{
-      background:linear-gradient(180deg,#0f172a 0%, #0d1b2a 100%);
-      border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; gap:12px;
-    }
-    .icon{
-      width:56px; height:56px; border-radius:12px; display:grid; place-items:center;
-      background:#0b1220; border:1px solid var(--border); font-weight:700; color:var(--accent)
-    }
-    .meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:6px 0}
-    .chip{
-      padding:4px 8px; border-radius:999px; background:#0b1220; border:1px solid var(--border);
-      font-size:.78rem; color:#cbd5e1;
-    }
-    .money{color:#a7f3d0}
-    .warn{color:#fde68a}
-    .muted{color:var(--muted)}
-    .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:8px}
-    .row .stat{
-      flex:1 1 160px; background:#0b1220; border:1px solid var(--border); border-radius:10px; padding:10px;
-    }
-    .stat b{display:block; font-size:.8rem; color:#cbd5e1; margin-bottom:4px}
-    .no-results{
-      padding:24px; text-align:center; border:1px dashed var(--border); border-radius:14px; color:var(--muted)
-    }
-    footer{color:var(--muted); text-align:center; padding:18px}
-    a.link{color:var(--accent); text-decoration:none}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Offline-first App Ideas Catalog (500) — বাংলা UI</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#94a3b8; --chip:#1f2937; --border:#243244;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  header{position:sticky;top:0;z-index:5;background:#0f172acc;border-bottom:1px solid var(--border);backdrop-filter:blur(6px)}
+  .container{max-width:1150px;margin:0 auto;padding:14px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;display:grid;place-items:center;color:#22d3ee}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  input,select{background:var(--chip);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:10px;outline:none}
+  main{padding:14px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .title{font-weight:700}
+  .desc{color:var(--muted);margin-top:4px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .chip{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#0b1220;color:#cbd5e1;font-size:.8rem}
+  .empty{margin:16px 0;padding:16px;border:1px dashed var(--border);border-radius:12px;color:var(--muted);text-align:center}
+  footer{color:#9ca3af;text-align:center;padding:16px}
+</style>
 </head>
 <body>
   <header>
-    <div class="container topbar">
+    <div class="container">
       <div class="brand">
-        <div class="icon">OFF</div>
+        <div class="logo">APP</div>
         <div>
-          <div style="font-weight:700; letter-spacing:.2px">Serverless App Catalog</div>
-          <div class="badge">Pure offline • No backend • Bengali UI, English names</div>
+          <div style="font-weight:700">Simple Offline App Ideas Catalog</div>
+          <div style="color:#94a3b8;font-size:.9rem">বাংলা বর্ণনা • ইংরেজি নাম • ক্যাটেগরি/সাব-ক্যাটেগরি ফিল্টার • সার্চ</div>
         </div>
       </div>
-      <div class="pill">
-        🔎 <input id="search" type="text" placeholder="সার্চ করুন (নাম/ক্যাটেগরি)..." />
-      </div>
-      <div class="pill">
-        ↕️
-        <select id="sort">
-          <option value="downloadsDesc">জনপ্রিয়তা: ডাউনলোড বেশি → কম</option>
-          <option value="ratingDesc">রেটিং: বেশি → কম</option>
-          <option value="earningIntlDesc">আন্তর্জাতিক আয়: বেশি → কম</option>
-          <option value="earningInDesc">ভারতীয় আয়: বেশি → কম</option>
-          <option value="nameAsc">নাম: A → Z</option>
-        </select>
+      <div class="controls">
+        <input id="search" type="text" placeholder="সার্চ করুন (নাম/ক্যাটেগরি/বর্ণনা)..." />
+        <select id="category"></select>
+        <select id="subcategory"></select>
       </div>
     </div>
   </header>
 
-  <div class="container layout">
-    <aside>
-      <h3>ক্যাটেগরি</h3>
-      <ul class="list" id="categoryList">
-        <!-- Filled by JS -->
-      </ul>
-      <h3>সাব-ক্যাটেগরি</h3>
-      <ul class="list" id="subcategoryList">
-        <!-- Filled by JS -->
-      </ul>
-      <h3>দেখান</h3>
-      <ul class="list">
-        <li><button id="onlyOffline" class="">শুধু অফলাইন/সার্ভার ছাড়া</button></li>
-      </ul>
-      <p class="muted" style="margin-top:10px">
-        টিপস: “গেম” → “Puzzle” ক্লিক করলে পাজল গেমগুলো দেখা যাবে। সার্চ বক্সে “Bengali” বা “runner” লিখেও খুঁজতে পারেন।
-      </p>
-    </aside>
-
-    <main>
-      <div class="controls">
-        <span class="badge">হোম: সব অ্যাপ</span>
-        <span class="badge">জনপ্রিয় আগে</span>
-      </div>
-      <section id="cards" class="cards"></section>
-      <div id="noResults" class="no-results" style="display:none">দুঃখিত, আপনার ফিল্টার অনুযায়ী কিছু পাওয়া যায়নি।</div>
-    </main>
-  </div>
+  <main class="container">
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" style="display:none">কিছু পাওয়া যায়নি। ফিল্টার/সার্চ পরিবর্তন করুন।</div>
+  </main>
 
   <footer>
-    শুধুই ডেমো ডেটা। আপনার অ্যাপগুলো যোগ করতে নিচের JS অবজেক্টে লিস্ট বাড়ান। · Built for offline browsing.
+    Offline-first • No server • 500 ideas generated inside this file
   </footer>
 
   <script>
-    // ---------- Demo dataset (Edit/extend this list) ----------
-    const APPS = [
-      // Hyper-casual (Game)
+    // ------------- Category & subcategory definitions with base ideas -------------
+    const DEFINITIONS = [
       {
-        name: "One Finger River Cross",
-        bnDesc: "এক আঙুলে নৌকা চালিয়ে স্রোত ও বাধা এড়িয়ে গন্তব্যে পৌঁছান। সম্পূর্ণ অফলাইন।",
         category: "Game",
         subcategory: "Hyper-casual",
-        offline: true,
-        earningInMin: 125000, earningInMax: 375000,      // India/month
-        earningIntlMin: 1000000, earningIntlMax: 2000000,// Intl/month
-        rating: 4.4, downloads: 1200000
+        bnTemplate: "এক ট্যাপে খেলা—দ্রুত সেশন, সহজ নিয়ন্ত্রণ, অফলাইনে খেলুন। ভ্যারিয়েন্ট: ",
+        bases: [
+          "One Finger River Cross","Stack & Smash","Color Switcher","Jump Dash","Rope Swing Hero",
+          "Bottle Flip Master","Traffic Dodger","Sky Glider","Fruit Slice Rush","Ball Bounce Escape",
+          "Tap to Fly","Ice Slide","Coin Grabber","Speed Tapper","Shape Shifter",
+          "Hill Climb Rider","Endless Runner Pro","Dodge the Spikes","Jump Rope Challenge","Quick Reflex Test"
+        ]
       },
       {
-        name: "Stack & Smash",
-        bnDesc: "ব্লক স্ট্যাক করুন, সঠিক সময়ে ভাঙুন। ৩০-৬০ সেকেন্ডের দ্রুত প্লে।",
-        category: "Game",
-        subcategory: "Hyper-casual",
-        offline: true,
-        earningInMin: 110000, earningInMax: 330000,
-        earningIntlMin: 850000, earningIntlMax: 1700000,
-        rating: 4.2, downloads: 820000
-      },
-      {
-        name: "Color Switcher",
-        bnDesc: "রঙ মিলিয়ে বাধা পার হন। এক ট্যাপে সহজ কন্ট্রোল।",
-        category: "Game",
-        subcategory: "Hyper-casual",
-        offline: true,
-        earningInMin: 90000, earningInMax: 270000,
-        earningIntlMin: 700000, earningIntlMax: 1400000,
-        rating: 4.1, downloads: 650000
-      },
-
-      // Puzzle (Game)
-      {
-        name: "Alpona Logic",
-        bnDesc: "ননোগ্রাম স্টাইল—আলপনার প্যাটার্ন ভরুন। লজিক দিয়ে সমাধান করুন।",
         category: "Game",
         subcategory: "Puzzle",
-        offline: true,
-        earningInMin: 125000, earningInMax: 375000,
-        earningIntlMin: 1000000, earningIntlMax: 2000000,
-        rating: 4.6, downloads: 980000
+        bnTemplate: "লজিক-ভিত্তিক পাজল—চিন্তা করুন, সমাধান করুন, অফলাইনে অগ্রগতি সেভ হয়। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Alpona Logic","Pipe Connect","Shadow Match","Slide & Deliver","Word Connect Bengali",
+          "Sudoku Master","Match-3 Jewels","Tangram Shapes","Memory Flip","Number Merge",
+          "Block Puzzle","Maze Escape","Color Link","Picture Scramble","Logic Grid",
+          "Crosswords Bengali","Kakuro Challenge","Pattern Match","Hidden Object Hunt","Jigsaw Master"
+        ]
       },
       {
-        name: "Pipe Connect",
-        bnDesc: "পাইপ ঘুরিয়ে পানির সঠিক পথ বানান। স্টার সংগ্রহ করুন।",
         category: "Game",
-        subcategory: "Puzzle",
-        offline: true,
-        earningInMin: 100000, earningInMax: 300000,
-        earningIntlMin: 800000, earningIntlMax: 1600000,
-        rating: 4.5, downloads: 760000
+        subcategory: "Simulation",
+        bnTemplate: "সিমুলেশন/ম্যানেজমেন্ট গেম—কৌশল আর পরিকল্পনায় জিতুন। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Village Manager","Shopkeeper Tycoon","Fish Farm Sim","Traffic Signal Control","Farm Harvest",
+          "City Builder Lite","Restaurant Rush","Airport Manager","Train Station Master","Zoo Keeper",
+          "Bus Depot Manager","Hospital Tycoon","School Principal Sim","Factory Builder","Cargo Ship Manager",
+          "Mining Tycoon","Theme Park Builder","Delivery Service Sim","Election Campaign Sim","Wildlife Reserve Manager"
+        ]
       },
       {
-        name: "Shadow Match",
-        bnDesc: "বস্তু ঘুরিয়ে ছায়ার আকার মিলান। ধাপে ধাপে কঠিন হবে।",
         category: "Game",
-        subcategory: "Puzzle",
-        offline: true,
-        earningInMin: 95000, earningInMax: 285000,
-        earningIntlMin: 780000, earningIntlMax: 1500000,
-        rating: 4.3, downloads: 540000
+        subcategory: "Culture",
+        bnTemplate: "লোকাল কালচারের ছোঁয়া—লোকগান, উৎসব, ঐতিহ্য নিয়ে অফলাইন গেম। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Padma Boat Race","Pithe Puli Craft","Folk Tale Adventure","Rabindra Quiz","Baul Music Rhythm",
+          "Durga Puja Organizer","Eid Feast Challenge","Bengali Wedding Planner","Lungi Race","Rickshaw Rush",
+          "Hilsa Fishing","Handloom Weaver","Clay Pot Maker","Village Fair Manager","Kite Festival",
+          "Monsoon Farming","Ganga Cleanup Game","Folk Dance Challenge","Bengali Theatre Manager","Sweets Shop Tycoon"
+        ]
       },
+      // Non-game
       {
-        name: "Slide & Deliver",
-        bnDesc: "স্লাইডিং টাইল দিয়ে মালামাল ঠিক ঘাটে পৌঁছান। মুভ সীমিত—ভাবনা জরুরি।",
-        category: "Game",
-        subcategory: "Puzzle",
-        offline: true,
-        earningInMin: 90000, earningInMax: 260000,
-        earningIntlMin: 700000, earningIntlMax: 1400000,
-        rating: 4.2, downloads: 430000
-      },
-
-      // Recipe (Non-game)
-      {
-        name: "Bengali Rasoi",
-        bnDesc: "বাংলা রেসিপির অফলাইন কালেকশন—ডাল, মাছ, ভাজা, পিঠে-পুলি। ছবি ছাড়াই হালকা।",
         category: "Non-game",
         subcategory: "Recipe",
-        offline: true,
-        earningInMin: 125000, earningInMax: 375000,
-        earningIntlMin: 1000000, earningIntlMax: 2000000,
-        rating: 4.7, downloads: 1500000
+        bnTemplate: "প্রি-লোডেড রেসিপি, ধাপে ধাপে নির্দেশ—সম্পূর্ণ অফলাইন। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Bengali Rasoi","Quick 15-min Recipes","Festival Special Recipes","Kids Lunchbox Ideas","Street Food Guide",
+          "Healthy Diet Planner","Dessert Book","Veggie Delight","Fish Curry Master","Tea & Snacks",
+          "Pickle Making Guide","Baking Basics","Smoothie Maker","Salad Ideas","Soup Collection",
+          "Breakfast Planner","Festive Drinks","Curry Master","Rice Dish Guide","Spice Mix Creator"
+        ]
       },
       {
-        name: "Quick 15-min Recipes",
-        bnDesc: "১৫ মিনিটে তৈরি দ্রুত রেসিপি—স্টুডেন্ট ও ব্যস্তদের জন্য উপযোগী।",
         category: "Non-game",
-        subcategory: "Recipe",
-        offline: true,
-        earningInMin: 90000, earningInMax: 270000,
-        earningIntlMin: 700000, earningIntlMax: 1400000,
-        rating: 4.4, downloads: 870000
+        subcategory: "Education",
+        bnTemplate: "অফলাইন লার্নিং—লেসন, কুইজ, প্র্যাকটিস সব একসাথে। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Bangla Alphabet Learn","Math Fun","Science Quiz","History Facts","English Vocabulary Builder",
+          "GK Master","Coding Basics","Geography Atlas","Physics Formulas","Chemistry Lab",
+          "Spelling Bee Trainer","Language Flashcards","Sign Language Basics","Poetry Collection","Exam Prep MCQ",
+          "Kids Storybook","Drawing Lessons","Music Theory","Grammar Trainer","Debate Practice"
+        ]
       },
       {
-        name: "Festival Special Recipes",
-        bnDesc: "পূজা/ঈদ/বড়দিনের স্পেশাল রেসিপি—সিজনাল কালেকশন অফলাইনে।",
         category: "Non-game",
-        subcategory: "Recipe",
-        offline: true,
-        earningInMin: 100000, earningInMax: 300000,
-        earningIntlMin: 800000, earningIntlMax: 1600000,
-        rating: 4.5, downloads: 930000
+        subcategory: "Productivity",
+        bnTemplate: "দিনের কাজ গুছিয়ে নিন—নোট, টুডু, হিসাব—সব অফলাইনে। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Offline Notes","To-do List","Expense Tracker","Unit Converter","Calculator Pro",
+          "Calendar Planner","Flashlight App","QR Code Scanner (Offline)","File Organizer","Voice Recorder",
+          "Password Vault","Contact Backup","Offline Dictionary","Document Scanner","Habit Tracker",
+          "Mind Map Maker","Checklist Maker","Stopwatch & Timer","Offline Translator","Weather Almanac"
+        ]
       },
       {
-        name: "Kids Lunchbox Ideas",
-        bnDesc: "বাচ্চাদের লাঞ্চবক্সের স্বাস্থ্যকর অফলাইন আইডিয়া—সহজ উপকরণে।",
         category: "Non-game",
-        subcategory: "Recipe",
-        offline: true,
-        earningInMin: 80000, earningInMax: 220000,
-        earningIntlMin: 600000, earningIntlMax: 1200000,
-        rating: 4.3, downloads: 520000
+        subcategory: "Health & Fitness",
+        bnTemplate: "স্বাস্থ্য ও ফিটনেস ট্র্যাক—ইন্টারনেট ছাড়াই। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Step Counter","Yoga Guide","Meditation Timer","Home Workout","Water Reminder",
+          "Sleep Tracker","Diet Log","Breathing Exercise","Stretching Coach","BMI Calculator",
+          "Calorie Counter","Pregnancy Tracker","Baby Growth Chart","First Aid Guide","Heart Rate Log",
+          "Blood Pressure Log","Eye Exercise","Posture Corrector","Healthy Recipe Book","Fitness Challenge"
+        ]
+      },
+      {
+        category: "Non-game",
+        subcategory: "Travel & Local",
+        bnTemplate: "ভ্রমণ ও লোকাল তথ্য—অফলাইন ম্যাপ/গাইড/বাক্যভাণ্ডার। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Offline Map","City Guide","Heritage Walk","Trekking Routes","Beach Finder",
+          "Hill Station Guide","Festival Calendar","Local Transport Info","Hotel Directory","Emergency Contacts",
+          "Offline Currency Converter","Travel Phrasebook","Wildlife Spotting Guide","Picnic Spot Finder","Road Trip Planner",
+          "Offline Metro Map","Hiking Checklist","Camping Guide","Local Food Finder","Historical Places Info"
+        ]
+      },
+      {
+        category: "Non-game",
+        subcategory: "Entertainment",
+        bnTemplate: "এন্টারটেইনমেন্ট অফলাইনে—পড়ুন/দেখুন/শিখুন। ভ্যারিয়েন্ট: ",
+        bases: [
+          "Offline Music Player","Video Player","E-book Reader","Jokes Collection","Horoscope",
+          "Photo Editor","Wallpaper Gallery","Fashion Lookbook","DIY Crafts","Gardening Tips",
+          "Movie Quotes","Offline Karaoke","Magic Tricks Guide","Origami Lessons","Makeup Tutorials",
+          "Hair Styling Guide","Pet Care Tips","Photography Tips","Interior Design Ideas","Relationship Advice"
+        ]
       }
     ];
 
-    // ---------- State ----------
-    const state = {
-      category: "All",
-      subcategory: "All",
-      onlyOffline: true,
-      search: "",
-      sort: "downloadsDesc"
-    };
+    // ------------- Build 500 items programmatically -------------
+    function buildData(targetCount = 500){
+      const apps = [];
+      // Seed a few exact entries (from earlier examples) for realism
+      const seeds = [
+        {name_en:"One Finger River Cross", name_bn:"এক আঙুলে নৌকা চালিয়ে বাধা এড়ানো", category:"Game", subcategory:"Hyper-casual"},
+        {name_en:"Stack & Smash", name_bn:"ব্লক স্ট্যাক করে সঠিক সময়ে ভাঙা", category:"Game", subcategory:"Hyper-casual"},
+        {name_en:"Color Switcher", name_bn:"রঙ মিলিয়ে বাধা পার হোন", category:"Game", subcategory:"Hyper-casual"},
+        {name_en:"Alpona Logic", name_bn:"ননোগ্রাম স্টাইলে আলপনার প্যাটার্ন পূরণ", category:"Game", subcategory:"Puzzle"},
+        {name_en:"Pipe Connect", name_bn:"পাইপ ঘুরিয়ে পানির পথ ঠিক করুন", category:"Game", subcategory:"Puzzle"},
+        {name_en:"Bengali Rasoi", name_bn:"বাংলা রেসিপির অফলাইন কালেকশন", category:"Non-game", subcategory:"Recipe"},
+        {name_en:"Quick 15-min Recipes", name_bn:"১৫ মিনিটে দ্রুত রান্না", category:"Non-game", subcategory:"Recipe"},
+        {name_en:"Bangla Alphabet Learn", name_bn:"বাংলা বর্ণমালা শেখা", category:"Non-game", subcategory:"Education"},
+        {name_en:"Offline Notes", name_bn:"ইন্টারনেট ছাড়াই নোট নিন", category:"Non-game", subcategory:"Productivity"}
+      ];
+      seeds.forEach(s => apps.push(s));
 
-    // ---------- Build category/subcategory lists ----------
-    function unique(arr){ return Array.from(new Set(arr)); }
-    const categories = ["All", ...unique(APPS.map(a => a.category))];
-    const subcategoriesAll = ["All", ...unique(APPS.map(a => a.subcategory))];
-
-    function renderFilters(){
-      const catEl = document.getElementById("categoryList");
-      const subEl = document.getElementById("subcategoryList");
-      catEl.innerHTML = "";
-      subEl.innerHTML = "";
-
-      categories.forEach(cat=>{
-        const btn = document.createElement("button");
-        btn.textContent = cat === "All" ? "সব" : cat === "Game" ? "গেম" : "নন-গেম";
-        if(state.category === cat) btn.classList.add("active");
-        btn.onclick = ()=>{ state.category = cat; render(); };
-        const li = document.createElement("li"); li.appendChild(btn); catEl.appendChild(li);
-      });
-
-      // Subcategories depend on selected category
-      const subs = state.category==="All"
-        ? subcategoriesAll
-        : ["All", ...unique(APPS.filter(a=>a.category===state.category).map(a=>a.subcategory))];
-
-      subs.forEach(sc=>{
-        const btn = document.createElement("button");
-        btn.textContent = sc==="All" ? "সব" : sc;
-        if(state.subcategory === sc) btn.classList.add("active");
-        btn.onclick = ()=>{ state.subcategory = sc; render(); };
-        const li = document.createElement("li"); li.appendChild(btn); subEl.appendChild(li);
-      });
-
-      const onlyOfflineBtn = document.getElementById("onlyOffline");
-      onlyOfflineBtn.classList.toggle("active", state.onlyOffline);
-      onlyOfflineBtn.onclick = ()=>{ state.onlyOffline = !state.onlyOffline; render(); };
-
-      document.getElementById("search").value = state.search;
-      document.getElementById("sort").value = state.sort;
+      // Generate the rest using definitions
+      let id = 1;
+      while(apps.length < targetCount){
+        for(const def of DEFINITIONS){
+          if(apps.length >= targetCount) break;
+          // pick a base name and create a unique variant
+          const base = def.bases[id % def.bases.length];
+          const variantNum = Math.floor(id/def.bases.length) + 1;
+          const name_en = variantNum > 1 ? `${base} ${variantNum}` : base;
+          const name_bn = `${def.bnTemplate}${base}${variantNum>1?(" "+variantNum):""}`;
+          apps.push({
+            name_en, name_bn,
+            category: def.category,
+            subcategory: def.subcategory
+          });
+          id++;
+          if(apps.length >= targetCount) break;
+        }
+      }
+      return apps.slice(0,targetCount);
     }
 
-    // ---------- Filtering, sorting, rendering ----------
-    function formatMoney(n){
-      // show in ₹ with commas
-      return "₹" + n.toLocaleString("en-IN");
+    const APPS = buildData(500);
+
+    // ------------- UI: filters and rendering -------------
+    const categoryEl = document.getElementById('category');
+    const subcategoryEl = document.getElementById('subcategory');
+    const searchEl = document.getElementById('search');
+    const gridEl = document.getElementById('grid');
+    const emptyEl = document.getElementById('empty');
+
+    function initFilters(){
+      const cats = ["All", ...new Set(APPS.map(a=>a.category))];
+      categoryEl.innerHTML = cats.map(c=>`<option value="${c}">${c==="All"?"সব":c}</option>`).join("");
+
+      // Subcategories update dynamically based on category
+      updateSubcategories();
     }
-    function star(r){
-      const full = "★".repeat(Math.floor(r));
-      const empty = "☆".repeat(5 - Math.floor(r));
-      return full + empty;
+
+    function updateSubcategories(){
+      const selectedCat = categoryEl.value || "All";
+      const subs = selectedCat==="All"
+        ? ["All", ...new Set(APPS.map(a=>a.subcategory))]
+        : ["All", ...new Set(APPS.filter(a=>a.category===selectedCat).map(a=>a.subcategory))];
+      subcategoryEl.innerHTML = subs.map(s=>`<option value="${s}">${s==="All"?"সব":s}</option>`).join("");
     }
 
     function applyFilters(){
-      let list = APPS.slice();
+      const q = (searchEl.value || "").trim().toLowerCase();
+      const cat = categoryEl.value || "All";
+      const sub = subcategoryEl.value || "All";
 
-      if(state.category !== "All"){
-        list = list.filter(a => a.category === state.category);
-      }
-      if(state.subcategory !== "All"){
-        list = list.filter(a => a.subcategory === state.subcategory);
-      }
-      if(state.onlyOffline){
-        list = list.filter(a => a.offline);
-      }
-      if(state.search.trim()){
-        const q = state.search.toLowerCase();
-        list = list.filter(a =>
-          a.name.toLowerCase().includes(q) ||
-          a.category.toLowerCase().includes(q) ||
-          a.subcategory.toLowerCase().includes(q) ||
-          a.bnDesc.toLowerCase().includes(q)
-        );
-      }
-
-      switch(state.sort){
-        case "downloadsDesc": list.sort((a,b)=> b.downloads - a.downloads); break;
-        case "ratingDesc": list.sort((a,b)=> b.rating - a.rating); break;
-        case "earningIntlDesc": list.sort((a,b)=> (b.earningIntlMax||0) - (a.earningIntlMax||0)); break;
-        case "earningInDesc": list.sort((a,b)=> (b.earningInMax||0) - (a.earningInMax||0)); break;
-        case "nameAsc": list.sort((a,b)=> a.name.localeCompare(b.name)); break;
-      }
-      return list;
-    }
-
-    function renderCards(items){
-      const wrap = document.getElementById("cards");
-      const empty = document.getElementById("noResults");
-      wrap.innerHTML = "";
-      if(items.length===0){ empty.style.display="block"; return; }
-      empty.style.display="none";
-
-      items.forEach(app=>{
-        const el = document.createElement("article");
-        el.className = "card";
-        el.innerHTML = `
-          <div class="icon">${app.category==="Game"?"G":"R"}</div>
-          <div style="flex:1">
-            <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start">
-              <div>
-                <div style="font-weight:700; font-size:1.05rem">${app.name}</div>
-                <div class="muted" style="margin-top:2px">${app.bnDesc}</div>
-                <div class="meta">
-                  <span class="chip">ক্যাটেগরি: ${app.category==="Game"?"গেম":"নন-গেম"}</span>
-                  <span class="chip">টাইপ: ${app.subcategory}</span>
-                  <span class="chip">${app.offline ? "অফলাইন/সার্ভারছাড়া" : "অনলাইন"}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="stat">
-                <b>ভারতীয় আয় (মাসিক)</b>
-                <div class="money">${formatMoney(app.earningInMin)} – ${formatMoney(app.earningInMax)}</div>
-              </div>
-              <div class="stat">
-                <b>আন্তর্জাতিক আয় (মাসিক)</b>
-                <div class="money">${formatMoney(app.earningIntlMin)} – ${formatMoney(app.earningIntlMax)}</div>
-              </div>
-              <div class="stat">
-                <b>রেটিং</b>
-                <div>${star(app.rating)} <span class="muted">(${app.rating.toFixed(1)})</span></div>
-              </div>
-              <div class="stat">
-                <b>ডাউনলোড</b>
-                <div class="warn">${app.downloads.toLocaleString("en-IN")}</div>
-              </div>
-            </div>
-          </div>
-        `;
-        wrap.appendChild(el);
+      return APPS.filter(a=>{
+        const matchCat = (cat==="All") || a.category===cat;
+        const matchSub = (sub==="All") || a.subcategory===sub;
+        const matchText = !q
+          || a.name_en.toLowerCase().includes(q)
+          || a.name_bn.toLowerCase().includes(q)
+          || a.category.toLowerCase().includes(q)
+          || a.subcategory.toLowerCase().includes(q);
+        return matchCat && matchSub && matchText;
       });
     }
 
     function render(){
-      renderFilters();
-      const items = applyFilters();
-      renderCards(items);
+      const list = applyFilters();
+      gridEl.innerHTML = "";
+      if(list.length===0){ emptyEl.style.display="block"; return; }
+      emptyEl.style.display="none";
+
+      const frag = document.createDocumentFragment();
+      list.forEach(a=>{
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="title">${a.name_en}</div>
+          <div class="desc">${a.name_bn}</div>
+          <div class="chips">
+            <span class="chip">ক্যাটেগরি: ${a.category}</span>
+            <span class="chip">টাইপ: ${a.subcategory}</span>
+          </div>
+        `;
+        frag.appendChild(card);
+      });
+      gridEl.appendChild(frag);
     }
 
-    // ---------- Events ----------
-    document.getElementById("search").addEventListener("input", (e)=>{
-      state.search = e.target.value;
+    searchEl.addEventListener('input', render);
+    categoryEl.addEventListener('change', ()=>{
+      updateSubcategories();
       render();
     });
-    document.getElementById("sort").addEventListener("change", (e)=>{
-      state.sort = e.target.value;
-      render();
-    });
+    subcategoryEl.addEventListener('change', render);
 
-    // ---------- Init ----------
+    initFilters();
     render();
   </script>
 </body>
