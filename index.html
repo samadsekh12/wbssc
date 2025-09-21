@@ -3,409 +3,418 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Server-less Android App আইডিয়া (৫২) — ট্র্যাকিং + AI + ক্যারিয়ার</title>
+  <title>Offline/Serverless App Catalog – বাংলা UI</title>
   <style>
-    :root {
-      --bg: #0f172a;
-      --panel: #0b1222;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #22d3ee;
-      --accent-2: #7c3aed;
-      --border: #1f2937;
-      --highlight: #0ea5e9;
-      --danger: #ef4444;
-      --success: #10b981;
-      --warn: #f59e0b;
+    :root{
+      --bg:#0f172a; --card:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#22d3ee;
+      --ok:#10b981; --warn:#f59e0b; --chip:#1f2937; --border:#243244;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: linear-gradient(180deg, #0b1022, #0f172a 25%, #0f172a 100%);
-      color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", "Helvetica Neue", Arial;
-      line-height: 1.6;
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg,#0b1220 0%, #0f172a 100%); color:var(--text);
     }
-    header {
-      position: sticky; top: 0; z-index: 10;
-      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
+    header{
+      position:sticky; top:0; z-index:5; backdrop-filter: blur(8px);
+      background:rgba(15,23,42,.7); border-bottom:1px solid var(--border);
     }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .title { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
-    .count-badge {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white; padding: 6px 10px; border-radius: 999px; font-size: 13px; font-weight: 700;
-      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+    .container{max-width:1200px; margin:0 auto; padding:16px}
+    .topbar{
+      display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:space-between;
     }
-    .toolbar {
-      margin-top: 12px; display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center;
+    .brand{display:flex; align-items:center; gap:10px}
+    .badge{
+      padding:4px 8px; border:1px solid var(--border); border-radius:999px; font-size:.8rem; color:var(--muted)
     }
-    .filters {
-      display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+    .pill{
+      background:var(--chip); border:1px solid var(--border); color:var(--text);
+      padding:10px 12px; border-radius:10px; display:flex; gap:8px; align-items:center;
     }
-    .search {
-      display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--border);
-      border-radius: 10px; background: #0b1222;
+    input, select{
+      background:var(--chip); border:1px solid var(--border); color:var(--text);
+      padding:10px 12px; border-radius:10px; outline:none;
     }
-    .search input {
-      flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 14px; min-width: 220px;
+    .layout{display:grid; grid-template-columns:260px 1fr; gap:16px; margin-top:12px}
+    @media (max-width: 900px){ .layout{grid-template-columns:1fr} }
+    aside{
+      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px;
     }
-    .btn {
-      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
-      background: #111827; color: var(--text); cursor: pointer; font-weight: 600; font-size: 14px;
+    aside h3{margin:4px 0 10px 0; font-size:1.05rem; color:#cbd5e1}
+    .list{display:flex; flex-direction:column; gap:8px; margin:0; padding:0; list-style:none}
+    .list button{
+      width:100%; text-align:left; background:transparent; color:var(--text);
+      border:1px solid var(--border); border-radius:10px; padding:10px; cursor:pointer;
     }
-    .btn:hover { border-color: var(--highlight); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); }
-    .panel {
-      margin-top: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    .list button.active{border-color:var(--accent); box-shadow:0 0 0 2px rgba(34,211,238,.2)}
+    main .controls{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
+    .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+    @media (max-width:1100px){ .cards{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:680px){ .cards{grid-template-columns:1fr} }
+    .card{
+      background:linear-gradient(180deg,#0f172a 0%, #0d1b2a 100%);
+      border:1px solid var(--border); border-radius:14px; padding:14px; display:flex; gap:12px;
     }
-    table { width: 100%; border-collapse: collapse; }
-    thead { background: #091222; position: sticky; top: 86px; z-index: 5; border-bottom: 1px solid var(--border); }
-    th, td {
-      padding: 10px 12px; text-align: left; vertical-align: top; font-size: 14px;
-      border-bottom: 1px solid #111827;
+    .icon{
+      width:56px; height:56px; border-radius:12px; display:grid; place-items:center;
+      background:#0b1220; border:1px solid var(--border); font-weight:700; color:var(--accent)
     }
-    th { color: #cbd5e1; user-select: none; white-space: nowrap; }
-    th.sortable { cursor: pointer; }
-    th.sortable span { color: var(--muted); font-size: 12px; margin-left: 6px; }
-    tbody tr:hover { background: rgba(34, 211, 238, 0.06); }
-    .muted { color: var(--muted); }
-    .tag {
-      display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700;
-      border: 1px solid var(--border); color: #93c5fd; background: rgba(59,130,246,0.08);
+    .meta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:6px 0}
+    .chip{
+      padding:4px 8px; border-radius:999px; background:#0b1220; border:1px solid var(--border);
+      font-size:.78rem; color:#cbd5e1;
     }
-    .ai-yes { color: #34d399; background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); }
-    .ai-no { color: #fca5a5; background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); }
-    .kpi {
-      display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; margin-top: 12px;
+    .money{color:#a7f3d0}
+    .warn{color:#fde68a}
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:8px}
+    .row .stat{
+      flex:1 1 160px; background:#0b1220; border:1px solid var(--border); border-radius:10px; padding:10px;
     }
-    .card {
-      background: #0b1222; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; color: var(--muted);
+    .stat b{display:block; font-size:.8rem; color:#cbd5e1; margin-bottom:4px}
+    .no-results{
+      padding:24px; text-align:center; border:1px dashed var(--border); border-radius:14px; color:var(--muted)
     }
-    .card b { color: var(--text); font-size: 16px; }
-    .note { font-size: 13px; color: var(--muted); margin-top: 8px; }
-    input[type="number"], select {
-      background: #0b1222; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
-    }
-    @media (max-width: 920px) {
-      .kpi { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px) {
-      th:nth-child(3), td:nth-child(3) { display: none; } /* কাজ কলাম মোবাইলে লম্বা হলে হাইড */
-    }
+    footer{color:var(--muted); text-align:center; padding:18px}
+    a.link{color:var(--accent); text-decoration:none}
   </style>
 </head>
 <body>
   <header>
-    <div class="container">
-      <div class="title">
-        <h1>Server-less Android App আইডিয়া — ট্র্যাকিং ড্যাশবোর্ড</h1>
-        <div class="count-badge">মোট ৫২</div>
-      </div>
-
-      <div class="toolbar">
-        <label class="search" aria-label="সার্চ">
-          <svg width="18" height="18" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="M21 21l-4.3-4.3"></path>
-          </svg>
-          <input id="search" type="search" placeholder="নাম/কীওয়ার্ড দিয়ে খুঁজুন (যেমন: calculator, quiz, health, ai)..." />
-        </label>
-
-        <div class="filters">
-          <label style="display:flex;gap:6px;align-items:center;">
-            <input type="checkbox" id="aiOnly" />
-            <span class="muted">শুধু AI</span>
-          </label>
-          <label style="display:flex;gap:6px;align-items:center;">
-            <span class="muted">Min Downloads</span>
-            <input type="number" id="minDownloads" min="0" step="1000" placeholder="যেমন 10000" style="width:130px;" />
-          </label>
-        </div>
-
-        <div class="filters">
-          <button class="btn" id="exportCsv">Export CSV</button>
-          <button class="btn" id="copyBtn">কপি HTML</button>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="icon">OFF</div>
+        <div>
+          <div style="font-weight:700; letter-spacing:.2px">Serverless App Catalog</div>
+          <div class="badge">Pure offline • No backend • Bengali UI, English names</div>
         </div>
       </div>
-
-      <div class="kpi">
-        <div class="card"><div class="muted">মোট AI সম্ভাব্য</div><b id="kpiAI">0</b></div>
-        <div class="card"><div class="muted">মোট Downloads (এন্ট্রি)</div><b id="kpiDL">0</b></div>
-        <div class="card"><div class="muted">মোট Earnings (₹)</div><b id="kpiEarn">0</b></div>
-        <div class="card"><div class="muted">Career demand এন্ট্রি</div><b id="kpiJobs">0</b></div>
+      <div class="pill">
+        🔎 <input id="search" type="text" placeholder="সার্চ করুন (নাম/ক্যাটেগরি)..." />
       </div>
-
-      <p class="note">টিপ: কলাম হেডারে ক্লিক করে সাজান (Sort)। নিচের টেবিলে ডেটা সেলগুলো সরাসরি এডিট করা যায়।</p>
+      <div class="pill">
+        ↕️
+        <select id="sort">
+          <option value="downloadsDesc">জনপ্রিয়তা: ডাউনলোড বেশি → কম</option>
+          <option value="ratingDesc">রেটিং: বেশি → কম</option>
+          <option value="earningIntlDesc">আন্তর্জাতিক আয়: বেশি → কম</option>
+          <option value="earningInDesc">ভারতীয় আয়: বেশি → কম</option>
+          <option value="nameAsc">নাম: A → Z</option>
+        </select>
+      </div>
     </div>
   </header>
 
-  <main class="container">
-    <section class="panel">
-      <table id="appsTable">
-        <thead>
-          <tr>
-            <th class="sortable" data-key="id"># <span>↕</span></th>
-            <th class="sortable" data-key="name">অ্যাপ নাম <span>↕</span></th>
-            <th>কাজ</th>
-            <th class="sortable" data-key="code">Code (Tech) <span>↕</span></th>
-            <th class="sortable" data-key="jobs">Career demand (jobs/mo) <span>↕</span></th>
-            <th class="sortable" data-key="downloads">Downloads <span>↕</span></th>
-            <th class="sortable" data-key="earnings">Earnings (₹) <span>↕</span></th>
-            <th class="sortable" data-key="ai">AI <span>↕</span></th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </section>
-  </main>
+  <div class="container layout">
+    <aside>
+      <h3>ক্যাটেগরি</h3>
+      <ul class="list" id="categoryList">
+        <!-- Filled by JS -->
+      </ul>
+      <h3>সাব-ক্যাটেগরি</h3>
+      <ul class="list" id="subcategoryList">
+        <!-- Filled by JS -->
+      </ul>
+      <h3>দেখান</h3>
+      <ul class="list">
+        <li><button id="onlyOffline" class="">শুধু অফলাইন/সার্ভার ছাড়া</button></li>
+      </ul>
+      <p class="muted" style="margin-top:10px">
+        টিপস: “গেম” → “Puzzle” ক্লিক করলে পাজল গেমগুলো দেখা যাবে। সার্চ বক্সে “Bengali” বা “runner” লিখেও খুঁজতে পারেন।
+      </p>
+    </aside>
+
+    <main>
+      <div class="controls">
+        <span class="badge">হোম: সব অ্যাপ</span>
+        <span class="badge">জনপ্রিয় আগে</span>
+      </div>
+      <section id="cards" class="cards"></section>
+      <div id="noResults" class="no-results" style="display:none">দুঃখিত, আপনার ফিল্টার অনুযায়ী কিছু পাওয়া যায়নি।</div>
+    </main>
+  </div>
+
+  <footer>
+    শুধুই ডেমো ডেটা। আপনার অ্যাপগুলো যোগ করতে নিচের JS অবজেক্টে লিস্ট বাড়ান। · Built for offline browsing.
+  </footer>
 
   <script>
-    // Base ideas
-    const baseIdeas = [
-      { id: 1, name: "To-Do List App", work: "কাজের তালিকা তৈরি, সম্পন্ন করা, মুছে ফেলা" },
-      { id: 2, name: "Note Taking App", work: "নোট লেখা, সংরক্ষণ, খোঁজা" },
-      { id: 3, name: "Expense Tracker", work: "আয়-ব্যয় রেকর্ড রাখা" },
-      { id: 4, name: "Habit Tracker", work: "অভ্যাস ট্র্যাক করা, রিমাইন্ডার" },
-      { id: 5, name: "Grocery List App", work: "বাজারের তালিকা তৈরি ও সম্পাদনা" },
-      { id: 6, name: "Daily Journal App", work: "প্রতিদিনের ডায়েরি লেখা" },
-      { id: 7, name: "Countdown Timer", work: "ইভেন্টের জন্য সময় গণনা" },
-      { id: 8, name: "Alarm Clock", work: "এলার্ম সেট করা ও চালানো" },
-      { id: 9, name: "Local Calendar", work: "ইভেন্ট যোগ করা, রিমাইন্ডার" },
-      { id: 10, name: "Password Manager", work: "পাসওয়ার্ড সংরক্ষণ (এনক্রিপ্টেডভাবে)" },
-      { id: 11, name: "Flashcard Study App", work: "পড়ার জন্য ফ্ল্যাশকার্ড তৈরি, কুইজ মোড" },
-      { id: 12, name: "Local Quiz App", work: "অফলাইন কুইজ, স্কোর দেখা" },
-      { id: 13, name: "Offline Dictionary", work: "শব্দ খোঁজা, সংজ্ঞা দেখা" },
-      { id: 14, name: "Math Formula Reference", work: "গণিত সূত্র দেখানো" },
-      { id: 15, name: "Periodic Table Explorer", work: "মৌলিক পদার্থের তথ্য দেখানো" },
-      { id: 16, name: "Language Learning App", work: "ভাষা শেখার জন্য প্রি-লোডেড কনটেন্ট" },
-      { id: 17, name: "Spelling Practice App", work: "বানান শেখার অনুশীলন" },
-      { id: 18, name: "Offline Translator", work: "প্রি-লোডেড বাক্য অনুবাদ" },
-      { id: 19, name: "GK Trivia App", work: "সাধারণ জ্ঞান কুইজ" },
-      { id: 20, name: "Coding Concepts Guide", work: "প্রোগ্রামিং ধারণা ব্যাখ্যা করা" },
-      { id: 21, name: "BMI Calculator", work: "BMI হিসাব করা" },
-      { id: 22, name: "Water Intake Tracker", work: "পানি পান করার রেকর্ড রাখা" },
-      { id: 23, name: "Workout Logger", work: "ব্যায়ামের রেকর্ড রাখা" },
-      { id: 24, name: "Meditation Timer", work: "মেডিটেশনের সময় গণনা" },
-      { id: 25, name: "Mood Tracker", work: "প্রতিদিনের মুড লগ করা" },
-      { id: 26, name: "Sleep Tracker", work: "ঘুমের সময় রেকর্ড রাখা" },
-      { id: 27, name: "Step Counter", work: "সেন্সর দিয়ে পদক্ষেপ গণনা" },
-      { id: 28, name: "Yoga Pose Guide", work: "যোগ ব্যায়ামের ছবি ও তথ্য" },
-      { id: 29, name: "Calorie Counter", work: "ক্যালোরি হিসাব (ম্যানুয়ালি)" },
-      { id: 30, name: "Health Tips Viewer", work: "স্বাস্থ্য বিষয়ক টিপস দেখানো" },
-      { id: 31, name: "Drawing App", work: "আঙুল দিয়ে আঁকা, ছবি সংরক্ষণ" },
-      { id: 32, name: "Doodle Pad", work: "সিম্পল ডুডল আঁকা" },
-      { id: 33, name: "Color Picker & Mixer", work: "রঙ নির্বাচন ও মিক্স" },
-      { id: 34, name: "Poetry Writing App", work: "কবিতা লেখা ও সংরক্ষণ" },
-      { id: 35, name: "Story Builder", work: "গল্প তৈরি ও সংরক্ষণ" },
-      { id: 36, name: "Meme Creator", work: "লোকাল ইমেজ দিয়ে মিম তৈরি" },
-      { id: 37, name: "Music Practice Log", work: "মিউজিক অনুশীলনের রেকর্ড" },
-      { id: 38, name: "Lyrics Organizer", work: "গান ও লিরিক সংরক্ষণ" },
-      { id: 39, name: "Offline Puzzle Game", work: "ধাঁধা বা পাজল গেম" },
-      { id: 40, name: "Sudoku Game", work: "সডোকু খেলা অফলাইনে" },
-      { id: 41, name: "Unit Converter", work: "ইউনিট রূপান্তর" },
-      { id: 42, name: "Age Calculator", work: "বয়স হিসাব করা" },
-      { id: 43, name: "Loan EMI Calculator", work: "লোনের EMI হিসাব" },
-      { id: 44, name: "Tip Calculator", work: "টিপ হিসাব করা" },
-      { id: 45, name: "Currency Converter", work: "স্থির রেট দিয়ে রূপান্তর" },
-      { id: 46, name: "GPA Calculator", work: "GPA হিসাব করা" },
-      { id: 47, name: "Discount Calculator", work: "ছাড়ের হিসাব" },
-      { id: 48, name: "Fuel Efficiency Tracker", work: "গাড়ির মাইলেজ রেকর্ড" },
-      { id: 49, name: "Time Zone Converter", work: "সময় অঞ্চল রূপান্তর" },
-      { id: 50, name: "QR Code Scanner", work: "QR স্ক্যান করে তথ্য দেখানো (ইন্টারনেট ছাড়া)" },
-      { id: 51, name: "File Hide App", work: "লোকাল ফাইল/ফোল্ডার পিন/পাসওয়ার্ডে লুকানো" },
-      { id: 52, name: "Calculator + Media File Hide App", work: "ক্যালকুলেটর + গোপন মিডিয়া ভল্ট (ভিডিও/অডিও/ফটো)" },
+    // ---------- Demo dataset (Edit/extend this list) ----------
+    const APPS = [
+      // Hyper-casual (Game)
+      {
+        name: "One Finger River Cross",
+        bnDesc: "এক আঙুলে নৌকা চালিয়ে স্রোত ও বাধা এড়িয়ে গন্তব্যে পৌঁছান। সম্পূর্ণ অফলাইন।",
+        category: "Game",
+        subcategory: "Hyper-casual",
+        offline: true,
+        earningInMin: 125000, earningInMax: 375000,      // India/month
+        earningIntlMin: 1000000, earningIntlMax: 2000000,// Intl/month
+        rating: 4.4, downloads: 1200000
+      },
+      {
+        name: "Stack & Smash",
+        bnDesc: "ব্লক স্ট্যাক করুন, সঠিক সময়ে ভাঙুন। ৩০-৬০ সেকেন্ডের দ্রুত প্লে।",
+        category: "Game",
+        subcategory: "Hyper-casual",
+        offline: true,
+        earningInMin: 110000, earningInMax: 330000,
+        earningIntlMin: 850000, earningIntlMax: 1700000,
+        rating: 4.2, downloads: 820000
+      },
+      {
+        name: "Color Switcher",
+        bnDesc: "রঙ মিলিয়ে বাধা পার হন। এক ট্যাপে সহজ কন্ট্রোল।",
+        category: "Game",
+        subcategory: "Hyper-casual",
+        offline: true,
+        earningInMin: 90000, earningInMax: 270000,
+        earningIntlMin: 700000, earningIntlMax: 1400000,
+        rating: 4.1, downloads: 650000
+      },
+
+      // Puzzle (Game)
+      {
+        name: "Alpona Logic",
+        bnDesc: "ননোগ্রাম স্টাইল—আলপনার প্যাটার্ন ভরুন। লজিক দিয়ে সমাধান করুন।",
+        category: "Game",
+        subcategory: "Puzzle",
+        offline: true,
+        earningInMin: 125000, earningInMax: 375000,
+        earningIntlMin: 1000000, earningIntlMax: 2000000,
+        rating: 4.6, downloads: 980000
+      },
+      {
+        name: "Pipe Connect",
+        bnDesc: "পাইপ ঘুরিয়ে পানির সঠিক পথ বানান। স্টার সংগ্রহ করুন।",
+        category: "Game",
+        subcategory: "Puzzle",
+        offline: true,
+        earningInMin: 100000, earningInMax: 300000,
+        earningIntlMin: 800000, earningIntlMax: 1600000,
+        rating: 4.5, downloads: 760000
+      },
+      {
+        name: "Shadow Match",
+        bnDesc: "বস্তু ঘুরিয়ে ছায়ার আকার মিলান। ধাপে ধাপে কঠিন হবে।",
+        category: "Game",
+        subcategory: "Puzzle",
+        offline: true,
+        earningInMin: 95000, earningInMax: 285000,
+        earningIntlMin: 780000, earningIntlMax: 1500000,
+        rating: 4.3, downloads: 540000
+      },
+      {
+        name: "Slide & Deliver",
+        bnDesc: "স্লাইডিং টাইল দিয়ে মালামাল ঠিক ঘাটে পৌঁছান। মুভ সীমিত—ভাবনা জরুরি।",
+        category: "Game",
+        subcategory: "Puzzle",
+        offline: true,
+        earningInMin: 90000, earningInMax: 260000,
+        earningIntlMin: 700000, earningIntlMax: 1400000,
+        rating: 4.2, downloads: 430000
+      },
+
+      // Recipe (Non-game)
+      {
+        name: "Bengali Rasoi",
+        bnDesc: "বাংলা রেসিপির অফলাইন কালেকশন—ডাল, মাছ, ভাজা, পিঠে-পুলি। ছবি ছাড়াই হালকা।",
+        category: "Non-game",
+        subcategory: "Recipe",
+        offline: true,
+        earningInMin: 125000, earningInMax: 375000,
+        earningIntlMin: 1000000, earningIntlMax: 2000000,
+        rating: 4.7, downloads: 1500000
+      },
+      {
+        name: "Quick 15-min Recipes",
+        bnDesc: "১৫ মিনিটে তৈরি দ্রুত রেসিপি—স্টুডেন্ট ও ব্যস্তদের জন্য উপযোগী।",
+        category: "Non-game",
+        subcategory: "Recipe",
+        offline: true,
+        earningInMin: 90000, earningInMax: 270000,
+        earningIntlMin: 700000, earningIntlMax: 1400000,
+        rating: 4.4, downloads: 870000
+      },
+      {
+        name: "Festival Special Recipes",
+        bnDesc: "পূজা/ঈদ/বড়দিনের স্পেশাল রেসিপি—সিজনাল কালেকশন অফলাইনে।",
+        category: "Non-game",
+        subcategory: "Recipe",
+        offline: true,
+        earningInMin: 100000, earningInMax: 300000,
+        earningIntlMin: 800000, earningIntlMax: 1600000,
+        rating: 4.5, downloads: 930000
+      },
+      {
+        name: "Kids Lunchbox Ideas",
+        bnDesc: "বাচ্চাদের লাঞ্চবক্সের স্বাস্থ্যকর অফলাইন আইডিয়া—সহজ উপকরণে।",
+        category: "Non-game",
+        subcategory: "Recipe",
+        offline: true,
+        earningInMin: 80000, earningInMax: 220000,
+        earningIntlMin: 600000, earningIntlMax: 1200000,
+        rating: 4.3, downloads: 520000
+      }
     ];
 
-    // Extend with tracking fields (editable)
-    let rows = baseIdeas.map(r => ({
-      ...r,
-      code: "",          // e.g., Kotlin + Room, Jetpack Compose, ML Kit
-      jobs: "",          // monthly job postings count (your estimate)
-      downloads: "",     // total downloads (your target or actual)
-      earnings: "",      // revenue in ₹
-      ai: ""             // Yes/No
-    }));
+    // ---------- State ----------
+    const state = {
+      category: "All",
+      subcategory: "All",
+      onlyOffline: true,
+      search: "",
+      sort: "downloadsDesc"
+    };
 
-    const tbody = document.getElementById('tbody');
-    const search = document.getElementById('search');
-    const aiOnly = document.getElementById('aiOnly');
-    const minDownloads = document.getElementById('minDownloads');
-    const kpiAI = document.getElementById('kpiAI');
-    const kpiDL = document.getElementById('kpiDL');
-    const kpiEarn = document.getElementById('kpiEarn');
-    const kpiJobs = document.getElementById('kpiJobs');
+    // ---------- Build category/subcategory lists ----------
+    function unique(arr){ return Array.from(new Set(arr)); }
+    const categories = ["All", ...unique(APPS.map(a => a.category))];
+    const subcategoriesAll = ["All", ...unique(APPS.map(a => a.subcategory))];
 
-    function fmtNumber(n) {
-      if (!n) return "";
-      const x = Number(String(n).replace(/,/g, ""));
-      if (!isFinite(x)) return String(n);
-      return x.toLocaleString('en-IN');
-    }
+    function renderFilters(){
+      const catEl = document.getElementById("categoryList");
+      const subEl = document.getElementById("subcategoryList");
+      catEl.innerHTML = "";
+      subEl.innerHTML = "";
 
-    function parseNumber(n) {
-      if (!n) return 0;
-      const x = Number(String(n).replace(/,/g, "").trim());
-      return isFinite(x) ? x : 0;
-    }
-
-    function aiBadge(val) {
-      const yes = String(val || "").toLowerCase().startsWith("y");
-      const no = String(val || "").toLowerCase().startsWith("n");
-      return yes
-        ? `<span class="tag ai-yes">AI</span>`
-        : no ? `<span class="tag ai-no">No AI</span>` : `<span class="tag">—</span>`;
-    }
-
-    function render() {
-      const q = search.value.toLowerCase().trim();
-      const onlyAI = aiOnly.checked;
-      const minDL = parseNumber(minDownloads.value);
-
-      const filtered = rows.filter(r => {
-        const matchQ =
-          String(r.id).includes(q) ||
-          (r.name || "").toLowerCase().includes(q) ||
-          (r.work || "").toLowerCase().includes(q) ||
-          (r.code || "").toLowerCase().includes(q);
-        const matchAI = !onlyAI || String(r.ai || "").toLowerCase().startsWith("y");
-        const matchDL = !minDL || parseNumber(r.downloads) >= minDL;
-        return matchQ && matchAI && matchDL;
+      categories.forEach(cat=>{
+        const btn = document.createElement("button");
+        btn.textContent = cat === "All" ? "সব" : cat === "Game" ? "গেম" : "নন-গেম";
+        if(state.category === cat) btn.classList.add("active");
+        btn.onclick = ()=>{ state.category = cat; render(); };
+        const li = document.createElement("li"); li.appendChild(btn); catEl.appendChild(li);
       });
 
-      tbody.innerHTML = filtered.map(r => `
-        <tr data-id="${r.id}">
-          <td>${r.id}</td>
-          <td contenteditable="true" data-field="name">${r.name}</td>
-          <td contenteditable="true" data-field="work" class="muted">${r.work}</td>
-          <td contenteditable="true" data-field="code" class="muted">${r.code}</td>
-          <td contenteditable="true" data-field="jobs" class="muted">${r.jobs}</td>
-          <td contenteditable="true" data-field="downloads" class="muted">${r.downloads}</td>
-          <td contenteditable="true" data-field="earnings" class="muted">${r.earnings}</td>
-          <td contenteditable="true" data-field="ai" style="min-width:80px;">${r.ai || ""} ${aiBadge(r.ai)}</td>
-        </tr>
-      `).join('');
+      // Subcategories depend on selected category
+      const subs = state.category==="All"
+        ? subcategoriesAll
+        : ["All", ...unique(APPS.filter(a=>a.category===state.category).map(a=>a.subcategory))];
 
-      // KPIs from filtered rows with numeric entries
-      const aiCount = filtered.filter(r => String(r.ai || "").toLowerCase().startsWith("y")).length;
-      const totalDL = filtered.reduce((s, r) => s + parseNumber(r.downloads), 0);
-      const totalEarn = filtered.reduce((s, r) => s + parseNumber(r.earnings), 0);
-      const jobsFilled = filtered.filter(r => parseNumber(r.jobs) > 0).length;
+      subs.forEach(sc=>{
+        const btn = document.createElement("button");
+        btn.textContent = sc==="All" ? "সব" : sc;
+        if(state.subcategory === sc) btn.classList.add("active");
+        btn.onclick = ()=>{ state.subcategory = sc; render(); };
+        const li = document.createElement("li"); li.appendChild(btn); subEl.appendChild(li);
+      });
 
-      kpiAI.textContent = fmtNumber(aiCount);
-      kpiDL.textContent = fmtNumber(totalDL);
-      kpiEarn.textContent = "₹ " + fmtNumber(totalEarn);
-      kpiJobs.textContent = fmtNumber(jobsFilled);
+      const onlyOfflineBtn = document.getElementById("onlyOffline");
+      onlyOfflineBtn.classList.toggle("active", state.onlyOffline);
+      onlyOfflineBtn.onclick = ()=>{ state.onlyOffline = !state.onlyOffline; render(); };
+
+      document.getElementById("search").value = state.search;
+      document.getElementById("sort").value = state.sort;
     }
 
-    // Inline editing handler
-    document.addEventListener('input', (e) => {
-      const td = e.target.closest('td[contenteditable="true"]');
-      if (!td) return;
-      const tr = td.closest('tr');
-      const id = Number(tr.dataset.id);
-      const field = td.dataset.field;
-      const row = rows.find(x => x.id === id);
-      if (!row) return;
-      row[field] = td.textContent.trim();
+    // ---------- Filtering, sorting, rendering ----------
+    function formatMoney(n){
+      // show in ₹ with commas
+      return "₹" + n.toLocaleString("en-IN");
+    }
+    function star(r){
+      const full = "★".repeat(Math.floor(r));
+      const empty = "☆".repeat(5 - Math.floor(r));
+      return full + empty;
+    }
 
-      // Re-render AI badge if AI field changed
-      if (field === 'ai') {
-        render();
+    function applyFilters(){
+      let list = APPS.slice();
+
+      if(state.category !== "All"){
+        list = list.filter(a => a.category === state.category);
       }
-    });
+      if(state.subcategory !== "All"){
+        list = list.filter(a => a.subcategory === state.subcategory);
+      }
+      if(state.onlyOffline){
+        list = list.filter(a => a.offline);
+      }
+      if(state.search.trim()){
+        const q = state.search.toLowerCase();
+        list = list.filter(a =>
+          a.name.toLowerCase().includes(q) ||
+          a.category.toLowerCase().includes(q) ||
+          a.subcategory.toLowerCase().includes(q) ||
+          a.bnDesc.toLowerCase().includes(q)
+        );
+      }
 
-    // Sorting
-    let sortState = { key: 'id', dir: 1 };
-    function sortBy(key) {
-      sortState.dir = (sortState.key === key) ? -sortState.dir : 1;
-      sortState.key = key;
-      rows.sort((a, b) => {
-        const va = (a[key] ?? "").toString().toLowerCase();
-        const vb = (b[key] ?? "").toString().toLowerCase();
+      switch(state.sort){
+        case "downloadsDesc": list.sort((a,b)=> b.downloads - a.downloads); break;
+        case "ratingDesc": list.sort((a,b)=> b.rating - a.rating); break;
+        case "earningIntlDesc": list.sort((a,b)=> (b.earningIntlMax||0) - (a.earningIntlMax||0)); break;
+        case "earningInDesc": list.sort((a,b)=> (b.earningInMax||0) - (a.earningInMax||0)); break;
+        case "nameAsc": list.sort((a,b)=> a.name.localeCompare(b.name)); break;
+      }
+      return list;
+    }
 
-        // Numeric-aware sort for certain keys
-        const numericKeys = ['id', 'jobs', 'downloads', 'earnings'];
-        if (numericKeys.includes(key)) {
-          const na = parseNumber(a[key]);
-          const nb = parseNumber(b[key]);
-          if (na < nb) return -1 * sortState.dir;
-          if (na > nb) return 1 * sortState.dir;
-          return 0;
-        }
+    function renderCards(items){
+      const wrap = document.getElementById("cards");
+      const empty = document.getElementById("noResults");
+      wrap.innerHTML = "";
+      if(items.length===0){ empty.style.display="block"; return; }
+      empty.style.display="none";
 
-        if (va < vb) return -1 * sortState.dir;
-        if (va > vb) return 1 * sortState.dir;
-        return 0;
+      items.forEach(app=>{
+        const el = document.createElement("article");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="icon">${app.category==="Game"?"G":"R"}</div>
+          <div style="flex:1">
+            <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start">
+              <div>
+                <div style="font-weight:700; font-size:1.05rem">${app.name}</div>
+                <div class="muted" style="margin-top:2px">${app.bnDesc}</div>
+                <div class="meta">
+                  <span class="chip">ক্যাটেগরি: ${app.category==="Game"?"গেম":"নন-গেম"}</span>
+                  <span class="chip">টাইপ: ${app.subcategory}</span>
+                  <span class="chip">${app.offline ? "অফলাইন/সার্ভারছাড়া" : "অনলাইন"}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="stat">
+                <b>ভারতীয় আয় (মাসিক)</b>
+                <div class="money">${formatMoney(app.earningInMin)} – ${formatMoney(app.earningInMax)}</div>
+              </div>
+              <div class="stat">
+                <b>আন্তর্জাতিক আয় (মাসিক)</b>
+                <div class="money">${formatMoney(app.earningIntlMin)} – ${formatMoney(app.earningIntlMax)}</div>
+              </div>
+              <div class="stat">
+                <b>রেটিং</b>
+                <div>${star(app.rating)} <span class="muted">(${app.rating.toFixed(1)})</span></div>
+              </div>
+              <div class="stat">
+                <b>ডাউনলোড</b>
+                <div class="warn">${app.downloads.toLocaleString("en-IN")}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(el);
       });
+    }
+
+    function render(){
+      renderFilters();
+      const items = applyFilters();
+      renderCards(items);
+    }
+
+    // ---------- Events ----------
+    document.getElementById("search").addEventListener("input", (e)=>{
+      state.search = e.target.value;
       render();
-    }
-    document.querySelectorAll('th.sortable').forEach(th => {
-      th.addEventListener('click', () => sortBy(th.dataset.key));
+    });
+    document.getElementById("sort").addEventListener("change", (e)=>{
+      state.sort = e.target.value;
+      render();
     });
 
-    // Filters & search
-    [search, aiOnly, minDownloads].forEach(el => el.addEventListener('input', render));
-
-    // Copy full HTML
-    document.getElementById('copyBtn').addEventListener('click', async () => {
-      try {
-        const html = document.documentElement.outerHTML;
-        await navigator.clipboard.writeText(html);
-        const btn = document.getElementById('copyBtn');
-        const old = btn.textContent;
-        btn.textContent = "কপি হয়েছে ✅";
-        setTimeout(() => (btn.textContent = old), 1500);
-      } catch (e) {
-        alert("কপি করা যায়নি। ব্রাউজারের পারমিশন চেক করুন।");
-      }
-    });
-
-    // Export CSV of current table view
-    function toCSV(arr) {
-      const headers = ["#", "App Name", "Work", "Code (Tech)", "Career demand (jobs/mo)", "Downloads", "Earnings (₹)", "AI"];
-      const lines = [headers.join(",")];
-      arr.forEach(r => {
-        const row = [
-          r.id,
-          `"${(r.name || "").replace(/"/g, '""')}"`,
-          `"${(r.work || "").replace(/"/g, '""')}"`,
-          `"${(r.code || "").replace(/"/g, '""')}"`,
-          parseNumber(r.jobs),
-          parseNumber(r.downloads),
-          parseNumber(r.earnings),
-          (r.ai || "")
-        ];
-        lines.push(row.join(","));
-      });
-      return lines.join("\n");
-    }
-
-    document.getElementById('exportCsv').addEventListener('click', () => {
-      // Apply current filters to decide which rows to export
-      const q = search.value.toLowerCase().trim();
-      const onlyAI = aiOnly.checked;
-      const minDL = parseNumber(minDownloads.value);
-      const filtered = rows.filter(r => {
-        const matchQ =
-          String(r.id).includes(q) ||
-          (r.name || "").toLowerCase().includes(q) ||
-          (r.work || "").toLowerCase().includes(q) ||
-          (r.code || "").toLowerCase().includes(q);
-        const matchAI = !onlyAI || String(r.ai || "").toLowerCase().startsWith("y");
-        const matchDL = !minDL || parseNumber(r.downloads) >= minDL;
-        return matchQ && matchAI && matchDL;
-      });
-      const csv = toCSV(filtered);
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "serverless-android-ideas-tracking.csv";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    // Initial render
+    // ---------- Init ----------
     render();
   </script>
 </body>
