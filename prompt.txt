@@ -1,0 +1,130 @@
+You are an expert mobile game developer and architect.  
+Build an **offline-first puzzle/brain game app** for Android (with future cross-platform support).  
+Follow these requirements:
+
+## Must-Have Features
+- **Gameplay**
+  - Core mechanics: Easy to learn, hard to master; clear goals per level/mode.
+  - Difficulty curve: Easy → Medium → Hard; adaptive difficulty or seed-based generation.
+  - Hint/Undo: Limited hints, undo/restart; rewarded ads for extra hints.
+  - Timer/Moves: Time/move limits, star rating or scoring model.
+  - Offline-first: All core modes work without internet; online only for ads/analytics.
+
+- **User Experience (UX)**
+  - Simple UI: Large touch targets, clear contrast, dark/light themes.
+  - Accessibility: Color-blind palettes, visual hints, haptic feedback.
+  - Polish: Fast loading (<2s), smooth animations, offline indicator.
+
+- **Engagement**
+  - Daily challenge: New seed/level each day; rewards or badges.
+  - Progress/Achievements: Unlock levels, trophies/badges, streaks.
+  - Leaderboard (optional): Offline scores; online sync later.
+  - Local notifications: Daily challenge/streak reminders.
+
+- **Monetization**
+  - Rewarded video: Unlock hints/extra levels/energy.
+  - Interstitial ads: Shown at level end/menu transitions with frequency caps.
+  - Banner/native ads: Low-intrusive, only on home/pause screens.
+  - IAP: Ad-free unlock, premium packs/modes, hint bundles.
+
+---
+
+## Android Tech Stack Recommendation
+- **Game Engine & Language**
+  - Unity (C#): Fast dev, easy rewarded ad integration, Addressables + ScriptableObjects for content.
+  - Godot 4 (GDScript/C#/C++): Lightweight, open-source, small APK, ideal for 2D puzzles.
+  - LibGDX (Java/Kotlin): High control, good performance, requires custom tooling.
+  - Native Android (Kotlin + Jetpack Compose/Canvas): Minimal dependencies, small APK, less cross-platform reuse.
+
+- **Framework/Database**
+  - Local DB: SQLite/Room (Android) or JSON-binary packs.
+  - Data format: JSON (dev/debug), binary/FlatBuffers/Protocol Buffers (production).
+  - Analytics (optional): Offline event queue, batch upload when online.
+  - Design tools: Figma/Adobe XD (UI), Illustrator/Affinity (vector), Aseprite (pixel art), Spine/Unity Animator (2D animation).
+
+---
+
+## Puzzle Types to Include
+- Sudoku: Classic, mini grids (4x4, 9x9), variants (Killer, Samurai).
+- Word search/crossword: Thematic lists; offline dictionary required.
+- Logic puzzles: Kakuro, Nonogram/Picross, constraint-based.
+- Memory games: Card-match, pattern repeat.
+- Block/tile puzzles: Block blast, 2048/Threes, sliding puzzles.
+- Path/concentration: Labyrinth, Knight’s Tour, Tower of Hanoi.
+
+---
+
+## Offline Data Storage Structure
+- **Data Model**
+  - Puzzle table: id, type, difficulty, seed, layout, solutionHash, createdAt.
+  - Progress table: puzzleId, status (new/in-progress/completed), bestTime, moves, hintsUsed, stars.
+  - Daily challenge: date, seed, completed, rewardClaimed.
+  - Settings: theme, haptics, language, accessibility.
+
+- **Storage Strategy**
+  - Seed-based generation: Store PRNG seed for Sudoku/blocks; generate layout on demand.
+  - Binary packs: Compress large word lists/crosswords (gzip/deflate).
+  - Offline dictionary: DAWG/Trie compression; thematic subsets.
+  - Save/restore: Auto-save every move/interval; crash-safe.
+  - Migration: Versioned schema (dbVersion); incremental migration scripts.
+
+---
+
+## Step-by-Step Development Roadmap
+1. **Concept & Design (1–2 weeks)**
+   - Define 1–2 core puzzle types (e.g., Sudoku + Block).
+   - UX flow: Home → Mode Select → Game → Result → Progress.
+   - Visuals: Style guide, themes, icons/assets.
+
+2. **Prototype (2 weeks)**
+   - Implement game loop: input, grid/tile, scoring.
+   - Puzzle generator/validator: seed-based generation + solver.
+   - Performance: FPS, device profiling, APK size targets.
+
+3. **Core Development (3–4 weeks)**
+   - Features: Hint/undo, daily challenge, progress tracking.
+   - Offline storage: DB schema, binary pack loader.
+   - Ad integration: Rewarded/interstitial with frequency caps; ad-free IAP.
+   - Settings/local notifications: streak/daily reminders.
+
+4. **Content & Polish (2 weeks)**
+   - Levels/packs: 50–200 levels or generator options.
+   - Localization: EN + HI/BN (India), later DE/ES/FR.
+   - Animation/sound: Minimal but polished; haptic feedback.
+
+5. **Testing (1–2 weeks)**
+   - Device matrix: Low → mid → high-end; offline/airplane mode.
+   - Edge cases: Ad fail/no-fill, save recovery, DB migration.
+   - QA/UX: Tutorial clarity, invalid input handling.
+
+6. **Launch & Post-launch (ongoing)**
+   - Store setup: ASO, screenshots/video, keywords.
+   - Soft launch: India/Brazil; gather feedback + bug fixes.
+   - Optimization: A/B test ads, difficulty tuning.
+   - Content updates: Weekly packs/challenges, seasonal events.
+
+---
+
+## Optional Advanced Features
+- AI hints/solver: On-device heuristic/ML (TensorFlow Lite).
+- Adaptive difficulty: Adjust levels based on player performance.
+- Daily streaks/seasonal events: Streak bonuses, festival packs.
+- Progress analytics: Offline event logs, later cloud sync.
+- Custom mode: User-created puzzles (local save/share).
+- Accessibility+: High contrast, scalable UI, voice/haptic guides.
+
+---
+
+## Final Recommendation
+- **Fastest cross-platform stack:**  
+  Unity (C#) + Addressables + ScriptableObjects + SQLite/JSON-binary.  
+  - Pros: Easy ad SDK integration (Unity Ads/AppLovin/ironSource/AdMob), mature 2D tooling, strong asset pipeline, one codebase for Android/iOS/PC.
+
+- **Lightweight open-source alternative:**  
+  Godot 4 (GDScript/C#) + JSON/binary packs + SQLite.  
+  - Pros: Small APK, fast 2D dev, free licensing, strong performance for offline puzzle games.
+
+- **If Android-only & minimal APK size:**  
+  Kotlin + Jetpack Compose + Canvas.  
+  - Pros: Smallest footprint, but less cross-platform reuse.
+
