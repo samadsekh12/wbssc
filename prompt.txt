@@ -1,38 +1,41 @@
 Build an Android app called “CalcVault” that shows a fully functional calculator UI on the front, and secretly acts as a secure file vault to hide videos, images, and documents.
 
-Key requirement: The app must work entirely offline, with no server, no cloud sync, no internet dependency. All data is stored and encrypted locally on the device.
+Key requirements:
 
-Calculator front: Same as before (basic arithmetic, clean UI).
+Offline-first: All vault data stored locally, no server or cloud sync.
 
-Hidden vault:
+Calculator front: Full basic arithmetic, clean UI.
 
-Trigger: secret PIN or long-press on “=”.
+Hidden vault: Trigger via secret PIN or long-press “=”, with PIN/biometric authentication. Files encrypted with AES-256 and stored in app-private storage.
 
-Authentication: PIN + optional biometric.
+Permissions: Only SAF (file access) + biometric. No internet needed for vault.
 
-Local storage only: All files are imported via Android’s Storage Access Framework, encrypted with AES-256, and stored in the app’s private directory.
+Google Ads integration:
 
-No server calls: Disable internet permission in the manifest (<uses-permission android:name="android.permission.INTERNET" tools:node="remove"/>).
+Integrate Google AdMob SDK.
 
-Metadata (file name, type, date) stored in local Room database, encrypted.
+Use Google’s sample Ad Unit IDs for testing first. In release build, replace them with your own AdMob App ID and Ad Unit IDs.
 
-Export/decrypt only when user explicitly chooses a location.
+Show Banner Ads at the bottom of the calculator screen.
 
-Security:
+Show Interstitial Ads only on safe flows (e.g., when user exits the vault or after completing an import/export).
 
-Keys derived from PIN and stored securely in Android Keystore.
+Never show ads inside the vault’s sensitive screens (file browsing, PIN entry, encryption/decryption).
 
-Auto-lock vault after inactivity.
+Ads must follow Google Play Ads Policy: no deceptive placement, no accidental clicks.
 
-Wipe decrypted temp files immediately after use.
+Privacy & compliance:
 
-Permissions: Only SAF for file access + biometric. No network permissions.
+Provide a Privacy Policy stating that ads are served via Google AdMob and user data is not uploaded elsewhere.
 
-Deliverables: Android Studio project, README explaining offline-only design, and test cases for vault operations.
+Ask for user consent (GDPR/CCPA) if required.
 
-Why this matters
-Privacy: Nothing leaves the device.
+Deliverables:
 
-Play Store compliance: No unnecessary permissions.
+Android Studio project with AdMob integrated.
 
-Simplicity: No backend to maintain.
+Test ads enabled by default.
+
+Clear instructions in README for replacing test IDs with real Ad Unit IDs before release.
+
+Vault remains secure and unaffected by ads.
