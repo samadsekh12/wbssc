@@ -25,6 +25,7 @@
     .t-eng{background:linear-gradient(135deg,#ff512f,#f09819)}
     .topic h3{margin:0 0 6px}
     .info-card{background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.7));padding:16px;border-radius:12px}
+    .mock-btn{display:inline-block;padding:10px 14px;border-radius:10px;background:#6a11cb;color:#fff;text-decoration:none;font-weight:700}
     footer{margin-top:18px;color:var(--muted);text-align:center}
     @media(max-width:820px){.hero-grid{grid-template-columns:1fr}}
   </style>
@@ -35,7 +36,7 @@
       <div class="brand">
         <div class="logo">WB</div>
         <div>
-          <h1>WBSSC Group C & D ��� Study Hub</h1>
+          <h1>WBSSC Group C & D — Study Hub</h1>
           <div class="lead">Colorful, professional and focused on quick practice</div>
         </div>
       </div>
@@ -45,7 +46,10 @@
       <div class="hero-grid">
         <div>
           <h2 style="margin-top:0">Select your topic and start practicing</h2>
-          <p style="color:var(--muted)">Start Learning এবং Download Short Notes বোতনগুলো সরানো হয়েছে। এখন টপিক কার্ডগুলোতে ক্লিক করলে সরাসরি সংশ্লিষ্ট পেজে নেওয়া হবে (gk.html, ca.html, math.html, english.html)।</p>
+
+          <div style="margin-top:12px">
+            <a class="mock-btn" href="./mock-test.html" id="mockLink">Start Mock Test</a>
+          </div>
 
           <div class="topics" id="topics">
             <div class="topic t-gk" data-topic="gk" onclick="goTopic('gk')" tabindex="0"><h3>General Knowledge</h3><div>History, geography</div></div>
@@ -58,9 +62,9 @@
         <aside>
           <div class="info-card">
             <h3 style="margin:0 0 8px">Mock Test</h3>
-            <p style="margin:0 0 12px;color:var(--muted)">Mock Test ইতিমধ্যে যোগ করা আছে—Start Mock Test লিংকটি রইল।</p>
+            <p style="margin:0 0 12px;color:var(--muted)">Mock Test ইতিমধ্যে যুক্ত আছে—এখান থেকেই সরাসরি Mock Test চালু করুন।</p>
             <div style="display:flex;gap:8px">
-              <a href="./mock-test.html" style="background:#6a11cb;color:#fff;padding:10px 12px;border-radius:10px;text-decoration:none">Start Mock Test</a>
+              <a class="mock-btn" href="./mock-test.html">Open Mock Test</a>
             </div>
           </div>
 
@@ -74,17 +78,17 @@
       </div>
     </section>
 
-    <footer>সব টেক্সট বাংলা—Start Learning ও Download Short Notes বোতন সরানো হয়েছে।</footer>
+    <footer>সব টেক্সট বাংলা—Mock Test লিংকটি ইন্ডেক্স পেজে যোগ করা হয়েছে।</footer>
   </div>
 
   <script>
     function goTopic(t){
-      // direct to topic page if exists, otherwise fallback to mock-test
       const page = (t==='gk'||t==='ca'||t==='math'||t==='english') ? './'+t+'.html' : './mock-test.html';
       window.location.href = page;
     }
-    // keyboard support
     document.getElementById('topics').addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') { const el=document.activeElement; if(el && el.dataset && el.dataset.topic) goTopic(el.dataset.topic); } });
+    // accessibility: mark mock link as button for screen readers
+    document.getElementById('mockLink').setAttribute('role','button');
   </script>
 </body>
 </html>
