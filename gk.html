@@ -7,29 +7,54 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#fff7f0; --card:#ffffff; --muted:#444;
-      --c1:#6a11cb; --c2:#2575fc; --c3:#ff7e5f; --c4:#feb47b;
-      --c5:#11998e; --c6:#38ef7d; --c7:#ff512f; --c8:#f09819;
-      --radius:12px;
+      --page-bg: #f6fbff;
+      --card-bg: #ffffff;
+      --muted: #374151; /* darker muted for readability */
+      --text: #0f172a;   /* near-black for best contrast */
+      --accent-1: #0f4c81; /* deep blue */
+      --accent-2: #0b7a55; /* deep green */
+      --accent-3: #c2410c; /* warm readable orange */
+      --accent-4: #7c3aed; /* vibrant violet */
+      --radius: 12px;
+      --shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(135deg,#fffefc,#f7fbff);color:#111;padding:28px}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,var(--page-bg),#ffffff);
+      color:var(--text);
+      padding:28px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
     .wrap{max-width:980px;margin:0 auto}
     header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent-1),#1e60b4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
     h1{margin:0;font-size:20px}
-    p.lead{margin:6px 0 0;color:var(--muted)}
+    p.lead{margin:6px 0 0;color:var(--muted);line-height:1.4}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
-    .card{background:var(--card);padding:16px;border-radius:var(--radius);box-shadow:0 8px 20px rgba(20,20,30,0.06);cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;display:flex;flex-direction:column;gap:8px}
-    .card:active,.card:focus{transform:translateY(2px)}
-    .card h3{margin:0;font-size:16px;color:#fff;padding:8px;border-radius:10px}
-    .meta{color:var(--muted);font-size:13px}
-    .c1{background:linear-gradient(135deg,var(--c1),var(--c2))}
-    .c2{background:linear-gradient(135deg,var(--c3),var(--c4))}
-    .c3{background:linear-gradient(135deg,var(--c5),var(--c6))}
-    .c4{background:linear-gradient(135deg,var(--c7),var(--c8))}
-    .btn-row{display:flex;gap:10px;margin-top:14px}
-    .btn{padding:8px 12px;border-radius:10px;background:#111;color:#fff;text-decoration:none;font-weight:700}
+    .card{
+      background:var(--card-bg);
+      padding:16px;border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;
+      display:flex;flex-direction:column;gap:10px;
+      min-height:120px;
+    }
+    .card:active,.card:focus{transform:translateY(2px);outline:3px solid rgba(11,122,85,0.12)}
+    .card h3{margin:0;font-size:16px;color:#fff;padding:10px;border-radius:10px;display:inline-block}
+    .meta{color:var(--muted);font-size:13px;line-height:1.45}
+    /* high-contrast color bands for cards */
+    .c1{background:linear-gradient(135deg,var(--accent-1),#1466b1)}
+    .c2{background:linear-gradient(135deg,var(--accent-2),#14946f)}
+    .c3{background:linear-gradient(135deg,var(--accent-3),#ef6a1a)}
+    .c4{background:linear-gradient(135deg,var(--accent-4),#8b5cf6)}
+    /* ensure card header text remains readable on gradient */
+    .card h3.small { font-weight:700; font-size:15px }
+    .actions{display:flex;gap:10px;margin-top:14px}
+    .btn{padding:8px 12px;border-radius:10px;background:var(--accent-1);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 6px 18px rgba(15,23,42,0.08)}
+    .btn.secondary{background:#e6eef9;color:var(--accent-1);font-weight:600}
     .back{display:inline-block;margin-top:18px;color:var(--muted);text-decoration:none}
     @media(max-width:520px){body{padding:16px}.card h3{font-size:15px}}
   </style>
@@ -40,55 +65,54 @@
       <div class="logo">GK</div>
       <div>
         <h1>General Knowledge — WBSSC</h1>
-        <p class="lead">নীচের 8টি বিভাগ থেকে পছন্দ করে অনুশীলন করুন — প্রতিটি বিভাগে প্রশ্ন, সংক্ষিপ্ত নোট ও মক টেস্ট যোগ করা যাবে।</p>
+        <p class="lead">নীচের ৮টি বিভাগ থেকে পছন্দ করে অনুশীলন করুন — প্রতিটি বিভাগে নোট ও প্রশ্ন যোগ করা যাবে।</p>
       </div>
     </header>
 
     <section class="grid" aria-label="GK topics">
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-environment.html'">
-        <h3 class="c1">1. পরিবেশ ও বাস্তুতন্ত্র</h3>
+        <h3 class="c1 small">1. পরিবেশ ও বাস্তুতন্ত্র</h3>
         <div class="meta">Air, Water, Noise; Climate change; Biodiversity; Conservation laws (Project Tiger, NGT)</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-geography.html'">
-        <h3 class="c2">2. ভারতের ভূগোল ও পশ্চিমবঙ্গের ভূগোল</h3>
-        <div class="meta">Main rivers, mountains, climate, soil, agriculture, West Bengal districts</div>
+        <h3 class="c2 small">2. ভারতের ভূগোল ও পশ্চিমবঙ্গ</h3>
+        <div class="meta">Major rivers, mountains, climate, soil, agriculture, West Bengal districts</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-history.html'">
-        <h3 class="c3">3. ভারতের ইতিহাস ও পশ্চিমবঙ্গের ইতিহাস</h3>
+        <h3 class="c3 small">3. ভারতের ইতিহাস ও পশ্চিমবঙ্গের ইতিহাস</h3>
         <div class="meta">Ancient, medieval, modern; Freedom movement; Bengal Renaissance</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-constitution.html'">
-        <h3 class="c4">4. ভারতের সংবিধান ও রাজনীতি</h3>
+        <h3 class="c4 small">4. ভারতের সংবিধান ও রাজনীতি</h3>
         <div class="meta">Fundamental rights & duties; President, PM, Parliament, State Assembly; Elections</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-science.html'">
-        <h3 class="c1">5. সাধারণ বিজ্ঞান (Class 6–10)</h3>
+        <h3 class="c1 small">5. সাধারণ বিজ্ঞান (Class 6–10)</h3>
         <div class="meta">Physics, Chemistry, Biology basics; Daily-life science; Health & disease prevention</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-economy.html'">
-        <h3 class="c2">6. ভারতের অর্থনীতি ও সামাজিক কাঠামো</h3>
+        <h3 class="c2 small">6. ভারতের অর্থনীতি ও সামাজিক কাঠামো</h3>
         <div class="meta">GDP, Inflation, Poverty, Unemployment, Social schemes, Banking</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-culture.html'">
-        <h3 class="c3">7. সাংস্কৃতিক ঐতিহ্য ও সাহিত্য</h3>
+        <h3 class="c3 small">7. সাংস্কৃতিক ঐতিহ্য ও সাহিত্য</h3>
         <div class="meta">Festivals, Famous authors, Dance, Music, Paintings</div>
       </div>
 
       <div class="card" tabindex="0" role="button" onclick="location.href='gk-administration.html'">
-        <h3 class="c4">8. ভারতের প্রশাসনিক কাঠামো</h3>
+        <h3 class="c4 small">8. ভারতের প্রশাসনিক কাঠামো</h3>
         <div class="meta">Central & state government structure, Administrative divisions, Govt schemes & agencies</div>
       </div>
     </section>
 
-    <div class="btn-row" aria-hidden="false">
-      <a class="btn" href="./mock-test.html">Start Mock Test</a>
-      <a class="btn" href="./index.html">Back to Home</a>
+    <div class="actions" aria-hidden="false">
+      <a class="btn secondary" href="./index.html">Back to Home</a>
     </div>
 
     <a class="back" href="./index.html">← প্রথম পৃষ্ঠায় যান</a>
