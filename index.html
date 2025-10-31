@@ -14,7 +14,6 @@
     .brand{display:flex;align-items:center;gap:12px}
     .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#ff7a7a,#ffdd55);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px}
     h1{margin:0;color:#221}
-    .lead{color:var(--muted);margin-top:6px}
     .hero{margin-top:20px;padding:22px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.7));box-shadow:0 10px 30px rgba(0,0,0,0.08)}
     .hero-grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
     .topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px}
@@ -37,7 +36,6 @@
         <div class="logo">WB</div>
         <div>
           <h1>WBSSC Group C & D — Study Hub</h1>
-          <div class="lead">Colorful, professional and focused on quick practice</div>
         </div>
       </div>
     </header>
@@ -46,10 +44,6 @@
       <div class="hero-grid">
         <div>
           <h2 style="margin-top:0">Select your topic and start practicing</h2>
-
-          <div style="margin-top:12px">
-            <a class="mock-btn" href="./mock-test.html" id="mockLink">Start Mock Test</a>
-          </div>
 
           <div class="topics" id="topics">
             <div class="topic t-gk" data-topic="gk" onclick="goTopic('gk')" tabindex="0"><h3>General Knowledge</h3><div>History, geography</div></div>
@@ -77,7 +71,7 @@
       </div>
     </section>
 
-    <footer>সব টেক্সট বাংলা—Mock Test লিংকটি ইন্ডেক্স পেজে যোগ করা হয়েছে।</footer>
+    <footer></footer>
   </div>
 
   <script>
@@ -85,9 +79,12 @@
       const page = (t==='gk'||t==='ca'||t==='math'||t==='english') ? './'+t+'.html' : './mock-test.html';
       window.location.href = page;
     }
-    document.getElementById('topics').addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') { const el=document.activeElement; if(el && el.dataset && el.dataset.topic) goTopic(el.dataset.topic); } });
-    // accessibility: mark mock link as button for screen readers
-    document.getElementById('mockLink').setAttribute('role','button');
+    document.getElementById('topics').addEventListener('keydown', e=>{
+      if(e.key==='Enter' || e.key===' ') {
+        const el=document.activeElement;
+        if(el && el.dataset && el.dataset.topic) goTopic(el.dataset.topic);
+      }
+    });
   </script>
 </body>
 </html>
