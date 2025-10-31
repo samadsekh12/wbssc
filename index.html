@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WBSSC Group C & D - Home</title>
+  <style>
+    body{font-family: Arial, sans-serif;background:#f7f9fc;color:#111;margin:0;padding:0}
+    .container{max-width:900px;margin:40px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    h1{margin-top:0}
+    .options{display:flex;flex-wrap:wrap;gap:12px}
+    .card{flex:1 1 200px;padding:18px;border-radius:6px;border:1px solid #e6eef8;background:#f0f7ff;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+    .card:hover{transform:translateY(-4px);box-shadow:0 6px 18px rgba(14,82,157,0.12)}
+    .card h3{margin:0 0 6px}
+    .cta{margin-top:18px}
+    .cta a{display:inline-block;padding:10px 16px;border-radius:6px;background:#0e529d;color:#fff;text-decoration:none}
+    .note{margin-top:12px;color:#555;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WBSSC Group C & D - Home</h1>
+    <p>Apni kon bishoy porben? niche theke ekta option select korun.</p>
+
+    <div class="options" role="list">
+      <div class="card" role="listitem" data-topic="gk" tabindex="0" onclick="openTopic('gk')">
+        <h3>General Knowledge (GK)</h3>
+        <p>Samanyo dakhyata, current affairs, history, geography.</p>
+      </div>
+
+      <div class="card" role="listitem" data-topic="ca" tabindex="0" onclick="openTopic('ca')">
+        <h3>Current Affairs (CA)</h3>
+        <p>Shamprotik ghatanaboli, important news and summaries.</p>
+      </div>
+
+      <div class="card" role="listitem" data-topic="math" tabindex="0" onclick="openTopic('math')">
+        <h3>Mathematics</h3>
+        <p>Arithmetic, algebra, problem solving practice.</p>
+      </div>
+
+      <div class="card" role="listitem" data-topic="english" tabindex="0" onclick="openTopic('english')">
+        <h3>English</h3>
+        <p>Grammar, comprehension, vocabulary practice.</p>
+      </div>
+    </div>
+
+    <div class="cta">
+      <a href="#" id="startBtn">Start Learning</a>
+    </div>
+
+    <p class="note">Protip: Click an option to choose a topic. This page is a starting point — I can add separate pages for each topic with lessons, quizzes, and downloadable notes if you want.</p>
+  </div>
+
+  <script>
+    let selected = null;
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(c=>{
+      c.addEventListener('keydown',e=>{ if(e.key === 'Enter' || e.key === ' ') openTopic(c.dataset.topic) })
+    });
+    function openTopic(topic){
+      selected = topic;
+      cards.forEach(c=>c.style.outline='');
+      const active = document.querySelector(`.card[data-topic="${topic}"]`);
+      if(active) active.style.outline='3px solid rgba(14,82,157,0.18)';
+      const start = document.getElementById('startBtn');
+      start.href = `./${topic}.html`;
+      start.textContent = 'Open '+ topic.toUpperCase();
+    }
+  </script>
+</body>
+</html>
