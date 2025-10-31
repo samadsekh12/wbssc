@@ -5,29 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GK | WBSSC Prep</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .wrap{max-width:1000px;margin:0 auto;padding:16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px}
+    .card{border:1px solid #1f2937;border-radius:12px;padding:14px;background:#0b1222}
+    .card h3{margin:6px 0 4px;font-size:18px}
+    .card p{margin:0;color:#9ca3af}
+    .card a{display:block;color:#d1e5ff;text-decoration:none}
+    .card a:hover{text-decoration:underline}
+    .sub{color:#9ca3af}
+    .back{margin-top:8px}
+  </style>
 </head>
 <body>
   <header class="site-header">
     <h1>General Knowledge (GK)</h1>
-    <p class="sub">ভারত, পশ্চিমবঙ্গ, সংবিধান, ইতিহাস, ভূগোল ইত্যাদি</p>
+    <p class="sub">ভারত, পশ্চিমবঙ্গ, সংবিধান, ইতিহাস, ভূগোল ইত্যাদি — টপিকভিত্তিক প্রফেশনাল মডিউল</p>
   </header>
 
-  <script>
-    window.quizConfig = {
-      title: 'General Knowledge (GK)',
-      questions: [
-        { q: 'পশ্চিমবঙ্গের রাজধানী কোনটি?', options: ['কোলকাতা', 'দিল্লি', 'মুম্বাই', 'চেন্নাই'], answer: 0, explanation: 'পশ্চিমবঙ্গের রাজধানী কোলকাতা।' },
-        { q: 'ভারতের জাতীয় পশু কোনটি?', options: ['হাতি', 'বাঘ', 'সিংহ', 'গণ্ডার'], answer: 1, explanation: 'ভারতের জাতীয় পশু রয়েল বেঙ্গল টাইগার (বাঘ)।' },
-        { q: 'গঙ্গা নদীর ইংরেজি নাম কী?', options: ['Yamuna', 'Ganges', 'Godavari', 'Narmada'], answer: 1, explanation: 'গঙ্গার ইংরেজি নাম Ganges।' },
-        { q: 'ভারতের জাতীয় সঙ্গীত "জন গণ মন" কার রচনা?', options: ['কাজী নজরুল ইসলাম', 'রবীন্দ্রনাথ ঠাকুর', 'ব্যাঙ্কিমচন্দ্র চট্টোপাধ্যায়', 'শরৎচন্দ্র চট্টোপাধ্যায়'], answer: 1, explanation: 'জাতীয় সঙ্গীত রবীন্দ্রনাথ ঠাকুরের রচনা।' },
-        { q: 'ভারতের পরিকল্পনা কমিশন (Planning Commission) কবে প্রতিষ্ঠিত হয়?', options: ['১৯৪৭', '১৯৪৯', '১৯৫০', '১৯৫২'], answer: 2, explanation: 'Planning Commission ১৯৫০ সালে স্থাপিত হয় (বর্তমানে NITI Aayog দ্বারা প্রতিস্থাপিত)।' },
-        { q: 'ভারতের সংবিধান কার্যকর হয় কবে?', options: ['১৫ আগস্ট ১৯৪৭', '২৬ জানুয়ারি ১৯৫০', '২৬ নভেম্বর ১৯৪৯', '২ জানুয়ারি ১৯৫০'], answer: 1, explanation: '২৬ জানুয়ারি ১৯৫০ সালে সংবিধান কার্যকর হয়।' },
-        { q: 'সুন্দরবন কোন নদী ব্যবস্থার বদ্বীপে অবস্থিত?', options: ['গঙ্গা-ব্রহ্মপুত্র-মেঘনা', 'গোদাবরী-কৃষ্ণা', 'নর্মদা-তাপ্তি', 'মহানদী'], answer: 0, explanation: 'সুন্দরবন গঙ্গা-ব্রহ্মপুত্র-মেঘনা নদী ব্যবস্থার বদ্বীপে।' },
-        { q: 'পশ্চিমবঙ্গের রাজ্য পাখি কোনটি?', options: ['পাওয়া ময়ূর', 'শুভ্রকণ্ঠ মাছরাঙা', 'সারস', 'হুদহুদ'], answer: 1, explanation: 'শুভ্রকণ্ঠ মাছরাঙা।' }
-      ]
-    };
-  </script>
+  <main class="wrap">
+    <h2>GK Modules</h2>
+    <div class="grid">
+      <div class="card">
+        <a href="gk-01-environment-and-ecosystem.html">
+          <h3>GK 01 — Environment & Ecosystem</h3>
+          <p>পরিবেশ দূষণ, জলবায়ু পরিবর্তন, ইকোলজি ইত্যাদি</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-02-india-and-west-bengal-geography.html">
+          <h3>GK 02 — India & West Bengal Geography</h3>
+          <p>ভারত ও পশ্চিমবঙ্গের ভূগোল</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-03-india-and-west-bengal-history.html">
+          <h3>GK 03 — India & West Bengal History</h3>
+          <p>ভারত ও পশ্চিমবঙ্গের ইতিহাস</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-04-constitution-and-polity.html">
+          <h3>GK 04 — Constitution & Polity</h3>
+          <p>সংবিধান, মৌলিক অধিকার, পঞ্চায়েত রাজ</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-05-general-science-ncert-6-10.html">
+          <h3>GK 05 — General Science (NCERT 6–10)</h3>
+          <p>ভৌত, রসায়ন, জীববিজ্ঞান — বেসিক কনসেপ্ট</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-06-indian-economy-and-social-structure.html">
+          <h3>GK 06 — Indian Economy & Social Structure</h3>
+          <p>অর্থনীতি, বাজেট, সমাজ কাঠামো</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-07-cultural-heritage-and-literature.html">
+          <h3>GK 07 — Cultural Heritage & Literature</h3>
+          <p>সংস্কৃতি, ঐতিহ্য, সাহিত্য</p>
+        </a>
+      </div>
+      <div class="card">
+        <a href="gk-08-indian-administrative-structure.html">
+          <h3>GK 08 — Indian Administrative Structure</h3>
+          <p>প্রশাসনিক কাঠামো, প্রতিষ্ঠান, পদ</p>
+        </a>
+      </div>
+    </div>
 
-  <script src="quiz.js"></script>
+    <p class="back"><a href="index.html">← Back to Home</a></p>
+  </main>
 </body>
 </html>
