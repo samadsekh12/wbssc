@@ -7,42 +7,55 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f7fbff;
-      --card:#ffffff;
-      --muted:#334155;   /* readable muted text */
-      --text:#0b1220;    /* near-black for contrast */
-      --accent:#0b6fb7;  /* calm deep blue for headings */
-      --accent-2:#0b9a6b;/* supportive green for highlights */
-      --danger:#d9480f;  /* orange-red for warnings */
+      --page-bg:#f6fbff;
+      --card-bg:#ffffff;
+      --muted:#334155;
+      --text:#0b1220;
+      --accent-blue:#0b6fb7;
+      --accent-green:#0b9a6b;
+      --accent-orange:#d97706;
+      --accent-indigo:#6d28d9;
       --radius:12px;
-      --shadow: 0 10px 30px rgba(2,6,23,0.06);
-      --maxw:900px;
+      --shadow:0 10px 30px rgba(11,18,32,0.06);
+      --maxw:980px;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:Inter, system-ui, Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg,var(--bg),#ffffff);
+      font-family:Inter,system-ui,Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,var(--page-bg),#ffffff);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       padding:28px;
     }
     .wrap{max-width:var(--maxw);margin:0 auto}
-    header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#1a86d0);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    header{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent-blue),#1e60b4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
     h1{margin:0;font-size:20px}
-    p.lead{margin:6px 0 0;color:var(--muted);line-height:1.5}
-    main{margin-top:18px;display:grid;gap:16px}
-    .section{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
-    .section h2{margin:0 0 8px;color:var(--accent);font-size:18px}
-    .section p{margin:6px 0;color:var(--muted);line-height:1.6}
-    .list{margin:8px 0 0;padding-left:20px;color:var(--muted)}
-    .highlight{color:var(--accent-2);font-weight:700}
-    .note{background:linear-gradient(90deg,#fff7ed,#fff1e6);border-left:4px solid var(--danger);padding:10px;border-radius:8px;color:var(--muted)}
-    .back{display:inline-block;margin-top:12px;color:var(--muted);text-decoration:none}
-    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
-    @media(max-width:520px){body{padding:16px}.logo{width:48px;height:48px}}
+    p.lead{margin:6px 0 0;color:var(--muted);line-height:1.4}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+    .card{
+      background:var(--card-bg);
+      padding:16px;border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      transition:transform .12s ease,box-shadow .12s ease;
+      min-height:150px;display:flex;flex-direction:column;gap:10px;
+      cursor:pointer;
+    }
+    .card:focus,.card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(11,18,32,0.08);outline:none}
+    .card h3{margin:0;color:#fff;padding:10px;border-radius:10px;display:inline-block;font-size:16px}
+    .meta{color:var(--muted);font-size:14px;line-height:1.6}
+    .c-blue{background:linear-gradient(135deg,var(--accent-blue),#1466b1)}
+    .c-green{background:linear-gradient(135deg,var(--accent-green),#14a46a)}
+    .c-orange{background:linear-gradient(135deg,var(--accent-orange),#fb923c)}
+    .c-indigo{background:linear-gradient(135deg,var(--accent-indigo),#8b5cf6)}
+    .note{background:linear-gradient(90deg,#fff7ed,#fff1e6);border-left:4px solid #d97706;padding:10px;border-radius:8px;color:var(--muted)}
+    .actions{display:flex;gap:10px;margin-top:14px}
+    .btn{padding:8px 12px;border-radius:10px;background:var(--accent-blue);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 6px 18px rgba(11,18,32,0.06)}
+    .btn.secondary{background:#f1f5f9;color:var(--accent-blue);font-weight:600}
+    .back{display:inline-block;margin-top:14px;color:var(--muted);text-decoration:none}
+    @media(max-width:520px){body{padding:16px}}
   </style>
 </head>
 <body>
@@ -51,68 +64,60 @@
       <div class="logo">ENV</div>
       <div>
         <h1>পরিবেশ ও বাস্তুতন্ত্র</h1>
-        <p class="lead">এই পৃষ্ঠায় পরিবেশ দূষণ, জলবায়ু পরিবর্তন, জীববৈচিত্র্য ও সংরক্ষণ এবং আইন/উদ্যোগ সম্পর্কে সংক্ষিপ্ত, পড়তে সহজ নোট দেয়া আছে।</p>
+        <p class="lead">নীচের চারটি বিষয়ের প্রতিটির জন্য আলাদা কার্ড দেয়া হল — টপিকে ক্লিক করলে বিস্তারিত নোট/প্রশ্ন পৃষ্ঠায় যাবে।</p>
       </div>
     </header>
 
-    <main>
-      <article class="section" id="pollution">
-        <h2>১. পরিবেশ দূষণ (Air, Water, Noise)</h2>
-        <p>পরিবেশ দূষণ হলো বায়ু, জল বা শব্দের মান যে কারণে মানুষের স্বাস্থ্য, প্রাণিজ ও উদ্ভিদজগৎ এবং পরিবেশের ক্ষমতা ক্ষতিগ্রস্ত হয়। প্রধান উৎসগুলো এবং প্রতিকার (সংক্ষিপ্ত):</p>
-        <ul class="list">
-          <li><strong>বায়ু দূষণ:</strong> যানবাহন, শিল্প, কৃষিকাজে জ্বালানি দাহ—ফল: শ্বাসকষ্ট, অ্যাসথমা, এসও২/নাইট্রোজেন অক্সাইড বৃদ্ধি। প্রতিকার: পরিষ্কার জ্বালানি, পরিবহণ ব্যাবস্থার উন্নতি, উদ্ভাবনী শিল্প-ফিল্টার।</li>
-          <li><strong>জল দূষণ:</strong> বর্জ্য জল, রাসায়নিক নিষ্পত্তি, কৃষি রাসায়নিক—ফল: পানীয়জলের দূষণ, মৎস্য-জীবনের ক্ষতি। প্রতিকার: চিকিত্সা প্ল্যান্ট, নিরীক্ষণ, কৃষিক্ষেত্রে সঠিক কীটনাশক ব্যবহার।</li>
-          <li><strong>শব্দ দূষণ:</strong> ট্রাফিক, নির্মাণ, উচ্চ সাউন্ড ইভেন্ট—ফল: শ্রবণজনিত সমস্যা, মানসিক চাপ। প্রতিকার: শব্দবাধক, আইন প্রয়োগ, পরিকল্পিত নগর উন্নয়ন।</li>
-        </ul>
-        <p class="note">নোট: শহরে বায়ু মান (Air Quality Index - AQI) নিয়মিত পর্যবেক্ষণ জরুরি—AQI > 200 হলে রুগীরা বাড়তি সতর্কতা অবলম্বন করবেন।</p>
-      </article>
+    <section class="grid" aria-label="Environment topics">
+      <div class="card" tabindex="0" role="button" onclick="location.href='gk-environment-pollution.html'">
+        <h3 class="c-blue">পরিবেশ দূষণ (Air, Water, Noise)</h3>
+        <div class="meta">
+          বায়ু, জল ও শব্দ দূষণের প্রধান কারণ ও প্রভাব; নিয়ন্ত্রণ ও প্রতিকার — সংক্ষিপ্ত নোট ও গুরুত্বপূর্ণ পরিভাষা অন্তর্ভুক্ত।
+        </div>
+      </div>
 
-      <article class="section" id="climate">
-        <h2>২. জলবায়ু পরিবর্তন ও এর প্রভাব</h2>
-        <p>বায়ুমণ্ডলের গ্রীনহাউস গ্যাস বৃদ্ধি (CO₂, CH₄) পৃথিবীর তাপমাত্রা বাড়ায় — ফলে গ্লেসিয়ার গলন, সমুদ্রস্তরের উত্থান ও চরম আবহাওয়ার ঘটনাবলি বাড়ছে।</p>
-        <ul class="list">
-          <li><span class="highlight">প্রভাব:</span> কৃষিতে ফলনহ্রাস, বন্যা ও খরা, জীববৈচিত্র্যের হ্রাস, উপকূলীয় এলাকায় অনিবাস্যতা বৃদ্ধি।</li>
-          <li><span class="highlight">অভিযোজন ব্যবস্থা:</span> বজায়যোগ্য কৃষি, বন্যা নিয়ন্ত্রণ, জল সংরক্ষণ, দুর্যোগ ব্যবস্থাপনা উন্নত করা।</li>
-          <li><span class="highlight">নিবন্ধ:</span> আন্তর্জাতিক চুক্তি যেমন প্যারিস চুক্তি, জাতীয় স্তরে জলবায়ু নীতি গ্রহণ করা হয়েছে।</li>
-        </ul>
-      </article>
+      <div class="card" tabindex="0" role="button" onclick="location.href='gk-environment-climate.html'">
+        <h3 class="c-green">জলবায়ু পরিবর্তন ও এর প্রভাব</h3>
+        <div class="meta">
+          গ্রীনহাউস গ্যাস, সমুদ্রস্তরের বৃদ্ধি, চরম আবহাওয়া; অভিযোজন ও নিরসন ব্যবস্থা; আন্তর্জাতিক ও জাতীয় নীতি।
+        </div>
+      </div>
 
-      <article class="section" id="biodiversity">
-        <h2>৩. জীববৈচিত্র্য ও সংরক্ষণ</h2>
-        <p>জীববৈচিত্র্য অর্থে প্রজাতি, জেনেটিক বৈচিত্র্য ও বাস্তুতন্ত্রের পারস্পরিক সম্পর্ক। এটি মানুষের খাদ্য, ওষুধ ও জীবিকা পরিচালনায় গুরুত্বপূর্ণ।</p>
-        <ul class="list">
-          <li><strong>হুমকিপূর্ণ কারণ:</strong> বন্য অঞ্চলের ধ্বংস, অবৈধ শিকার, দূষণ, জলবায়ু পরিবর্তন।</li>
-          <li><strong>সংরক্ষণ পদ্ধতি:</strong> অভয়া-অঞ্চল (protected areas), জৈবিক করিডর, সম্প্রদায়ভিত্তিক সংরক্ষণ, প্রজনন ও পুনরুদ্ধার প্ৰকল্প।</li>
-          <li><strong>উদাহরণ:</strong> পশ্চিমবঙ্গের সুন্দরবন (ব্যানর স্যলাইন ম্যানগ্রোভ) — সমুদ্রস্তর বৃদ্ধির কারণে ঝুঁকিতে আছে; স্থানীয় ও জাতীয় উদ্যোগ জরুরি।</li>
-        </ul>
-      </article>
+      <div class="card" tabindex="0" role="button" onclick="location.href='gk-environment-biodiversity.html'">
+        <h3 class="c-orange">জীববৈচিত্র্য ও সংরক্ষণ</h3>
+        <div class="meta">
+          প্রজাতি ও বাস্তুতন্ত্র সংরক্ষণ, হুমকিপ্রাপ্ত প্রজাতি, অভয়ারণ্য ও সম্প্রদায়ভিত্তিক উদ্যোগ — সংরক্ষণ কৌশল।
+        </div>
+      </div>
 
-      <article class="section" id="laws">
-        <h2>৪. পরিবেশ সংরক্ষণ আইন ও উদ্যোগ</h2>
-        <p>ভারত সরকার ও স্থানীয় সংস্থাগুলো বিভিন্ন আইন ও প্রকল্প চালিয়ে যাচ্ছে পরিবেশ রক্ষার জন্য। প্রধান কিছু:</p>
-        <ul class="list">
-          <li><strong>Environment (Protection) Act, 1986:</strong> পরিবেশ রক্ষার বিস্তৃত কাঠামো প্রদান করে।</li>
-          <li><strong>Air (Prevention & Control of Pollution) Act, 1981</strong> ও <strong>Water (Prevention & Control of Pollution) Act, 1974:</strong> বায়ু ও জল দূষণ নিয়ন্ত্রণে আইন।</li>
-          <li><strong>Project Tiger:</strong> বাঘ সংরক্ষণের লক্ষ্যে 1973-এ শুরু; অভয়ারণ্য ও প্রজাতি সংরক্ষণে সফল উদাহরণ।</li>
-          <li><strong>National Green Tribunal (NGT):</strong> পরিবেশ সম্পর্কিত মামলাগুলো দ্রুত রায় দেয়ার জন্য বিশেষ ট্রিবিউনাল।</li>
-        </ul>
-        <p class="note">আইন প্রয়োগে জনসচেতনতা ও পর্যবেক্ষণ গুরুত্বপূর্ণ—কমিউনিটি অংশগ্রহণ ছাড়া আইন কার্যকরি হবে না।</p>
-      </article>
+      <div class="card" tabindex="0" role="button" onclick="location.href='gk-environment-laws.html'">
+        <h3 class="c-indigo">পরিবেশ সংরক্ষণ আইন ও উদ্যোগ</h3>
+        <div class="meta">
+          Environment Act, Air/Water Acts, Project Tiger, NGT ইত্যাদি; আইন প্রয়োগ ও গ্ৰামীণ/শহর ভিত্তিক উদ্যোগের উদাহরণ।
+        </div>
+      </div>
+    </section>
 
-      <article class="section" id="quiz">
-        <h2>সংক্ষিপ্ত অবলোকন: দ্রুত প্রশ্ন (আরও অনুশীলনের জন্য)</h2>
-        <ol class="list">
-          <li>বায়ু দূষণের প্রধান উৎস কী? (উত্তর: যানবাহন ও শিল্প)</li>
-          <li>AQI উচ্চ হলে কী করণীয়? (উত্তর: বাইরে কম বের হওয়া, মাস্ক ব্যবহার)</li>
-          <li>Project Tiger কিসের জন্য চালু করা হয়েছিল? (উত্তর: বাঘ সংরক্ষণ)</li>
-        </ol>
-        <p style="margin-top:8px;color:var(--muted)">এই প্রশ্নগুলো স্মরণীয় নোট তৈরিতে সাহায্য করবে; চাইলে আমি এগুলোকে MCQ ফরম্যাটে করে একটি মিনি‑মক টেস্ট বানিয়ে দিতে পারি।</p>
-      </article>
-    </main>
+    <div class="actions" aria-hidden="false">
+      <a class="btn secondary" href="./gk.html">← назад GK বিভাগে</a>
+      <a class="btn" href="./index.html">হোম</a>
+    </div>
 
-    <a class="back" href="./gk.html">← পিছনে যান (GK বিভাগ)</a>
+    <p class="note" style="margin-top:16px">
+      নোট: প্রতিটি কার্ডের পৃষ্ঠায় আমি সংক্ষিপ্ত নোট, গুরুত্বপূর্ণ পয়েন্ট এবং MCQ/প্রশ্ন যুক্ত করে মক‑টেস্ট বানিয়ে দিতে পারি — বলুন আমি তৈরি করে ফেলি।
+    </p>
 
-    <footer>প্রস্তুত: সংক্ষিপ্ত নোট — বিস্তারিত নোট/প্রশ্ন যোগ করতে বলুন।</footer>
+    <a class="back" href="./gk.html">← ফিরে যান</a>
+
   </div>
+
+  <script>
+    // keyboard accessibility for cards
+    document.querySelectorAll('.card').forEach(c=>{
+      c.addEventListener('keydown', e=>{
+        if(e.key==='Enter' || e.key===' ') c.click();
+      });
+    });
+  </script>
 </body>
 </html>
